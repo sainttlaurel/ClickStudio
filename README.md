@@ -7,12 +7,16 @@ A modern, production-ready web photo booth application built with React 19, Type
 ## Features
 
 - **Live Camera** — HD webcam support with device switching, grid overlay, and flash
-- **13 Film Filters** — Vintage, Smooth, 70s, 80s, 90s, B&W, Faded, Lomo, Cool, Warm, Film, Dreamy, and Original — applied live and baked into every capture
-- **Frame Overlays** — Clean, Film strip, Blush vignette, and Minimal border
-- **Layout Templates** — Single, Double Strip, Four Cuts, and Photo Strip
+- **Mirror toggle** — Flip the live feed horizontally; baked correctly into the captured photo
+- **Timer options** — Choose 3s, 5s, or 10s countdown before each shot
+- **Burst mode** — Auto-fires the full set of shots for your chosen template; opt-in
+- **Retake** — Thumbnail strip after each shot lets you delete and reshoot any photo
+- **13 Film Filters** — Vintage, Smooth, 70s, 80s, 90s, B&W, Faded, Lomo, Cool, Warm, Film, Dreamy, Original — applied live and baked into every capture
+- **Frame Overlays** — Clean, Film strip, Blush vignette, Minimal border, Polaroid
+- **Polaroid frame** — White border with thick bottom strip; subtle ClickStudio label baked in
+- **Layout Templates** — Single, Double Strip, Four Cuts, Photo Strip
 - **Photo Editor** — Brightness, contrast, saturation, temperature adjustments
 - **Session History** — Cloud-synced via Supabase with save, load, and delete
-- **Export** — PNG, JPEG, WebP, and PDF formats
 - **PWA** — Installable as a native-like app
 - **Responsive** — Desktop and mobile ready
 - **Accessible** — WCAG AA compliant, keyboard navigable
@@ -23,8 +27,8 @@ A modern, production-ready web photo booth application built with React 19, Type
 
 1. Landing page — click **Start the Studio**
 2. Templates — pick a layout
-3. Camera — select a filter and frame, then capture
-4. Preview — review your photos
+3. Camera — choose timer, mirror, filter, and frame; capture (or use burst mode)
+4. Preview — review your shots; retake any via the thumbnail strip
 5. Editor — fine-tune adjustments
 6. Export or save to the cloud
 
@@ -48,7 +52,19 @@ A modern, production-ready web photo booth application built with React 19, Type
 | Film | Classic film tone |
 | Dreamy | Bright, soft, ethereal |
 
-Both the selected filter and frame overlay are baked into the saved photo via `canvas ctx.filter`.
+The selected filter and frame overlay are baked into the saved photo via `canvas ctx.filter` and `ctx.setTransform`.
+
+---
+
+## Frame Overlays
+
+| Name | Style |
+|---|---|
+| Clean | No border |
+| Film | Black sprocket-hole bars top and bottom |
+| Blush | Soft pink radial vignette |
+| Minimal | Thin white inner border |
+| Polaroid | White border, thick bottom strip with ClickStudio label |
 
 ---
 
@@ -135,9 +151,15 @@ src/
 ├── components/
 │   ├── ui/                   # Button, Input, Modal, Slider, Toaster
 │   └── layout/               # Header, Sidebar, Layout
+├── constants/                # Shared constants and types
+│   ├── filters.ts            # 13 film filter presets
+│   ├── frames.ts             # 5 frame overlay definitions
+│   ├── types.ts              # CameraError type
+│   └── index.ts              # Barrel export
+├── hooks/                    # Custom hooks (future)
 ├── pages/
 │   ├── LandingPage.tsx
-│   ├── CameraPage.tsx        # Filters, frames, live capture
+│   ├── CameraPage.tsx        # Filters, frames, mirror, timer, burst, retake
 │   ├── TemplatesPage.tsx
 │   ├── PreviewPage.tsx
 │   ├── EditorPage.tsx
@@ -154,10 +176,13 @@ src/
 ├── types/
 │   └── index.ts
 └── utils/
-    ├── camera.ts             # CameraManager — capture with filter and frame baking
+    ├── camera.ts             # CameraManager — capture with filter, frame, mirror baking
     └── cn.ts
 supabase/
 └── schema.sql                # Full database schema and storage setup
+docs/
+├── BRAINSTORM.md             # Full feature brainstorm with notes
+└── ROADMAP.md                # Active roadmap — what's shipped, building, and parked
 ```
 
 ---
@@ -176,7 +201,7 @@ npm run format       # Prettier
 
 ## Adding a Custom Filter
 
-Append an entry to the `FILTERS` array in `src/pages/CameraPage.tsx`:
+Append an entry to the `FILTERS` array in `src/constants/filters.ts`:
 
 ```typescript
 { id: 'myfilter', name: 'My Filter', css: 'sepia(30%) contrast(1.1) brightness(1.05)' }
@@ -189,6 +214,8 @@ The CSS string is applied live to the `<video>` element and written to the canva
 ## Deployment
 
 **Vercel:** Connect the repository, set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in project settings, and deploy. Subsequent pushes to `main` deploy automatically.
+
+Note: `vercel.json` sets `Permissions-Policy: camera=*` so the camera API works on the deployed domain.
 
 ```bash
 # Manual build
