@@ -1,0 +1,206 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+:root {
+  --background: #fdf5f7;
+  --surface: #ffffff;
+  --card: #fff0f5;
+  --border: #f5c5d8;
+  --primary: #e91e8c;
+  --secondary: #ff85a2;
+  --accent: #ffb3c6;
+  --text: #1c0b1a;
+  --muted: #9b6b7b;
+  --success: #4caf50;
+  --warning: #ff9800;
+  --error: #ef4444;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family:
+    'Inter',
+    system-ui,
+    -apple-system,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* ─── Scrollbar ───────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--card);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 99px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary);
+}
+
+/* ─── Focus ───────────────────────────────────────────── */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* ─── Reduce motion ───────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ─── Glass morphism (light pink) ────────────────────── */
+.glass {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(245, 197, 216, 0.45);
+}
+
+.glass-dark {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(28, 11, 26, 0.88);
+  border: 1px solid rgba(245, 197, 216, 0.15);
+}
+
+/* ─── Dot grid background ─────────────────────────────── */
+.dot-grid {
+  background-image: radial-gradient(circle, #f5c5d8 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* ─── Pink radial glow ────────────────────────────────── */
+.pink-radial {
+  background: radial-gradient(
+    ellipse 70% 55% at 50% 48%,
+    rgba(233, 30, 140, 0.13) 0%,
+    transparent 70%
+  );
+}
+
+/* ─── Camera viewport ─────────────────────────────────── */
+.camera-viewport {
+  aspect-ratio: 4/3;
+  background: #1c0b1a;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  position: relative;
+  border: 2px solid var(--border);
+}
+
+/* ─── Photo strip layout ──────────────────────────────── */
+.photo-strip {
+  display: grid;
+  gap: 0.375rem;
+}
+
+.photo-strip.single {
+  grid-template-columns: 1fr;
+}
+
+.photo-strip.double {
+  grid-template-columns: 1fr 1fr;
+}
+
+.photo-strip.quad {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+.photo-strip.six {
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1fr 1fr;
+}
+
+/* ─── Flash animation ─────────────────────────────────── */
+@keyframes flash {
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ─── Polaroid card ───────────────────────────────────── */
+.polaroid {
+  background: white;
+  padding: 8px 8px 24px 8px;
+  box-shadow: 0 4px 16px rgba(28, 11, 26, 0.12);
+  border-radius: 4px;
+}
+
+/* ─── Sticker badge ───────────────────────────────────── */
+.sticker {
+  background: white;
+  border-radius: 12px;
+  padding: 4px 12px;
+  font-family: 'Dancing Script', cursive;
+  font-size: 0.9rem;
+  box-shadow: 2px 3px 10px rgba(28, 11, 26, 0.1);
+  white-space: nowrap;
+}
+
+/* ─── Print styles ────────────────────────────────────── */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* ─── Mobile touch targets ────────────────────────────── */
+@media (max-width: 768px) {
+  button,
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* ─── Script text helper ──────────────────────────────── */
+.font-script {
+  font-family: 'Dancing Script', cursive;
+}
+
+.font-display {
+  font-family: 'DM Serif Display', serif;
+}
