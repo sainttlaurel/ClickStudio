@@ -5,23 +5,21 @@ export class CameraManager {
   private videoElement: HTMLVideoElement | null = null
 
   async requestPermissions(): Promise<boolean> {
+    // navigator.permissions.query for 'camera' is not universally supported
+    // (throws in Firefox, Safari partial). We directly probe getUserMedia instead.
     try {
-      const permission = await navigator.permissions.query({
-        name: 'camera' as PermissionName,
-      })
-
-      if (permission.state === 'denied') {
-        return false
-      }
-
-      const testStream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-      })
-      testStream.getTracks().forEach(track => track.stop())
-
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true })
+      stream.getTracks().forEach(t => t.stop())
       return true
-    } catch (error) {
-      console.error('Camera permission error:', error)
+    } catch (err: any) {
+      const denied = [
+        'NotAllowedError',
+        'PermissionDeniedError',
+        'SecurityError',
+      ]
+      if (!denied.includes(err?.name)) {
+        console.error('Camera permission error:', err)
+      }
       return false
     }
   }

@@ -1,33 +1,38 @@
-# ClickStudio 📸
+# ClickStudio
 
-A modern, production-ready web-based photo booth application built with React 19, TypeScript, and cutting-edge technologies. The aesthetic photo studio experience — right in your browser. No app required.
+A modern, production-ready web photo booth application built with React 19, TypeScript, and Vite. Capture, filter, and share beautiful photo strips — entirely in the browser, no app required.
 
-## ✨ Features
+---
 
-- **Live Camera Capture** — HD webcam support with device switching and grid overlay
-- **13 Film Filters** — Vintage, Smooth, 70s, 80s, 90s, B&W, Faded, Lomo, Cool, Warm, Film, Dreamy & more — applied live and baked into every photo
-- **Frame Overlays** — Clean, Film strip, Blush vignette, and Minimal border styles
-- **Multiple Layouts** — Single, Double Strip, Four Cuts, and Photo Strip templates
-- **Photo Editor** — Brightness, contrast, saturation, temperature and more
-- **Real-time Preview** — See filter changes live on the camera feed
-- **Export Options** — PNG, JPEG, WebP, and PDF formats
-- **Session History** — Track and manage your photo sessions
-- **Responsive Design** — Works beautifully on desktop and mobile
-- **Accessibility** — WCAG AA compliant with keyboard navigation
-- **PWA Support** — Install as a native-like app
+## Features
 
-## 🌸 User Flow
+- **Live Camera** — HD webcam support with device switching, grid overlay, and flash
+- **13 Film Filters** — Vintage, Smooth, 70s, 80s, 90s, B&W, Faded, Lomo, Cool, Warm, Film, Dreamy, and Original — applied live and baked into every capture
+- **Frame Overlays** — Clean, Film strip, Blush vignette, and Minimal border
+- **Layout Templates** — Single, Double Strip, Four Cuts, and Photo Strip
+- **Photo Editor** — Brightness, contrast, saturation, temperature adjustments
+- **Session History** — Cloud-synced via Supabase with save, load, and delete
+- **Export** — PNG, JPEG, WebP, and PDF formats
+- **PWA** — Installable as a native-like app
+- **Responsive** — Desktop and mobile ready
+- **Accessible** — WCAG AA compliant, keyboard navigable
 
-1. **Landing Page** → Click "Start the Studio"
-2. **Template Selection** → Pick a frame layout (Single / Double / Four Cuts / Strip)
-3. **Camera** → Choose a live filter + frame overlay → Countdown → Capture
-4. **Preview** → Review your photos
-5. **Editor** → Fine-tune adjustments and apply filters
-6. **Export** → Download or share instantly
+---
 
-## 🎞️ Filters
+## User Flow
 
-| Filter | Vibe |
+1. Landing page — click **Start the Studio**
+2. Templates — pick a layout
+3. Camera — select a filter and frame, then capture
+4. Preview — review your photos
+5. Editor — fine-tune adjustments
+6. Export or save to the cloud
+
+---
+
+## Filters
+
+| Name | Character |
 |---|---|
 | Original | No filter |
 | Vintage | Warm sepia, slightly faded |
@@ -38,221 +43,178 @@ A modern, production-ready web-based photo booth application built with React 19
 | B & W | Crisp grayscale |
 | Faded | Lifted blacks, desaturated |
 | Lomo | Deep contrast, vivid |
-| Cool | Blue-toned crisp |
-| Warm | Golden warm tones |
+| Cool | Blue-toned |
+| Warm | Golden tones |
 | Film | Classic film tone |
 | Dreamy | Bright, soft, ethereal |
 
-## 🖼️ Frame Overlays
+Both the selected filter and frame overlay are baked into the saved photo via `canvas ctx.filter`.
 
-| Frame | Style |
+---
+
+## Tech Stack
+
+| Layer | Technology |
 |---|---|
-| Clean ✦ | No border — pure camera view |
-| Film 🎞️ | Black sprocket-hole bars top & bottom |
-| Blush 🌸 | Soft pink vignette at the edges |
-| Minimal ⬜ | Thin white inner border |
+| Frontend | React 19, TypeScript, Vite |
+| Styling | Tailwind CSS, Framer Motion |
+| State | Zustand |
+| Backend | Supabase (Database, Storage) |
+| Icons | Lucide React |
+| Fonts | Inter, DM Serif Display, Dancing Script |
+| Deployment | Vercel |
 
-> Both the filter and frame are **baked into the saved photo** — what you see is what you capture.
+---
 
-## 🚀 Tech Stack
+## Getting Started
 
-- **Frontend**: React 19, TypeScript, Vite
-- **Styling**: Tailwind CSS, Framer Motion
-- **State Management**: Zustand
-- **Data Fetching**: TanStack Query
-- **Backend**: Supabase (Auth, Database, Storage)
-- **Forms**: React Hook Form
-- **Icons**: Lucide React
-- **Fonts**: Inter, DM Serif Display, Dancing Script (Google Fonts)
-- **Deployment**: Vercel
+**Prerequisites:** Node.js 18+, a modern browser with WebRTC support, a Supabase project.
 
-## 📋 Prerequisites
+```bash
+# 1. Clone
+git clone https://github.com/sainttlaurel/ClickStudio.git
+cd ClickStudio
 
-- Node.js 18+ and npm/yarn
-- Modern browser with WebRTC support
-- Supabase account (for backend features)
+# 2. Install
+npm install
 
-## 🛠️ Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/clickstudio.git
-   cd clickstudio
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Set up environment variables**
-   ```bash
-   cp .env.example .env
-   ```
-
-   Update `.env` with your Supabase credentials:
-   ```env
-   VITE_SUPABASE_URL=your_supabase_project_url
-   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-   ```
-
-4. **Start development server**
-   ```bash
-   npm run dev
-   ```
-
-5. **Open in browser**
-   Navigate to `http://localhost:5173`
-
-## 🎨 Design System
-
-ClickStudio uses a feminine pink design system with:
-
-- **Color Palette**: Warm pink-white backgrounds with hot pink accents
-- **Typography**: Inter (body), DM Serif Display (headings), Dancing Script (cursive accents)
-- **Components**: Reusable UI components with pill/rounded variants
-- **Spacing**: 8-point grid system
-- **Animations**: Smooth Framer Motion transitions with float and pulse effects
-- **Accessibility**: Focus states, ARIA labels, keyboard navigation
-
-### Color Tokens
-
-```css
---background: #FDF5F7   /* Warm pink-white */
---surface:    #FFFFFF
---card:       #FFF0F5
---border:     #F5C5D8   /* Soft rose border */
---primary:    #E91E8C   /* Hot pink */
---secondary:  #FF85A2   /* Medium pink */
---accent:     #FFB3C6   /* Light blush */
---text:       #1C0B1A   /* Deep dark */
---muted:      #9B6B7B   /* Dusty rose */
+# 3. Configure environment
+cp .env.example .env
 ```
 
-## 🏗️ Project Structure
+Add your credentials to `.env`:
+
+```env
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+```bash
+# 4. Run the database schema
+# Open supabase/schema.sql and run it in the Supabase SQL Editor
+
+# 5. Start dev server
+npm run dev
+```
+
+---
+
+## Database Setup
+
+Run `supabase/schema.sql` once in the Supabase SQL Editor. It creates:
+
+- `sessions` table with an `updated_at` trigger
+- `photos` table with a cascade delete foreign key
+- `photos` storage bucket (public, 10 MB limit)
+- Row Level Security policies (public access, no login required)
+
+---
+
+## Design System
+
+Pink-forward, feminine aesthetic with a clean editorial structure.
+
+| Token | Value | Usage |
+|---|---|---|
+| `--background` | `#FDF5F7` | Page background |
+| `--surface` | `#FFFFFF` | Cards and panels |
+| `--border` | `#F5C5D8` | Borders and dividers |
+| `--primary` | `#E91E8C` | Buttons, active states |
+| `--secondary` | `#FF85A2` | Accents |
+| `--text` | `#1C0B1A` | Body text |
+| `--muted` | `#9B6B7B` | Secondary text |
+
+**Typography:** Inter (body), DM Serif Display (display headings), Dancing Script (script accents)
+
+---
+
+## Project Structure
 
 ```
 src/
 ├── components/
-│   ├── ui/             # Button, Input, Modal, Slider, Toaster
-│   └── layout/         # Header, Sidebar, Layout
+│   ├── ui/                   # Button, Input, Modal, Slider, Toaster
+│   └── layout/               # Header, Sidebar, Layout
 ├── pages/
-│   ├── LandingPage.tsx       # Hero + floating stickers + CTA
-│   ├── CameraPage.tsx        # Live camera + filters + frames
-│   ├── TemplatesPage.tsx     # Frame layout selection
-│   ├── PreviewPage.tsx       # Review captured photos
-│   ├── EditorPage.tsx        # Adjust brightness, contrast etc.
-│   ├── GalleryPage.tsx       # Browse all photos
+│   ├── LandingPage.tsx
+│   ├── CameraPage.tsx        # Filters, frames, live capture
+│   ├── TemplatesPage.tsx
+│   ├── PreviewPage.tsx
+│   ├── EditorPage.tsx
+│   ├── GalleryPage.tsx
 │   ├── SessionHistoryPage.tsx
 │   ├── SettingsPage.tsx
 │   ├── HelpPage.tsx
 │   └── AboutPage.tsx
 ├── store/
-│   ├── usePhotoStore.ts      # Camera, photos, session state
-│   └── useUIStore.ts         # Toast, sidebar UI state
+│   ├── usePhotoStore.ts      # Session, photo, and camera state + Supabase sync
+│   └── useUIStore.ts
+├── lib/
+│   └── supabase.ts           # Typed client, upload and delete helpers
 ├── types/
-│   └── index.ts              # TypeScript interfaces
+│   └── index.ts
 └── utils/
-    ├── camera.ts             # CameraManager (capture + filter baking)
-    └── cn.ts                 # Tailwind class merging helper
+    ├── camera.ts             # CameraManager — capture with filter and frame baking
+    └── cn.ts
+supabase/
+└── schema.sql                # Full database schema and storage setup
 ```
 
-## 🧪 Development
+---
 
-### Available Scripts
+## Scripts
 
 ```bash
-npm run dev          # Start development server
-npm run build        # Build for production
+npm run dev          # Development server
+npm run build        # Production build
 npm run preview      # Preview production build
-npm run lint         # Run ESLint
-npm run type-check   # Run TypeScript checks
-npm run format       # Format code with Prettier
+npm run lint         # ESLint
+npm run format       # Prettier
 ```
 
-### Code Quality
+---
 
-- **ESLint** — Linting with TypeScript rules
-- **Prettier** — Code formatting
-- **Husky** — Git hooks for quality checks
-- **TypeScript** — Strict mode enabled
+## Adding a Custom Filter
 
-### Camera Settings
-
-Modify camera defaults in `src/store/usePhotoStore.ts`:
-
-```typescript
-cameraSettings: {
-  facingMode: 'user',
-  resolution: { width: 1280, height: 720 },
-  countdown: 3,
-  flash: false,
-  grid: true,
-}
-```
-
-### Adding a Custom Filter
-
-Add a new entry to the `FILTERS` array in `src/pages/CameraPage.tsx`:
+Append an entry to the `FILTERS` array in `src/pages/CameraPage.tsx`:
 
 ```typescript
 { id: 'myfilter', name: 'My Filter', css: 'sepia(30%) contrast(1.1) brightness(1.05)' }
 ```
 
-The CSS string is applied live to the `<video>` element and baked into the canvas on capture via `ctx.filter`.
-
-## 🚀 Deployment
-
-### Vercel (Recommended)
-
-1. Connect your repository to Vercel
-2. Set environment variables in the Vercel dashboard
-3. Deploy — automatic deployments on push to main
-
-### Manual Build
-
-```bash
-npm run build
-# Output is in the dist/ directory
-```
-
-## 📊 Performance
-
-- **Lighthouse Score**: 90+ across all metrics
-- **Core Web Vitals**: Optimized for best user experience
-- **Bundle Size**: Code splitting and lazy loading
-- **PWA**: Service worker with offline support
-
-## ♿ Accessibility
-
-- **WCAG AA Compliance**: Meets accessibility standards
-- **Keyboard Navigation**: Full keyboard support
-- **Screen Readers**: Proper ARIA labels and roles
-- **Focus Management**: Visible pink focus indicators
-- **Reduced Motion**: Respects `prefers-reduced-motion`
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Design inspiration from Polaroid Booth, photobooth.io, and Y2K aesthetics
-- Icons by [Lucide](https://lucide.dev/)
-- Typography by [Google Fonts](https://fonts.google.com/) — DM Serif Display, Dancing Script, Inter
-
-## 📞 Support
-
-- 🐛 Issues: [GitHub Issues](https://github.com/yourusername/clickstudio/issues)
+The CSS string is applied live to the `<video>` element and written to the canvas via `ctx.filter` on capture.
 
 ---
 
-**Made with ♡ for capturing beautiful moments**
+## Deployment
+
+**Vercel:** Connect the repository, set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in project settings, and deploy. Subsequent pushes to `main` deploy automatically.
+
+```bash
+# Manual build
+npm run build
+# Output → dist/
+```
+
+---
+
+## Contributing
+
+```bash
+git checkout -b feature/your-feature
+git commit -m 'Add your feature'
+git push origin feature/your-feature
+# Open a pull request
+```
+
+---
+
+## License
+
+MIT — see [LICENSE](LICENSE).
+
+---
+
+## Acknowledgments
+
+Design language inspired by Y2K photo booth aesthetics, Polaroid culture, and modern editorial UI patterns. Icons by [Lucide](https://lucide.dev/). Typefaces via [Google Fonts](https://fonts.google.com/).

@@ -9,6 +9,7 @@ import {
   ZapOff,
   Square,
   ChevronLeft,
+  RefreshCw,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
@@ -17,7 +18,7 @@ import { useToast } from '@/store/useUIStore'
 import { cameraManager } from '@/utils/camera'
 import { cn } from '@/utils/cn'
 
-/* ─── Filter presets ────────────────────────────────────────────────── */
+/* ─── Filter presets ────────────────────────────────────── */
 export const FILTERS = [
   { id: 'none', name: 'Original', css: 'none' },
   {
@@ -80,7 +81,7 @@ export const FILTERS = [
 
 type FilterId = (typeof FILTERS)[number]['id']
 
-/* ─── Frame overlays ────────────────────────────────────────────────── */
+/* ─── Frame overlays ───────────────────────────────────── */
 const FRAMES = [
   { id: 'none', name: 'Clean', emoji: '✦' },
   { id: 'film', name: 'Film', emoji: '🎞️' },
@@ -89,8 +90,9 @@ const FRAMES = [
 ] as const
 
 type FrameId = (typeof FRAMES)[number]['id']
+type CameraError = null | 'denied' | 'unsupported' | 'error'
 
-/* ─── FilterThumbnail ────────────────────────────────────────────────── */
+/* ─── FilterThumbnail ──────────────────────────────────── */
 function FilterThumbnail({
   filter,
   selected,
@@ -103,29 +105,28 @@ function FilterThumbnail({
   return (
     <button
       onClick={onClick}
-      className="flex flex-col items-center gap-1.5 flex-shrink-0 group"
+      className="flex flex-col items-center gap-1.5 group flex-shrink-0"
     >
       <div
         className={cn(
-          'h-14 w-14 rounded-full overflow-hidden ring-2 ring-offset-2 transition-all',
+          'h-12 w-12 rounded-full overflow-hidden ring-2 ring-offset-2 transition-all duration-200',
           selected
-            ? 'ring-primary ring-offset-white scale-110'
+            ? 'ring-primary ring-offset-white scale-110 shadow-md'
             : 'ring-transparent group-hover:ring-rose-200 group-hover:ring-offset-white'
         )}
       >
-        {/* Gradient swatch with filter applied so user sees the effect */}
         <div
           className="w-full h-full"
           style={{
             background:
-              'linear-gradient(135deg, #E8B4C8 0%, #F5D78E 40%, #A8D8EA 80%, #E8B4C8 100%)',
+              'linear-gradient(135deg,#F9C5D5 0%,#F5D78E 35%,#B5E5F5 70%,#F9C5D5 100%)',
             filter: filter.css === 'none' ? undefined : filter.css,
           }}
         />
       </div>
       <span
         className={cn(
-          'text-[10px] font-medium transition-colors',
+          'text-[10px] font-medium leading-none transition-colors',
           selected ? 'text-primary' : 'text-muted group-hover:text-text'
         )}
       >
@@ -135,11 +136,66 @@ function FilterThumbnail({
   )
 }
 
-/* ─── CameraPage ─────────────────────────────────────────────────────── */
+/* ─── Camera denied card ───────────────────────────────── */
+function CameraDeniedCard({ onRetry }: { onRetry: () => void }) {
+  return (
+    <div className="absolute inset-0 flex items-center justify-center bg-white/95 backdrop-blur-sm z-30 rounded-2xl">
+      <div className="text-center px-8 py-10 max-w-xs">
+        <div className="text-5xl mb-4">📷</div>
+        <h3 className="font-display text-xl text-text mb-2">
+          Camera access needed
+        </h3>
+        <p className="text-muted text-sm leading-relaxed mb-5">
+          ClickStudio needs your camera to take photos. Please allow access in
+          your browser.
+        </p>
+
+        <div className="bg-rose-50 border border-border rounded-xl p-4 text-left text-xs space-y-2 mb-6">
+          <p className="font-semibold text-text mb-1">How to allow:</p>
+          <p className="text-muted">① Click the 🔒 icon in the address bar</p>
+          <p className="text-muted">
+            ② Set <strong className="text-text">Camera</strong> → Allow
+          </p>
+          <p className="text-muted">③ Refresh the page</p>
+        </div>
+
+        <Button
+          pill
+          className="w-full"
+          onClick={onRetry}
+          icon={<RefreshCw className="h-4 w-4" />}
+        >
+          Refresh & Try Again
+        </Button>
+      </div>
+    </div>
+  )
+}
+
+function CameraUnsupportedCard() {
+  return (
+    <div className="absolute inset-0 flex items-center justify-center bg-white/95 z-30 rounded-2xl">
+      <div className="text-center px-8 py-10 max-w-xs">
+        <div className="text-5xl mb-4">🚫</div>
+        <h3 className="font-display text-xl text-text mb-2">
+          Camera not supported
+        </h3>
+        <p className="text-muted text-sm leading-relaxed">
+          Your browser doesn't support camera access. Try opening ClickStudio in
+          Chrome or Safari.
+        </p>
+      </div>
+    </div>
+  )
+}
+
+/* ─── CameraPage ───────────────────────────────────────── */
 export default function CameraPage() {
   const navigate = useNavigate()
   const videoRef = useRef<HTMLVideoElement>(null)
+
   const [isStreaming, setIsStreaming] = useState(false)
+  const [cameraError, setCameraError] = useState<CameraError>(null)
   const [showGrid, setShowGrid] = useState(true)
   const [countdown, setCountdown] = useState(0)
   const [isCapturing, setIsCapturing] = useState(false)
@@ -172,32 +228,28 @@ export default function CameraPage() {
       attempted = true
 
       if (!cameraManager.isSupported()) {
-        if (!cancelled)
-          showError(
-            'Not supported',
-            'Your browser does not support camera access'
-          )
+        if (!cancelled) setCameraError('unsupported')
         return
       }
+
       const ok = await cameraManager.requestPermissions()
       if (!ok) {
-        if (!cancelled)
-          showError(
-            'Permission denied',
-            'Please allow camera access to use ClickStudio'
-          )
+        if (!cancelled) setCameraError('denied')
         return
       }
+
       if (videoRef.current && !cancelled) {
         try {
           await cameraManager.startCamera(cameraSettings, videoRef.current)
           if (!cancelled) {
             setIsStreaming(true)
+            setCameraError(null)
             showSuccess('Camera ready ✦', 'Strike your best pose!')
           }
         } catch (err) {
           if (!cancelled) {
             console.error(err)
+            setCameraError('error')
             showError(
               'Camera error',
               'Failed to start camera. Please try again.'
@@ -255,7 +307,7 @@ export default function CameraPage() {
 
       success(
         'Photo captured! 📸',
-        `${activeFilter.name} filter • ${FRAMES.find(f => f.id === selectedFrame)?.name} frame`
+        `${activeFilter.name} filter · ${FRAMES.find(f => f.id === selectedFrame)?.name} frame`
       )
 
       if (cameraSettings.flash) {
@@ -280,48 +332,48 @@ export default function CameraPage() {
       await cameraManager.switchCamera(cameraSettings)
       success('Camera switched', 'Ready from the other side!')
     } catch {
-      error('Switch failed', 'Could not switch camera')
+      error('Switch failed', 'Could not switch camera.')
     }
   }
 
-  /* ── Frame CSS overlay ── */
+  /* ── Frame overlay (CSS only, also baked into capture) ── */
   function FrameOverlay() {
     if (selectedFrame === 'film') {
       return (
         <>
-          <div className="absolute inset-x-0 top-0 h-10 bg-black/88 flex items-center gap-1.5 px-2 z-10 overflow-hidden">
-            {Array.from({ length: 22 }).map((_, i) => (
-              <div
-                key={i}
-                className="flex-shrink-0 w-3.5 h-5 bg-white/15 rounded-sm"
-              />
-            ))}
-          </div>
-          <div className="absolute inset-x-0 bottom-0 h-10 bg-black/88 flex items-center gap-1.5 px-2 z-10 overflow-hidden">
-            {Array.from({ length: 22 }).map((_, i) => (
-              <div
-                key={i}
-                className="flex-shrink-0 w-3.5 h-5 bg-white/15 rounded-sm"
-              />
-            ))}
-          </div>
+          {[0, 1].map(pos => (
+            <div
+              key={pos}
+              className={cn(
+                'absolute inset-x-0 h-9 bg-black/88 flex items-center gap-1.5 px-2 z-10 overflow-hidden',
+                pos === 0 ? 'top-0' : 'bottom-0'
+              )}
+            >
+              {Array.from({ length: 24 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="flex-shrink-0 w-3 h-5 bg-white/15 rounded-sm"
+                />
+              ))}
+            </div>
+          ))}
         </>
       )
     }
     if (selectedFrame === 'blush') {
       return (
         <div
-          className="absolute inset-0 pointer-events-none z-10 rounded-xl"
+          className="absolute inset-0 pointer-events-none z-10 rounded-2xl"
           style={{
             background:
-              'radial-gradient(ellipse at center, rgba(233,30,140,0) 38%, rgba(233,30,140,0.28) 100%)',
+              'radial-gradient(ellipse at center,rgba(233,30,140,0) 36%,rgba(233,30,140,0.26) 100%)',
           }}
         />
       )
     }
     if (selectedFrame === 'minimal') {
       return (
-        <div className="absolute inset-2 border-2 border-white/80 rounded-lg pointer-events-none z-10" />
+        <div className="absolute inset-2 border-2 border-white/80 rounded-xl pointer-events-none z-10" />
       )
     }
     return null
@@ -330,8 +382,9 @@ export default function CameraPage() {
   return (
     <div className="h-full flex flex-col bg-background">
       {/* ── Top controls bar ── */}
-      <div className="flex items-center justify-between px-5 py-3 border-b border-border bg-white/90 backdrop-blur-sm">
-        <div className="flex items-center gap-2">
+      <div className="flex items-center justify-between px-4 py-2.5 border-b border-border bg-white/90 backdrop-blur-sm">
+        {/* Left */}
+        <div className="flex items-center gap-1">
           <Button
             variant="ghost"
             size="sm"
@@ -341,43 +394,41 @@ export default function CameraPage() {
           >
             Frames
           </Button>
-
           <Button
             variant="ghost"
             size="sm"
             onClick={switchCamera}
             disabled={!isStreaming}
             icon={<SwitchCamera className="h-4 w-4 text-muted" />}
+            className="text-muted"
           >
             Flip
           </Button>
         </div>
 
+        {/* Right */}
         <div className="flex items-center gap-1.5">
-          {/* Grid toggle */}
           <button
             onClick={() => {
               setShowGrid(s => !s)
               setCameraSettings({ grid: !showGrid })
             }}
             className={cn(
-              'h-8 px-3 rounded-full text-xs font-medium border flex items-center gap-1 transition-all',
+              'h-8 px-3 rounded-full text-xs font-medium border flex items-center gap-1.5 transition-all',
               showGrid
-                ? 'bg-primary text-white border-primary'
+                ? 'bg-primary text-white border-primary shadow-sm'
                 : 'bg-white text-muted border-border hover:border-primary/40'
             )}
           >
             <Grid3X3 className="h-3.5 w-3.5" />
             Grid
           </button>
-
-          {/* Flash toggle */}
           <button
             onClick={() => setCameraSettings({ flash: !cameraSettings.flash })}
             className={cn(
-              'h-8 px-3 rounded-full text-xs font-medium border flex items-center gap-1 transition-all',
+              'h-8 px-3 rounded-full text-xs font-medium border flex items-center gap-1.5 transition-all',
               cameraSettings.flash
-                ? 'bg-primary text-white border-primary'
+                ? 'bg-primary text-white border-primary shadow-sm'
                 : 'bg-white text-muted border-border hover:border-primary/40'
             )}
           >
@@ -391,33 +442,11 @@ export default function CameraPage() {
         </div>
       </div>
 
-      {/* ── Frame selector strip ── */}
-      <div className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white border-b border-border">
-        <span className="text-xs text-muted mr-1 font-medium shrink-0">
-          Frame:
-        </span>
-        {FRAMES.map(frame => (
-          <button
-            key={frame.id}
-            onClick={() => setSelectedFrame(frame.id)}
-            className={cn(
-              'h-7 px-3 rounded-full text-xs font-medium border transition-all flex items-center gap-1',
-              selectedFrame === frame.id
-                ? 'bg-primary text-white border-primary shadow-sm'
-                : 'bg-white text-muted border-border hover:border-primary/40 hover:text-primary'
-            )}
-          >
-            <span>{frame.emoji}</span>
-            {frame.name}
-          </button>
-        ))}
-      </div>
-
       {/* ── Camera viewport ── */}
-      <div className="flex-1 flex items-center justify-center p-4">
-        <div className="relative w-full max-w-3xl">
-          <div className="camera-viewport shadow-card border-2 border-border overflow-hidden rounded-2xl">
-            {/* Live video with filter applied */}
+      <div className="flex-1 flex items-center justify-center p-4 min-h-0">
+        <div className="relative w-full max-w-3xl h-full max-h-[480px]">
+          <div className="camera-viewport w-full h-full shadow-card border-2 border-border rounded-2xl overflow-hidden">
+            {/* Live video */}
             <video
               ref={videoRef}
               className="w-full h-full object-cover"
@@ -434,7 +463,7 @@ export default function CameraPage() {
             <FrameOverlay />
 
             {/* Grid overlay */}
-            {showGrid && (
+            {showGrid && isStreaming && (
               <div className="absolute inset-0 pointer-events-none z-20">
                 <div className="w-full h-full grid grid-cols-3 grid-rows-3">
                   {Array.from({ length: 9 }).map((_, i) => (
@@ -452,18 +481,26 @@ export default function CameraPage() {
                   initial={{ scale: 0.4, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 1.6, opacity: 0 }}
-                  transition={{ duration: 0.65, ease: 'easeOut' }}
+                  transition={{ duration: 0.6, ease: 'easeOut' }}
                   className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-30"
                 >
-                  <div className="font-display text-[9rem] text-white drop-shadow-2xl leading-none">
+                  <span className="font-display text-[8rem] text-white drop-shadow-2xl leading-none">
                     {countdown}
-                  </div>
+                  </span>
                 </motion.div>
               )}
             </AnimatePresence>
 
-            {/* Loading overlay */}
-            {!isStreaming && (
+            {/* Error states */}
+            {!isStreaming && cameraError === 'denied' && (
+              <CameraDeniedCard onRetry={() => window.location.reload()} />
+            )}
+            {!isStreaming && cameraError === 'unsupported' && (
+              <CameraUnsupportedCard />
+            )}
+
+            {/* Generic loading spinner (only when no error) */}
+            {!isStreaming && !cameraError && (
               <div className="absolute inset-0 flex items-center justify-center bg-white/90 backdrop-blur-sm z-30">
                 <div className="text-center space-y-3">
                   <div className="relative mx-auto w-12 h-12">
@@ -475,9 +512,9 @@ export default function CameraPage() {
               </div>
             )}
 
-            {/* Active filter badge (top-right corner of viewport) */}
-            {selectedFilter !== 'none' && (
-              <div className="absolute top-3 right-3 z-20 bg-black/60 backdrop-blur-sm text-white text-xs font-medium px-2.5 py-1 rounded-full">
+            {/* Active filter badge */}
+            {selectedFilter !== 'none' && isStreaming && (
+              <div className="absolute top-3 right-3 z-20 bg-black/55 backdrop-blur-sm text-white text-xs font-medium px-2.5 py-1 rounded-full">
                 {activeFilter.name}
               </div>
             )}
@@ -485,34 +522,52 @@ export default function CameraPage() {
         </div>
       </div>
 
-      {/* ── Filter picker ── */}
-      <div className="bg-white border-t border-border pt-3 pb-2">
-        <p className="text-center text-xs text-muted mb-2 font-medium tracking-wide uppercase">
-          Filter —{' '}
-          <span className="text-primary font-semibold">
-            {activeFilter.name}
+      {/* ── Bottom panel ── */}
+      <div className="bg-white border-t border-border">
+        {/* Frame selector */}
+        <div className="flex items-center justify-center gap-2 px-4 py-2 border-b border-border/60">
+          <span className="text-[10px] font-semibold uppercase tracking-widest text-muted mr-1">
+            Frame
           </span>
-        </p>
-        <div className="overflow-x-auto">
-          <div className="flex gap-3 px-4 pb-1 min-w-max mx-auto">
-            {FILTERS.map(filter => (
-              <FilterThumbnail
-                key={filter.id}
-                filter={filter}
-                selected={selectedFilter === filter.id}
-                onClick={() => setSelectedFilter(filter.id)}
-              />
-            ))}
-          </div>
+          {FRAMES.map(frame => (
+            <button
+              key={frame.id}
+              onClick={() => setSelectedFrame(frame.id)}
+              className={cn(
+                'h-7 px-3 rounded-full text-xs font-medium border transition-all flex items-center gap-1',
+                selectedFrame === frame.id
+                  ? 'bg-primary text-white border-primary shadow-sm'
+                  : 'bg-white text-muted border-border hover:border-primary/40 hover:text-primary'
+              )}
+            >
+              <span className="text-[11px]">{frame.emoji}</span>
+              {frame.name}
+            </button>
+          ))}
         </div>
-      </div>
 
-      {/* ── Capture controls ── */}
-      <div className="px-6 py-4 border-t border-border bg-white/90 backdrop-blur-sm">
-        <div className="flex items-center justify-center gap-10">
+        {/* Filter label */}
+        <p className="text-center text-[10px] font-semibold uppercase tracking-widest text-muted pt-2.5 pb-1.5">
+          Filter — <span className="text-primary">{activeFilter.name}</span>
+        </p>
+
+        {/* Filter grid — centered, wraps on narrow screens */}
+        <div className="flex flex-wrap justify-center gap-x-3 gap-y-2 px-4 pb-3">
+          {FILTERS.map(filter => (
+            <FilterThumbnail
+              key={filter.id}
+              filter={filter}
+              selected={selectedFilter === filter.id}
+              onClick={() => setSelectedFilter(filter.id)}
+            />
+          ))}
+        </div>
+
+        {/* Capture controls */}
+        <div className="flex items-center justify-center gap-8 px-6 py-3 border-t border-border/60">
           {/* Timer chip */}
           <div className="flex items-center gap-1.5 text-xs text-muted bg-rose-50 border border-border rounded-full px-3 py-1.5 w-24 justify-center">
-            <Timer className="h-3.5 w-3.5 text-primary" />
+            <Timer className="h-3.5 w-3.5 text-primary flex-shrink-0" />
             {cameraSettings.countdown}s timer
           </div>
 
@@ -523,16 +578,16 @@ export default function CameraPage() {
             whileHover={{ scale: isStreaming && !isCapturing ? 1.07 : 1 }}
             whileTap={{ scale: isStreaming && !isCapturing ? 0.93 : 1 }}
             className={cn(
-              'relative h-20 w-20 rounded-full flex items-center justify-center',
+              'relative h-16 w-16 rounded-full flex items-center justify-center',
               'bg-primary transition-all animate-pulse-pink',
-              'disabled:opacity-50 disabled:cursor-not-allowed'
+              'disabled:opacity-40 disabled:cursor-not-allowed'
             )}
           >
             <div className="absolute inset-0 rounded-full border-4 border-white/40" />
             {isCapturing ? (
-              <Square className="h-8 w-8 text-white" />
+              <Square className="h-6 w-6 text-white" />
             ) : (
-              <Camera className="h-9 w-9 text-white" />
+              <Camera className="h-7 w-7 text-white" />
             )}
           </motion.button>
 
@@ -544,7 +599,7 @@ export default function CameraPage() {
                 isStreaming ? 'bg-green-400 animate-pulse' : 'bg-border'
               )}
             />
-            {isStreaming ? 'Ready ✦' : 'Connecting…'}
+            {isStreaming ? 'Ready ✦' : cameraError ? 'Denied' : 'Connecting…'}
           </div>
         </div>
       </div>
