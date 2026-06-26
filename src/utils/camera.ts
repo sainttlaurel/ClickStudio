@@ -109,7 +109,7 @@ export class CameraManager {
    */
   capturePhoto(
     videoElement: HTMLVideoElement,
-    options?: { filterCss?: string; frameId?: string }
+    options?: { filterCss?: string; frameId?: string; mirror?: boolean }
   ): string {
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
@@ -120,15 +120,17 @@ export class CameraManager {
     canvas.width = w
     canvas.height = h
 
-    // ── Draw video frame with filter ──
+    // ── Apply filter ──
     const filterCss = options?.filterCss
-    if (filterCss && filterCss !== 'none') {
-      ctx.filter = filterCss
-    }
+    if (filterCss && filterCss !== 'none') ctx.filter = filterCss
+
+    // ── Apply mirror transform then draw ──
+    if (options?.mirror) ctx.setTransform(-1, 0, 0, 1, w, 0)
     ctx.drawImage(videoElement, 0, 0)
 
-    // ── Reset filter before drawing frame overlay ──
+    // ── Reset filter + transform before frame overlay ──
     ctx.filter = 'none'
+    ctx.setTransform(1, 0, 0, 1, 0, 0)
 
     // ── Bake frame overlay ──
     const frameId = options?.frameId
@@ -137,7 +139,6 @@ export class CameraManager {
       ctx.fillStyle = '#111111'
       ctx.fillRect(0, 0, w, barH)
       ctx.fillRect(0, h - barH, w, barH)
-      // Sprocket holes
       const holeW = Math.round(w * 0.022)
       const holeH = Math.round(barH * 0.55)
       const gap = Math.round(w * 0.038)
@@ -148,7 +149,6 @@ export class CameraManager {
         ctx.fillRect(x, h - barH + ry, holeW, holeH)
       }
     } else if (frameId === 'blush') {
-      // Pink vignette
       const grad = ctx.createRadialGradient(
         w / 2,
         h / 2,
@@ -166,6 +166,20 @@ export class CameraManager {
       ctx.strokeStyle = 'rgba(255,255,255,0.85)'
       ctx.lineWidth = b
       ctx.strokeRect(b / 2, b / 2, w - b, h - b)
+    } else if (frameId === 'polaroid') {
+      const border = Math.round(Math.min(w, h) * 0.04)
+      const bottomH = Math.round(h * 0.2)
+      ctx.fillStyle = '#FFFFFF'
+      ctx.fillRect(0, 0, w, border) // top
+      ctx.fillRect(0, 0, border, h) // left
+      ctx.fillRect(w - border, 0, border, h) // right
+      ctx.fillRect(0, h - bottomH, w, bottomH) // thick bottom
+      // Subtle label inside bottom strip
+      ctx.fillStyle = 'rgba(155, 107, 123, 0.45)'
+      ctx.font = `italic ${Math.round(h * 0.028)}px cursive`
+      ctx.textAlign = 'center'
+      ctx.textBaseline = 'middle'
+      ctx.fillText('ClickStudio', w / 2, h - bottomH / 2)
     }
 
     return canvas.toDataURL('image/png', 1.0)

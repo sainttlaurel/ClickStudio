@@ -10,6 +10,9 @@ import {
   Square,
   ChevronLeft,
   RefreshCw,
+  FlipHorizontal,
+  Repeat2,
+  X,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
@@ -17,82 +20,10 @@ import { usePhotoStore } from '@/store/usePhotoStore'
 import { useToast } from '@/store/useUIStore'
 import { cameraManager } from '@/utils/camera'
 import { cn } from '@/utils/cn'
+import { FILTERS, FRAMES } from '@/constants'
+import type { FilterId, FrameId, CameraError } from '@/constants'
 
-/* ─── Filter presets ────────────────────────────────────── */
-export const FILTERS = [
-  { id: 'none', name: 'Original', css: 'none' },
-  {
-    id: 'vintage',
-    name: 'Vintage',
-    css: 'sepia(45%) contrast(1.1) brightness(1.05) saturate(0.85)',
-  },
-  {
-    id: 'smooth',
-    name: 'Smooth',
-    css: 'brightness(1.1) contrast(0.88) saturate(0.85)',
-  },
-  {
-    id: '70s',
-    name: '70s',
-    css: 'sepia(55%) saturate(1.6) contrast(1.08) brightness(1.1) hue-rotate(8deg)',
-  },
-  {
-    id: '80s',
-    name: '80s',
-    css: 'contrast(1.35) saturate(1.7) brightness(1.1) hue-rotate(-25deg)',
-  },
-  {
-    id: '90s',
-    name: '90s',
-    css: 'sepia(18%) saturate(1.3) contrast(1.06) brightness(1.03)',
-  },
-  { id: 'bw', name: 'B & W', css: 'grayscale(100%) contrast(1.2)' },
-  {
-    id: 'faded',
-    name: 'Faded',
-    css: 'brightness(1.15) contrast(0.8) saturate(0.6)',
-  },
-  {
-    id: 'lomo',
-    name: 'Lomo',
-    css: 'contrast(1.5) saturate(1.45) brightness(0.85)',
-  },
-  {
-    id: 'cool',
-    name: 'Cool',
-    css: 'hue-rotate(20deg) saturate(1.25) contrast(1.08) brightness(1.02)',
-  },
-  {
-    id: 'warm',
-    name: 'Warm',
-    css: 'sepia(35%) saturate(1.5) brightness(1.08)',
-  },
-  {
-    id: 'film',
-    name: 'Film',
-    css: 'sepia(25%) contrast(1.18) saturate(0.85) brightness(0.98)',
-  },
-  {
-    id: 'dreamy',
-    name: 'Dreamy',
-    css: 'brightness(1.12) contrast(0.85) saturate(1.3)',
-  },
-] as const
-
-type FilterId = (typeof FILTERS)[number]['id']
-
-/* ─── Frame overlays ───────────────────────────────────── */
-const FRAMES = [
-  { id: 'none', name: 'Clean', emoji: '✦' },
-  { id: 'film', name: 'Film', emoji: '🎞️' },
-  { id: 'blush', name: 'Blush', emoji: '🌸' },
-  { id: 'minimal', name: 'Minimal', emoji: '⬜' },
-] as const
-
-type FrameId = (typeof FRAMES)[number]['id']
-type CameraError = null | 'denied' | 'unsupported' | 'error'
-
-/* ─── FilterThumbnail ──────────────────────────────────── */
+/* ─── FilterThumbnail ─────────────────────────────────── */
 function FilterThumbnail({
   filter,
   selected,
@@ -136,7 +67,7 @@ function FilterThumbnail({
   )
 }
 
-/* ─── Camera denied card ───────────────────────────────── */
+/* ─── Camera denied card ──────────────────────────────── */
 function CameraDeniedCard({ onRetry }: { onRetry: () => void }) {
   return (
     <div className="absolute inset-0 flex items-center justify-center bg-white/95 backdrop-blur-sm z-30 rounded-2xl">
@@ -149,23 +80,21 @@ function CameraDeniedCard({ onRetry }: { onRetry: () => void }) {
           ClickStudio needs your camera to take photos. Please allow access in
           your browser.
         </p>
-
         <div className="bg-rose-50 border border-border rounded-xl p-4 text-left text-xs space-y-2 mb-6">
           <p className="font-semibold text-text mb-1">How to allow:</p>
           <p className="text-muted">① Click the 🔒 icon in the address bar</p>
           <p className="text-muted">
             ② Set <strong className="text-text">Camera</strong> → Allow
           </p>
-          <p className="text-muted">③ Refresh the page</p>
+          <p className="text-muted">③ Click Try Again below</p>
         </div>
-
         <Button
           pill
           className="w-full"
           onClick={onRetry}
           icon={<RefreshCw className="h-4 w-4" />}
         >
-          Refresh & Try Again
+          Try Again
         </Button>
       </div>
     </div>
@@ -181,31 +110,47 @@ function CameraUnsupportedCard() {
           Camera not supported
         </h3>
         <p className="text-muted text-sm leading-relaxed">
-          Your browser doesn't support camera access. Try opening ClickStudio in
-          Chrome or Safari.
+          Your browser doesn't support camera access. Try Chrome or Safari.
         </p>
       </div>
     </div>
   )
 }
 
-/* ─── CameraPage ───────────────────────────────────────── */
+/* ─── CameraPage ──────────────────────────────────────── */
 export default function CameraPage() {
   const navigate = useNavigate()
   const videoRef = useRef<HTMLVideoElement>(null)
 
+  // ── Camera state ──
   const [isStreaming, setIsStreaming] = useState(false)
   const [cameraError, setCameraError] = useState<CameraError>(null)
-  const [showGrid, setShowGrid] = useState(true)
   const [countdown, setCountdown] = useState(0)
   const [isCapturing, setIsCapturing] = useState(false)
+
+  // ── Visual options ──
+  const [showGrid, setShowGrid] = useState(true)
+  const [isMirrored, setIsMirrored] = useState(false) // C2
   const [selectedFilter, setSelectedFilter] = useState<FilterId>('none')
   const [selectedFrame, setSelectedFrame] = useState<FrameId>('none')
 
+  // ── Burst mode (C4) ──
+  const [burstMode, setBurstMode] = useState(false)
+  const [burstInfo, setBurstInfo] = useState<{
+    current: number
+    total: number
+  } | null>(null)
+  const burstQueueRef = useRef({ remaining: 0, total: 0 })
+  const countdownValRef = useRef(3) // kept in sync with cameraSettings.countdown
+
+  // ── Store ──
   const {
     cameraSettings,
     setCameraSettings,
     addPhoto,
+    removePhoto,
+    capturedPhotos,
+    currentSession,
     setCountdown: setCountdownState,
   } = usePhotoStore()
   const { success, error } = useToast()
@@ -218,6 +163,21 @@ export default function CameraPage() {
 
   const activeFilter = FILTERS.find(f => f.id === selectedFilter) ?? FILTERS[0]
 
+  // How many photos the current template needs (C4)
+  const photosNeeded = (() => {
+    const layout = currentSession?.template?.layout
+    if (layout === 'single') return 1
+    if (layout === 'double') return 2
+    if (layout === 'six') return 6
+    return 4
+  })()
+
+  // Keep countdown ref in sync so burst timeouts always see the latest value
+  useEffect(() => {
+    countdownValRef.current = cameraSettings.countdown
+  }, [cameraSettings.countdown])
+
+  // ── Error name lists ──
   const DENIED_NAMES = [
     'NotAllowedError',
     'PermissionDeniedError',
@@ -229,7 +189,7 @@ export default function CameraPage() {
     'NotReadableError',
   ]
 
-  /* ── Shared camera start logic ── */
+  /* ── Start camera stream ── */
   const startCameraStream = useCallback(
     async (cancelled?: { value: boolean }) => {
       if (!videoRef.current) return
@@ -241,20 +201,18 @@ export default function CameraPage() {
         showSuccess('Camera ready ✦', 'Strike your best pose!')
       } catch (err: any) {
         if (cancelled?.value) return
-        if (DENIED_NAMES.includes(err?.name)) {
-          setCameraError('denied')
-        } else if (NO_DEVICE.includes(err?.name)) {
-          setCameraError('unsupported')
-        } else {
+        if (DENIED_NAMES.includes(err?.name)) setCameraError('denied')
+        else if (NO_DEVICE.includes(err?.name)) setCameraError('unsupported')
+        else {
           setCameraError('error')
-          showError('Camera error', 'Failed to start camera. Please try again.')
+          showError('Camera error', 'Failed to start camera.')
         }
       }
     },
     [cameraSettings, showSuccess, showError]
   )
 
-  /* ── Retry without page reload ── */
+  /* ── Retry ── */
   const retryCamera = useCallback(async () => {
     setCameraError(null)
     setIsStreaming(false)
@@ -262,17 +220,14 @@ export default function CameraPage() {
     await startCameraStream()
   }, [startCameraStream])
 
-  /* ── Init camera on mount ── */
+  /* ── Mount ── */
   useEffect(() => {
     const cancelled = { value: false }
-
     if (!cameraManager.isSupported()) {
       setCameraError('unsupported')
       return
     }
-
     startCameraStream(cancelled)
-
     return () => {
       cancelled.value = true
       cameraManager.stopCamera()
@@ -291,19 +246,32 @@ export default function CameraPage() {
     return () => clearTimeout(timer)
   }, [countdown, isCapturing])
 
-  const startCountdown = () => {
-    if (!isStreaming || isCapturing) return
+  /* ── Stable fire-capture (safe to call from setTimeout) ── */
+  const fireCapture = useCallback(() => {
     setIsCapturing(true)
-    setCountdown(cameraSettings.countdown)
-    setCountdownState(true, cameraSettings.countdown)
+    setCountdown(countdownValRef.current)
+    setCountdownState(true, countdownValRef.current)
+  }, [setCountdownState])
+
+  /* ── Capture button handler ── */
+  const handleCaptureButton = () => {
+    if (!isStreaming || isCapturing) return
+    if (burstMode) {
+      const shotsLeft = Math.max(1, photosNeeded - capturedPhotos.length)
+      burstQueueRef.current = { remaining: shotsLeft - 1, total: shotsLeft }
+      setBurstInfo({ current: 1, total: shotsLeft })
+    }
+    fireCapture()
   }
 
+  /* ── Capture photo ── */
   const capturePhoto = async () => {
     if (!videoRef.current || !isStreaming) return
     try {
       const photoDataUrl = cameraManager.capturePhoto(videoRef.current, {
         filterCss: activeFilter.css,
         frameId: selectedFrame,
+        mirror: isMirrored,
       })
 
       addPhoto({
@@ -320,7 +288,7 @@ export default function CameraPage() {
 
       success(
         'Photo captured! 📸',
-        `${activeFilter.name} filter · ${FRAMES.find(f => f.id === selectedFrame)?.name} frame`
+        `${activeFilter.name} · ${FRAMES.find(f => f.id === selectedFrame)?.name}`
       )
 
       if (cameraSettings.flash) {
@@ -330,9 +298,22 @@ export default function CameraPage() {
         document.body.appendChild(flash)
         setTimeout(() => document.body.removeChild(flash), 380)
       }
+
+      // ── Burst continuation ──
+      const { remaining, total } = burstQueueRef.current
+      if (total > 0 && remaining > 0) {
+        burstQueueRef.current = { remaining: remaining - 1, total }
+        setBurstInfo({ current: total - remaining + 1, total })
+        setTimeout(fireCapture, 950)
+      } else {
+        burstQueueRef.current = { remaining: 0, total: 0 }
+        setBurstInfo(null)
+      }
     } catch (err) {
       console.error(err)
       error('Capture failed', 'Please try again.')
+      burstQueueRef.current = { remaining: 0, total: 0 }
+      setBurstInfo(null)
     } finally {
       setIsCapturing(false)
       setCountdown(0)
@@ -349,7 +330,7 @@ export default function CameraPage() {
     }
   }
 
-  /* ── Frame overlay (CSS only, also baked into capture) ── */
+  /* ── Frame overlay (CSS preview — also baked into capture) ── */
   function FrameOverlay() {
     if (selectedFrame === 'film') {
       return (
@@ -389,13 +370,27 @@ export default function CameraPage() {
         <div className="absolute inset-2 border-2 border-white/80 rounded-xl pointer-events-none z-10" />
       )
     }
+    if (selectedFrame === 'polaroid') {
+      return (
+        <div className="absolute inset-0 pointer-events-none z-10">
+          <div className="absolute inset-x-0 top-0 h-3 bg-white" />
+          <div className="absolute inset-y-0 left-0 w-3 bg-white" />
+          <div className="absolute inset-y-0 right-0 w-3 bg-white" />
+          <div className="absolute inset-x-0 bottom-0 h-16 bg-white flex items-end justify-center pb-2">
+            <span className="font-script text-xs text-muted/50 select-none">
+              ClickStudio
+            </span>
+          </div>
+        </div>
+      )
+    }
     return null
   }
 
   return (
     <div className="h-full flex flex-col bg-background">
       {/* ── Top controls bar ── */}
-      <div className="flex items-center justify-between px-4 py-2.5 border-b border-border bg-white/90 backdrop-blur-sm">
+      <div className="flex items-center justify-between px-4 py-2 border-b border-border bg-white/90 backdrop-blur-sm">
         {/* Left */}
         <div className="flex items-center gap-1">
           <Button
@@ -417,6 +412,19 @@ export default function CameraPage() {
           >
             Flip
           </Button>
+          {/* C2 — Mirror toggle */}
+          <button
+            onClick={() => setIsMirrored(m => !m)}
+            className={cn(
+              'h-8 px-3 rounded-full text-xs font-medium border flex items-center gap-1.5 transition-all',
+              isMirrored
+                ? 'bg-primary text-white border-primary shadow-sm'
+                : 'bg-white text-muted border-border hover:border-primary/40'
+            )}
+          >
+            <FlipHorizontal className="h-3.5 w-3.5" />
+            Mirror
+          </button>
         </div>
 
         {/* Right */}
@@ -457,25 +465,23 @@ export default function CameraPage() {
 
       {/* ── Camera viewport ── */}
       <div className="flex-1 flex items-center justify-center p-4 min-h-0">
-        <div className="relative w-full max-w-3xl h-full max-h-[480px]">
+        <div className="relative w-full max-w-3xl h-full max-h-[440px]">
           <div className="camera-viewport w-full h-full shadow-card border-2 border-border rounded-2xl overflow-hidden">
-            {/* Live video */}
             <video
               ref={videoRef}
               className="w-full h-full object-cover"
               style={{
                 filter:
                   activeFilter.css === 'none' ? undefined : activeFilter.css,
+                transform: isMirrored ? 'scaleX(-1)' : undefined,
               }}
               autoPlay
               playsInline
               muted
             />
 
-            {/* Frame overlay */}
             <FrameOverlay />
 
-            {/* Grid overlay */}
             {showGrid && isStreaming && (
               <div className="absolute inset-0 pointer-events-none z-20">
                 <div className="w-full h-full grid grid-cols-3 grid-rows-3">
@@ -486,7 +492,6 @@ export default function CameraPage() {
               </div>
             )}
 
-            {/* Countdown overlay */}
             <AnimatePresence>
               {countdown > 0 && (
                 <motion.div
@@ -495,24 +500,26 @@ export default function CameraPage() {
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 1.6, opacity: 0 }}
                   transition={{ duration: 0.6, ease: 'easeOut' }}
-                  className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-30"
+                  className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm z-30 gap-3"
                 >
                   <span className="font-display text-[8rem] text-white drop-shadow-2xl leading-none">
                     {countdown}
                   </span>
+                  {burstInfo && (
+                    <span className="bg-primary/80 text-white text-sm font-semibold px-4 py-1 rounded-full">
+                      Shot {burstInfo.current} of {burstInfo.total}
+                    </span>
+                  )}
                 </motion.div>
               )}
             </AnimatePresence>
 
-            {/* Error states */}
             {!isStreaming && cameraError === 'denied' && (
               <CameraDeniedCard onRetry={retryCamera} />
             )}
             {!isStreaming && cameraError === 'unsupported' && (
               <CameraUnsupportedCard />
             )}
-
-            {/* Generic loading spinner (only when no error) */}
             {!isStreaming && !cameraError && (
               <div className="absolute inset-0 flex items-center justify-center bg-white/90 backdrop-blur-sm z-30">
                 <div className="text-center space-y-3">
@@ -525,7 +532,6 @@ export default function CameraPage() {
               </div>
             )}
 
-            {/* Active filter badge */}
             {selectedFilter !== 'none' && isStreaming && (
               <div className="absolute top-3 right-3 z-20 bg-black/55 backdrop-blur-sm text-white text-xs font-medium px-2.5 py-1 rounded-full">
                 {activeFilter.name}
@@ -537,9 +543,9 @@ export default function CameraPage() {
 
       {/* ── Bottom panel ── */}
       <div className="bg-white border-t border-border">
-        {/* Frame selector */}
-        <div className="flex items-center justify-center gap-2 px-4 py-2 border-b border-border/60">
-          <span className="text-[10px] font-semibold uppercase tracking-widest text-muted mr-1">
+        {/* Frame selector (now includes Polaroid — P2) */}
+        <div className="flex items-center justify-center gap-1.5 px-4 py-2 border-b border-border/60 overflow-x-auto">
+          <span className="text-[10px] font-semibold uppercase tracking-widest text-muted mr-1 flex-shrink-0">
             Frame
           </span>
           {FRAMES.map(frame => (
@@ -547,7 +553,7 @@ export default function CameraPage() {
               key={frame.id}
               onClick={() => setSelectedFrame(frame.id)}
               className={cn(
-                'h-7 px-3 rounded-full text-xs font-medium border transition-all flex items-center gap-1',
+                'h-7 px-2.5 rounded-full text-xs font-medium border transition-all flex items-center gap-1 flex-shrink-0',
                 selectedFrame === frame.id
                   ? 'bg-primary text-white border-primary shadow-sm'
                   : 'bg-white text-muted border-border hover:border-primary/40 hover:text-primary'
@@ -559,12 +565,54 @@ export default function CameraPage() {
           ))}
         </div>
 
+        {/* C1 + C4 — Timer selector & Burst toggle */}
+        <div className="flex items-center justify-between px-5 py-2 border-b border-border/60">
+          {/* C1: Timer options */}
+          <div className="flex items-center gap-2">
+            <Timer className="h-3.5 w-3.5 text-muted flex-shrink-0" />
+            <div className="flex items-center bg-rose-50 border border-border rounded-full p-0.5">
+              {[3, 5, 10].map(t => (
+                <button
+                  key={t}
+                  onClick={() => setCameraSettings({ countdown: t })}
+                  className={cn(
+                    'h-6 px-2.5 rounded-full text-[11px] font-medium transition-all',
+                    cameraSettings.countdown === t
+                      ? 'bg-primary text-white shadow-sm'
+                      : 'text-muted hover:text-primary'
+                  )}
+                >
+                  {t}s
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* C4: Burst mode toggle */}
+          <button
+            onClick={() => {
+              setBurstMode(b => !b)
+              burstQueueRef.current = { remaining: 0, total: 0 }
+              setBurstInfo(null)
+            }}
+            className={cn(
+              'h-7 px-3 rounded-full text-xs font-medium border flex items-center gap-1.5 transition-all',
+              burstMode
+                ? 'bg-primary text-white border-primary shadow-sm'
+                : 'bg-white text-muted border-border hover:border-primary/40 hover:text-primary'
+            )}
+          >
+            <Repeat2 className="h-3.5 w-3.5" />
+            Burst {burstMode ? 'On' : 'Off'}
+          </button>
+        </div>
+
         {/* Filter label */}
-        <p className="text-center text-[10px] font-semibold uppercase tracking-widest text-muted pt-2.5 pb-1.5">
+        <p className="text-center text-[10px] font-semibold uppercase tracking-widest text-muted pt-2 pb-1.5">
           Filter — <span className="text-primary">{activeFilter.name}</span>
         </p>
 
-        {/* Filter grid — centered, wraps on narrow screens */}
+        {/* Filter thumbnails — centered, wraps on narrow screens */}
         <div className="flex flex-wrap justify-center gap-x-3 gap-y-2 px-4 pb-3">
           {FILTERS.map(filter => (
             <FilterThumbnail
@@ -576,17 +624,58 @@ export default function CameraPage() {
           ))}
         </div>
 
+        {/* C3 — Retake thumbnail strip (shows when photos exist) */}
+        {capturedPhotos.length > 0 && (
+          <div className="flex items-center gap-2.5 px-4 py-2 border-t border-border/60 bg-rose-50/40 overflow-x-auto">
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-muted flex-shrink-0">
+              Shots
+            </span>
+            {capturedPhotos.map((photo, i) => (
+              <div key={photo.id} className="relative flex-shrink-0 group">
+                <img
+                  src={photo.url}
+                  alt={`Shot ${i + 1}`}
+                  className="w-11 h-11 object-cover rounded-lg border-2 border-white shadow-sm"
+                />
+                {/* Retake × button */}
+                <button
+                  onClick={() => removePhoto(photo.id)}
+                  className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-error text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+                  title="Retake this shot"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+                <span className="absolute bottom-0.5 left-0 right-0 text-center text-[9px] text-white/90 font-bold">
+                  {i + 1}
+                </span>
+              </div>
+            ))}
+            <span className="text-[11px] text-muted flex-shrink-0 ml-1 font-medium">
+              {capturedPhotos.length} / {photosNeeded}
+            </span>
+          </div>
+        )}
+
         {/* Capture controls */}
-        <div className="flex items-center justify-center gap-8 px-6 py-3 border-t border-border/60">
-          {/* Timer chip */}
-          <div className="flex items-center gap-1.5 text-xs text-muted bg-rose-50 border border-border rounded-full px-3 py-1.5 w-24 justify-center">
-            <Timer className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-            {cameraSettings.countdown}s timer
+        <div className="flex items-center justify-center gap-6 px-6 py-3 border-t border-border/60">
+          {/* Left: burst progress or timer display */}
+          <div className="w-24 flex justify-center">
+            {burstInfo ? (
+              <div className="flex items-center gap-1.5 bg-primary/10 border border-primary/20 rounded-full px-3 py-1.5 text-xs font-semibold text-primary animate-pulse">
+                <Repeat2 className="h-3 w-3" />
+                {burstInfo.current}/{burstInfo.total}
+              </div>
+            ) : (
+              <div className="flex items-center gap-1.5 text-xs text-muted bg-rose-50 border border-border rounded-full px-3 py-1.5">
+                <Timer className="h-3.5 w-3.5 text-primary flex-shrink-0" />
+                {cameraSettings.countdown}s
+              </div>
+            )}
           </div>
 
           {/* Capture button */}
           <motion.button
-            onClick={startCountdown}
+            onClick={handleCaptureButton}
             disabled={!isStreaming || isCapturing}
             whileHover={{ scale: isStreaming && !isCapturing ? 1.07 : 1 }}
             whileTap={{ scale: isStreaming && !isCapturing ? 0.93 : 1 }}
@@ -605,14 +694,16 @@ export default function CameraPage() {
           </motion.button>
 
           {/* Status chip */}
-          <div className="flex items-center gap-1.5 text-xs text-muted bg-rose-50 border border-border rounded-full px-3 py-1.5 w-24 justify-center">
-            <div
-              className={cn(
-                'h-2 w-2 rounded-full flex-shrink-0',
-                isStreaming ? 'bg-green-400 animate-pulse' : 'bg-border'
-              )}
-            />
-            {isStreaming ? 'Ready ✦' : cameraError ? 'Denied' : 'Connecting…'}
+          <div className="w-24 flex justify-center">
+            <div className="flex items-center gap-1.5 text-xs text-muted bg-rose-50 border border-border rounded-full px-3 py-1.5">
+              <div
+                className={cn(
+                  'h-2 w-2 rounded-full flex-shrink-0',
+                  isStreaming ? 'bg-green-400 animate-pulse' : 'bg-border'
+                )}
+              />
+              {isStreaming ? 'Ready ✦' : cameraError ? 'Denied' : 'Connecting…'}
+            </div>
           </div>
         </div>
       </div>
