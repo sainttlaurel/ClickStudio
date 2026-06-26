@@ -46,10 +46,10 @@ export class CameraManager {
           deviceId: settings.deviceId
             ? { exact: settings.deviceId }
             : undefined,
-          facingMode: settings.facingMode,
+          facingMode: settings.facingMode ?? 'user',
           width: { ideal: settings.resolution.width },
           height: { ideal: settings.resolution.height },
-          aspectRatio: settings.resolution.width / settings.resolution.height,
+          // aspectRatio omitted — causes OverconstrainedError on some devices
         },
         audio: false,
       }
@@ -84,9 +84,7 @@ export class CameraManager {
       )
     } catch (error) {
       console.error('Error starting camera:', error)
-      throw new Error(
-        'Failed to start camera. Please check permissions and device availability.'
-      )
+      throw error // re-throw original so callers can inspect error.name
     }
   }
 

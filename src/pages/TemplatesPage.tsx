@@ -121,13 +121,12 @@ export default function TemplatesPage() {
               <ChevronLeft className="h-5 w-5" />
             </button>
 
-            {/* Cards */}
-            <div className="flex items-center gap-4 md:gap-6 overflow-x-auto pb-4 max-w-3xl">
+            {/* Cards — uniform width + fixed-height preview so all cards align */}
+            <div className="flex items-stretch gap-5 overflow-x-auto pb-4 max-w-3xl">
               {templates.map((template, index) => {
                 const isSelected = selectedTemplate?.id === template.id
                 const isPopular =
                   template.layout === 'quad' || template.layout === 'double'
-                const isCenter = index === 2
                 const photoCount = photoCounts[template.layout]
 
                 return (
@@ -138,13 +137,12 @@ export default function TemplatesPage() {
                     transition={{ duration: 0.4, delay: index * 0.08 }}
                     className={cn(
                       'relative cursor-pointer rounded-2xl border-2 transition-all duration-300 bg-white shadow-card flex-shrink-0',
-                      'hover:scale-105 hover:shadow-polaroid',
+                      'hover:-translate-y-1 hover:shadow-polaroid',
                       isSelected
-                        ? 'border-primary shadow-glow scale-105'
-                        : 'border-border hover:border-primary/40',
-                      isCenter ? 'scale-105' : 'scale-95 opacity-80'
+                        ? 'border-primary shadow-glow'
+                        : 'border-border hover:border-primary/40'
                     )}
-                    style={{ width: 140 }}
+                    style={{ width: 160 }}
                     onClick={() => handleTemplateSelect(template)}
                   >
                     {/* Popular badge */}
@@ -157,27 +155,20 @@ export default function TemplatesPage() {
                       </div>
                     )}
 
-                    <div className="p-3">
-                      {/* Layout preview */}
-                      <div
-                        className={cn(
-                          'w-full bg-rose-50 rounded-lg border border-border flex items-center justify-center mb-3',
-                          template.layout === 'single' && 'aspect-square',
-                          template.layout === 'double' && 'aspect-[1/2]',
-                          template.layout === 'quad' && 'aspect-square',
-                          template.layout === 'six' && 'aspect-[3/4]'
-                        )}
-                      >
+                    <div className="p-4">
+                      {/* Fixed-height preview — same for every template */}
+                      <div className="w-full h-44 bg-rose-50 rounded-xl border border-border flex items-center justify-center mb-4 overflow-hidden">
                         <div
                           className={cn(
-                            'w-3/4 h-3/4 grid gap-1',
-                            template.layout === 'single' && 'grid-cols-1',
+                            'grid gap-1',
+                            template.layout === 'single' &&
+                              'w-20 h-20 grid-cols-1',
                             template.layout === 'double' &&
-                              'grid-cols-1 grid-rows-2',
+                              'w-14 h-36 grid-cols-1 grid-rows-2',
                             template.layout === 'quad' &&
-                              'grid-cols-2 grid-rows-2',
+                              'w-24 h-24 grid-cols-2 grid-rows-2',
                             template.layout === 'six' &&
-                              'grid-cols-3 grid-rows-2'
+                              'w-28 h-16 grid-cols-3 grid-rows-2'
                           )}
                         >
                           {Array.from({ length: photoCount }).map((_, i) => (

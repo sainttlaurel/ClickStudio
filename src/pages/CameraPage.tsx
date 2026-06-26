@@ -218,50 +218,63 @@ export default function CameraPage() {
 
   const activeFilter = FILTERS.find(f => f.id === selectedFilter) ?? FILTERS[0]
 
-  /* ── Init camera ── */
-  useEffect(() => {
-    let cancelled = false
-    let attempted = false
+  const DENIED_NAMES = [
+    'NotAllowedError',
+    'PermissionDeniedError',
+    'SecurityError',
+  ]
+  const NO_DEVICE = [
+    'NotFoundError',
+    'DevicesNotFoundError',
+    'NotReadableError',
+  ]
 
-    async function init() {
-      if (attempted || cancelled) return
-      attempted = true
-
-      if (!cameraManager.isSupported()) {
-        if (!cancelled) setCameraError('unsupported')
-        return
-      }
-
-      const ok = await cameraManager.requestPermissions()
-      if (!ok) {
-        if (!cancelled) setCameraError('denied')
-        return
-      }
-
-      if (videoRef.current && !cancelled) {
-        try {
-          await cameraManager.startCamera(cameraSettings, videoRef.current)
-          if (!cancelled) {
-            setIsStreaming(true)
-            setCameraError(null)
-            showSuccess('Camera ready ✦', 'Strike your best pose!')
-          }
-        } catch (err) {
-          if (!cancelled) {
-            console.error(err)
-            setCameraError('error')
-            showError(
-              'Camera error',
-              'Failed to start camera. Please try again.'
-            )
-          }
+  /* ── Shared camera start logic ── */
+  const startCameraStream = useCallback(
+    async (cancelled?: { value: boolean }) => {
+      if (!videoRef.current) return
+      try {
+        await cameraManager.startCamera(cameraSettings, videoRef.current)
+        if (cancelled?.value) return
+        setIsStreaming(true)
+        setCameraError(null)
+        showSuccess('Camera ready ✦', 'Strike your best pose!')
+      } catch (err: any) {
+        if (cancelled?.value) return
+        if (DENIED_NAMES.includes(err?.name)) {
+          setCameraError('denied')
+        } else if (NO_DEVICE.includes(err?.name)) {
+          setCameraError('unsupported')
+        } else {
+          setCameraError('error')
+          showError('Camera error', 'Failed to start camera. Please try again.')
         }
       }
+    },
+    [cameraSettings, showSuccess, showError]
+  )
+
+  /* ── Retry without page reload ── */
+  const retryCamera = useCallback(async () => {
+    setCameraError(null)
+    setIsStreaming(false)
+    await cameraManager.stopCamera()
+    await startCameraStream()
+  }, [startCameraStream])
+
+  /* ── Init camera on mount ── */
+  useEffect(() => {
+    const cancelled = { value: false }
+
+    if (!cameraManager.isSupported()) {
+      setCameraError('unsupported')
+      return
     }
 
-    init()
+    startCameraStream(cancelled)
+
     return () => {
-      cancelled = true
+      cancelled.value = true
       cameraManager.stopCamera()
       setIsStreaming(false)
     }
@@ -493,7 +506,7 @@ export default function CameraPage() {
 
             {/* Error states */}
             {!isStreaming && cameraError === 'denied' && (
-              <CameraDeniedCard onRetry={() => window.location.reload()} />
+              <CameraDeniedCard onRetry={retryCamera} />
             )}
             {!isStreaming && cameraError === 'unsupported' && (
               <CameraUnsupportedCard />
