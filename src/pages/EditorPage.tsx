@@ -63,6 +63,7 @@ export default function EditorPage() {
   const location = useLocation()
   const navigate = useNavigate()
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const canvasWrapperRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const { success, error } = useToast()
   const { capturedPhotos, updatePhoto } = usePhotoStore()
@@ -225,6 +226,16 @@ export default function EditorPage() {
 
   // ── Sticker handlers ────────────────────────────────────────────────────
   const handleAddSticker = (emoji: string) => {
+    // Toggle: if same sticker clicked, deselect; otherwise select for placement
+    if (selectedSticker === emoji) {
+      setSelectedSticker(null)
+    } else {
+      setSelectedSticker(emoji)
+    }
+  }
+
+  // Double-click sticker in panel to quick-add at center
+  const handleQuickAddSticker = (emoji: string) => {
     if (!canvasRef.current) return
     const canvas = canvasRef.current
     const newSticker: PlacedSticker = {
@@ -237,15 +248,14 @@ export default function EditorPage() {
     }
     setPlacedStickers(prev => [...prev, newSticker])
     setHasChanges(true)
-    setSelectedSticker(emoji)
   }
 
   const handleStickerMouseDown = (e: React.MouseEvent, stickerId: string) => {
     e.stopPropagation()
     const sticker = placedStickers.find(s => s.id === stickerId)
-    if (!sticker || !containerRef.current || !canvasRef.current) return
+    if (!sticker || !canvasWrapperRef.current || !canvasRef.current) return
 
-    const rect = containerRef.current.getBoundingClientRect()
+    const rect = canvasWrapperRef.current.getBoundingClientRect()
     const canvas = canvasRef.current
     const scaleX = canvas.width / rect.width
     const scaleY = canvas.height / rect.height
@@ -259,8 +269,8 @@ export default function EditorPage() {
   }
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if ((!draggingSticker && !draggingText) || !containerRef.current || !canvasRef.current) return
-    const rect = containerRef.current.getBoundingClientRect()
+    if ((!draggingSticker && !draggingText) || !canvasWrapperRef.current || !canvasRef.current) return
+    const rect = canvasWrapperRef.current.getBoundingClientRect()
     const canvas = canvasRef.current
     const scaleX = canvas.width / rect.width
     const scaleY = canvas.height / rect.height
@@ -287,6 +297,103 @@ export default function EditorPage() {
   const handleMouseUp = () => {
     setDraggingSticker(null)
     setDraggingText(null)
+  }
+
+  // ── Touch handlers for mobile ──────────────────────────────────────────
+  const getTouchPos = (e: React.TouchEvent) => {
+    if (!canvasWrapperRef.current || !canvasRef.current) return null
+    const touch = e.touches[0] || e.changedTouches[0]
+    if (!touch) return null
+    const rect = canvasWrapperRef.current.getBoundingClientRect()
+    const canvas = canvasRef.current
+    const scaleX = canvas.width / rect.width
+    const scaleY = canvas.height / rect.height
+    return {
+      x: (touch.clientX - rect.left) * scaleX,
+      y: (touch.clientY - rect.top) * scaleY,
+      scaleX,
+      scaleY,
+      rect,
+    }
+  }
+
+  const handleTouchStart = (e: React.TouchEvent, stickerId: string) => {
+    e.stopPropagation()
+    const sticker = placedStickers.find(s => s.id === stickerId)
+    const pos = getTouchPos(e)
+    if (!sticker || !pos) return
+
+    setDraggingSticker(stickerId)
+    setDragOffset({
+      x: pos.x - sticker.x,
+      y: pos.y - sticker.y,
+    })
+    setHasChanges(true)
+  }
+
+  const handleTextTouchStart = (e: React.TouchEvent, textId: string) => {
+    e.stopPropagation()
+    const t = placedTexts.find(txt => txt.id === textId)
+    const pos = getTouchPos(e)
+    if (!t || !pos) return
+
+    setDraggingText(textId)
+    setDragOffset({
+      x: pos.x - t.x,
+      y: pos.y - t.y,
+    })
+    setHasChanges(true)
+  }
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if ((!draggingSticker && !draggingText)) return
+    const pos = getTouchPos(e)
+    if (!pos) return
+
+    const newX = pos.x - dragOffset.x
+    const newY = pos.y - dragOffset.y
+
+    if (draggingSticker) {
+      setPlacedStickers(prev =>
+        prev.map(s =>
+          s.id === draggingSticker ? { ...s, x: newX, y: newY } : s
+        )
+      )
+    }
+    if (draggingText) {
+      setPlacedTexts(prev =>
+        prev.map(t =>
+          t.id === draggingText ? { ...t, x: newX, y: newY } : t
+        )
+      )
+    }
+  }
+
+  const handleTouchEnd = () => {
+    setDraggingSticker(null)
+    setDraggingText(null)
+  }
+
+  // ── Canvas click to place sticker at position ──────────────────────────
+  const handleCanvasClick = (e: React.MouseEvent) => {
+    if (!selectedSticker || !canvasWrapperRef.current || !canvasRef.current) return
+    const rect = canvasWrapperRef.current.getBoundingClientRect()
+    const canvas = canvasRef.current
+    const scaleX = canvas.width / rect.width
+    const scaleY = canvas.height / rect.height
+    const x = (e.clientX - rect.left) * scaleX
+    const y = (e.clientY - rect.top) * scaleY
+
+    const newSticker: PlacedSticker = {
+      id: `sticker-${Date.now()}`,
+      emoji: selectedSticker,
+      x,
+      y,
+      size: Math.min(canvas.width, canvas.height) * 0.1,
+      rotation: 0,
+    }
+    setPlacedStickers(prev => [...prev, newSticker])
+    setHasChanges(true)
   }
 
   const handleDeleteSticker = (id: string) => {
@@ -336,9 +443,9 @@ export default function EditorPage() {
   const handleTextMouseDown = (e: React.MouseEvent, textId: string) => {
     e.stopPropagation()
     const t = placedTexts.find(txt => txt.id === textId)
-    if (!t || !containerRef.current || !canvasRef.current) return
+    if (!t || !canvasWrapperRef.current || !canvasRef.current) return
 
-    const rect = containerRef.current.getBoundingClientRect()
+    const rect = canvasWrapperRef.current.getBoundingClientRect()
     const canvas = canvasRef.current
     const scaleX = canvas.width / rect.width
     const scaleY = canvas.height / rect.height
@@ -415,24 +522,29 @@ export default function EditorPage() {
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
-          <div className="relative max-w-4xl w-full">
+          <div ref={canvasWrapperRef} className="relative max-w-4xl w-full">
             <canvas
               ref={canvasRef}
-              className="max-w-full max-h-full rounded-xl shadow-2xl"
+              className="max-w-full max-h-full rounded-xl shadow-2xl block"
               style={{
                 width: 'auto',
                 height: 'auto',
                 maxWidth: '100%',
                 maxHeight: '70vh',
+                cursor: selectedSticker ? 'crosshair' : 'default',
               }}
+              onClick={handleCanvasClick}
             />
 
             {/* Draggable sticker overlays */}
-            {containerRef.current && canvasRef.current && placedStickers.map(sticker => {
-              const rect = containerRef.current?.getBoundingClientRect()
+            {placedStickers.map(sticker => {
+              const wrapper = canvasWrapperRef.current
               const canvas = canvasRef.current
-              if (!rect || !canvas) return null
+              if (!wrapper || !canvas) return null
+              const rect = wrapper.getBoundingClientRect()
               const displayScaleX = rect.width / canvas.width
               const displayScaleY = rect.height / canvas.height
               const displayX = sticker.x * displayScaleX
@@ -453,6 +565,7 @@ export default function EditorPage() {
                     transform: `rotate(${sticker.rotation}deg)`,
                   }}
                   onMouseDown={e => handleStickerMouseDown(e, sticker.id)}
+                  onTouchStart={e => handleTouchStart(e, sticker.id)}
                 >
                   <span className="pointer-events-none">{sticker.emoji}</span>
                   <div className="absolute -top-8 left-1/2 -translate-x-1/2 hidden group-hover:flex gap-1">
@@ -486,10 +599,11 @@ export default function EditorPage() {
             })}
 
             {/* Draggable text overlays */}
-            {containerRef.current && canvasRef.current && placedTexts.map(t => {
-              const rect = containerRef.current?.getBoundingClientRect()
+            {placedTexts.map(t => {
+              const wrapper = canvasWrapperRef.current
               const canvas = canvasRef.current
-              if (!rect || !canvas) return null
+              if (!wrapper || !canvas) return null
+              const rect = wrapper.getBoundingClientRect()
               const displayScaleX = rect.width / canvas.width
               const displayScaleY = rect.height / canvas.height
               const displayX = t.x * displayScaleX
@@ -514,6 +628,7 @@ export default function EditorPage() {
                     textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
                   }}
                   onMouseDown={e => handleTextMouseDown(e, t.id)}
+                  onTouchStart={e => handleTextTouchStart(e, t.id)}
                 >
                   <span className="pointer-events-none">{t.text}</span>
                   <button
@@ -676,10 +791,11 @@ export default function EditorPage() {
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                         onClick={() => handleAddSticker(emoji)}
+                        onDoubleClick={() => handleQuickAddSticker(emoji)}
                         className={cn(
                           'aspect-square rounded-xl border-2 text-2xl flex items-center justify-center transition-all',
                           selectedSticker === emoji
-                            ? 'border-primary bg-primary/5'
+                            ? 'border-primary bg-primary/5 ring-2 ring-primary/30 scale-110'
                             : 'border-border hover:border-primary/40 bg-white hover:bg-rose-50'
                         )}
                       >
@@ -689,7 +805,9 @@ export default function EditorPage() {
                   )}
                 </div>
                 <p className="text-xs text-muted text-center">
-                  Tap a sticker to add it. Drag to reposition.
+                  {selectedSticker
+                    ? `Selected: ${selectedSticker} — click on the photo to place, or double-click to center`
+                    : 'Tap to select a sticker, then click on the photo to place'}
                 </p>
                 {placedStickers.length > 0 && (
                   <div className="space-y-2">
