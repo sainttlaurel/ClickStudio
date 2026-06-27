@@ -1,20 +1,10 @@
 {
-  "outputDirectory": "dist",
+  "framework": "vite",
   "routes": [
     {
-      "src": "/robots\\.txt",
-      "dest": "/api/robots"
-    },
-    {
-      "src": "/sitemap\\.xml",
-      "dest": "/api/sitemap"
-    },
-    {
-      "src": "/(google[a-z0-9]+\\.html)",
-      "dest": "/api/google-verification"
-    },
-    {
-      "handle": "filesystem"
+      "src": "/(.*)",
+      "dest": "/$1",
+      "check": true
     },
     {
       "src": "/(.*)",
