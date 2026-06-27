@@ -104,36 +104,15 @@ export class CameraManager {
   }
 
   /**
-   * Capture a frame from the video element.
-   * Bakes in the CSS filter and a frame overlay if provided.
+   * Bake a frame overlay onto an existing canvas context.
+   * Shared by capturePhoto and processUploadedImage.
    */
-  capturePhoto(
-    videoElement: HTMLVideoElement,
-    options?: { filterCss?: string; frameId?: string; mirror?: boolean }
-  ): string {
-    const canvas = document.createElement('canvas')
-    const ctx = canvas.getContext('2d')
-    if (!ctx) throw new Error('Could not get canvas context')
-
-    const w = videoElement.videoWidth
-    const h = videoElement.videoHeight
-    canvas.width = w
-    canvas.height = h
-
-    // ── Apply filter ──
-    const filterCss = options?.filterCss
-    if (filterCss && filterCss !== 'none') ctx.filter = filterCss
-
-    // ── Apply mirror transform then draw ──
-    if (options?.mirror) ctx.setTransform(-1, 0, 0, 1, w, 0)
-    ctx.drawImage(videoElement, 0, 0)
-
-    // ── Reset filter + transform before frame overlay ──
-    ctx.filter = 'none'
-    ctx.setTransform(1, 0, 0, 1, 0, 0)
-
-    // ── Bake frame overlay ──
-    const frameId = options?.frameId
+  private bakeFrameOverlay(
+    ctx: CanvasRenderingContext2D,
+    w: number,
+    h: number,
+    frameId?: string
+  ): void {
     if (frameId === 'film') {
       const barH = Math.round(h * 0.065)
       ctx.fillStyle = '#111111'
@@ -174,13 +153,77 @@ export class CameraManager {
       ctx.fillRect(0, 0, border, h) // left
       ctx.fillRect(w - border, 0, border, h) // right
       ctx.fillRect(0, h - bottomH, w, bottomH) // thick bottom
-      // Subtle label inside bottom strip
       ctx.fillStyle = 'rgba(155, 107, 123, 0.45)'
       ctx.font = `italic ${Math.round(h * 0.028)}px cursive`
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
       ctx.fillText('ClickStudio', w / 2, h - bottomH / 2)
     }
+  }
+
+  /**
+   * Capture a frame from the video element.
+   * Bakes in the CSS filter and a frame overlay if provided.
+   */
+  capturePhoto(
+    videoElement: HTMLVideoElement,
+    options?: { filterCss?: string; frameId?: string; mirror?: boolean }
+  ): string {
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+    if (!ctx) throw new Error('Could not get canvas context')
+
+    const w = videoElement.videoWidth
+    const h = videoElement.videoHeight
+    canvas.width = w
+    canvas.height = h
+
+    // ── Apply filter ──
+    const filterCss = options?.filterCss
+    if (filterCss && filterCss !== 'none') ctx.filter = filterCss
+
+    // ── Apply mirror transform then draw ──
+    if (options?.mirror) ctx.setTransform(-1, 0, 0, 1, w, 0)
+    ctx.drawImage(videoElement, 0, 0)
+
+    // ── Reset filter + transform before frame overlay ──
+    ctx.filter = 'none'
+    ctx.setTransform(1, 0, 0, 1, 0, 0)
+
+    // ── Bake frame overlay ──
+    this.bakeFrameOverlay(ctx, w, h, options?.frameId)
+
+    return canvas.toDataURL('image/png', 1.0)
+  }
+
+  /**
+   * Process an uploaded image through the same filter + frame pipeline
+   * as a camera capture. Returns a PNG data URL.
+   */
+  processUploadedImage(
+    imgElement: HTMLImageElement,
+    options?: { filterCss?: string; frameId?: string }
+  ): string {
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+    if (!ctx) throw new Error('Could not get canvas context')
+
+    const w = imgElement.naturalWidth
+    const h = imgElement.naturalHeight
+    canvas.width = w
+    canvas.height = h
+
+    // ── Apply filter ──
+    const filterCss = options?.filterCss
+    if (filterCss && filterCss !== 'none') ctx.filter = filterCss
+    ctx.drawImage(imgElement, 0, 0)
+
+    // ── Reset filter before frame overlay ──
+    ctx.filter = 'none'
+    ctx.setTransform(1, 0, 0, 1, 0, 0)
+
+    // ── Bake frame overlay ──
+    this.bakeFrameOverlay(ctx, w, h, options?.frameId)
 
     return canvas.toDataURL('image/png', 1.0)
   }

@@ -49,10 +49,13 @@ export interface Template {
   layout: LayoutType
   aspectRatio: AspectRatio
   frameStyle?: FrameStyle
+  compositeStyle?: CompositeStyle
+  description?: string
 }
 
 export type LayoutType = 'single' | 'double' | 'quad' | 'six'
 export type AspectRatio = '1:1' | '3:4' | '4:3' | '16:9' | '2:3'
+export type CompositeStyle = 'clean' | 'polaroid' | 'film' | 'blush' | 'minimal'
 
 export interface FrameStyle {
   id: string

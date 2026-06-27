@@ -6,17 +6,34 @@ A modern, production-ready web photo booth application built with React 19, Type
 
 ## Features
 
+### Camera
 - **Live Camera** — HD webcam support with device switching, grid overlay, and flash
 - **Mirror toggle** — Flip the live feed horizontally; baked correctly into the captured photo
 - **Timer options** — Choose 3s, 5s, or 10s countdown before each shot
 - **Burst mode** — Auto-fires the full set of shots for your chosen template; opt-in
 - **Retake** — Thumbnail strip after each shot lets you delete and reshoot any photo
+- **Image upload** — Upload an existing JPG, PNG, or WEBP and run it through the same filter + frame pipeline
+
+### Filters & Frames
 - **13 Film Filters** — Vintage, Smooth, 70s, 80s, 90s, B&W, Faded, Lomo, Cool, Warm, Film, Dreamy, Original — applied live and baked into every capture
-- **Frame Overlays** — Clean, Film strip, Blush vignette, Minimal border, Polaroid
-- **Polaroid frame** — White border with thick bottom strip; subtle ClickStudio label baked in
-- **Layout Templates** — Single, Double Strip, Four Cuts, Photo Strip
-- **Photo Editor** — Brightness, contrast, saturation, temperature adjustments
-- **Session History** — Cloud-synced via Supabase with save, load, and delete
+- **5 Frame Overlays** — Clean, Film strip, Blush vignette, Minimal border, Polaroid — applied per-photo at capture time
+
+### Templates & Composite Output
+- **Classic Layouts** — Single, Double Strip, Four Cuts, Photo Strip — plain grid arrangements with a clean white composite
+- **Frame Templates** — Pre-designed composite styles: Polaroid Memories, Film Roll, Blush Edit, Minimal Clean — each applies a unique visual treatment to the entire strip output
+- **Photo Strip Compositor** — All captured photos are composited into one final PNG (the "product") — the primary view in Preview
+- **Polaroid caption** — When using a Polaroid frame template, add a personal text note to the bottom strip before downloading
+
+### Preview & Export
+- **Composite preview** — Preview page shows the final composited strip as the main result; individual shots appear in a retake filmstrip on the side
+- **Download Strip** — One-click download of the full composite PNG with a ClickStudio watermark
+- **Share** — Web Share API on supported devices; falls back to download
+- **Save to cloud** — Session + photos synced to Supabase Storage
+
+### App
+- **What's New modal** — Auto-shows once per app version with a versioned changelog; dismissed state in localStorage
+- **Session History** — Cloud-synced sessions with save, load, delete, and composite strip export
+- **Photo Editor** — Brightness, contrast, saturation, temperature adjustments per individual photo
 - **PWA** — Installable as a native-like app
 - **Responsive** — Desktop and mobile ready
 - **Accessible** — WCAG AA compliant, keyboard navigable
@@ -25,12 +42,12 @@ A modern, production-ready web photo booth application built with React 19, Type
 
 ## User Flow
 
-1. Landing page — click **Start the Studio**
-2. Templates — pick a layout
-3. Camera — choose timer, mirror, filter, and frame; capture (or use burst mode)
-4. Preview — review your shots; retake any via the thumbnail strip
-5. Editor — fine-tune adjustments
-6. Export or save to the cloud
+1. **Landing page** — click **Start the Studio**
+2. **Templates** — pick a Classic Layout or a Frame Template
+3. **Camera** — choose timer, mirror, filter, and per-photo frame overlay; capture (or use burst mode); or upload existing photos
+4. **Preview** — see the final composited strip; retake individual shots from the filmstrip sidebar; add a Polaroid caption if applicable
+5. **Editor** — fine-tune brightness, contrast, saturation, and temperature on any individual shot
+6. **Download** the strip, share it, or save the session to the cloud
 
 ---
 
@@ -52,11 +69,11 @@ A modern, production-ready web photo booth application built with React 19, Type
 | Film | Classic film tone |
 | Dreamy | Bright, soft, ethereal |
 
-The selected filter and frame overlay are baked into the saved photo via `canvas ctx.filter` and `ctx.setTransform`.
+The selected filter is applied live to the `<video>` element and baked into every capture via `canvas ctx.filter`.
 
 ---
 
-## Frame Overlays
+## Frame Overlays (per-photo, applied at capture)
 
 | Name | Style |
 |---|---|
@@ -65,6 +82,19 @@ The selected filter and frame overlay are baked into the saved photo via `canvas
 | Blush | Soft pink radial vignette |
 | Minimal | Thin white inner border |
 | Polaroid | White border, thick bottom strip with ClickStudio label |
+
+---
+
+## Frame Templates (composite-level styles)
+
+| Name | Layout | Style |
+|---|---|---|
+| Polaroid Memories | 4 shots (2×2) | White polaroid cards, soft cream background, shadow |
+| Film Roll | 2 shots (vertical) | Dark background, sprocket holes, muted tones |
+| Blush Edit | 4 shots (2×2) | Pink gradient background, rounded photo corners |
+| Minimal Clean | 1 shot | White background, thin pink border |
+
+Frame Templates define how the final composited strip looks. Classic Layouts use the same grid arrangements with a plain white background.
 
 ---
 
@@ -149,19 +179,20 @@ Pink-forward, feminine aesthetic with a clean editorial structure.
 ```
 src/
 ├── components/
-│   ├── ui/                   # Button, Input, Modal, Slider, Toaster
+│   ├── ui/                   # Button, Input, Modal, Slider, Toaster, ChangelogModal
 │   └── layout/               # Header, Sidebar, Layout
 ├── constants/                # Shared constants and types
 │   ├── filters.ts            # 13 film filter presets
 │   ├── frames.ts             # 5 frame overlay definitions
+│   ├── changelog.ts          # Versioned changelog entries + localStorage helpers
 │   ├── types.ts              # CameraError type
 │   └── index.ts              # Barrel export
 ├── hooks/                    # Custom hooks (future)
 ├── pages/
 │   ├── LandingPage.tsx
-│   ├── CameraPage.tsx        # Filters, frames, mirror, timer, burst, retake
-│   ├── TemplatesPage.tsx
-│   ├── PreviewPage.tsx
+│   ├── CameraPage.tsx        # Filters, frames, mirror, timer, burst, retake, upload
+│   ├── TemplatesPage.tsx     # Classic Layouts + Frame Templates tabs
+│   ├── PreviewPage.tsx       # Composite result, retake filmstrip, Polaroid caption, download
 │   ├── EditorPage.tsx
 │   ├── GalleryPage.tsx
 │   ├── SessionHistoryPage.tsx
@@ -174,9 +205,10 @@ src/
 ├── lib/
 │   └── supabase.ts           # Typed client, upload and delete helpers
 ├── types/
-│   └── index.ts
+│   └── index.ts              # Photo, Template, CompositeStyle, and all shared types
 └── utils/
-    ├── camera.ts             # CameraManager — capture with filter, frame, mirror baking
+    ├── camera.ts             # CameraManager — capture, upload processing, filter + frame baking
+    ├── compositor.ts         # composeStrip — composites photos into a single strip PNG
     └── cn.ts
 supabase/
 └── schema.sql                # Full database schema and storage setup
@@ -207,7 +239,27 @@ Append an entry to the `FILTERS` array in `src/constants/filters.ts`:
 { id: 'myfilter', name: 'My Filter', css: 'sepia(30%) contrast(1.1) brightness(1.05)' }
 ```
 
-The CSS string is applied live to the `<video>` element and written to the canvas via `ctx.filter` on capture.
+The CSS string is applied live to the `<video>` element and baked into every capture (and upload) via `ctx.filter`.
+
+---
+
+## Adding a Custom Frame Template
+
+Add an entry to the `frameTemplates` array in `src/pages/TemplatesPage.tsx`:
+
+```typescript
+{
+  id: 'frame-my-style',
+  name: 'My Style',
+  preview: '',
+  layout: 'quad',           // single | double | quad | six
+  aspectRatio: '1:1',
+  compositeStyle: 'blush',  // clean | polaroid | film | blush | minimal
+  description: '4 shots · my custom style',
+}
+```
+
+The `compositeStyle` field drives how `compositor.ts` renders the final strip PNG.
 
 ---
 

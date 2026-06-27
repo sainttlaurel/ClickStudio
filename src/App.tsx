@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import { Toaster } from '@/components/ui/toaster'
+import ChangelogModal from '@/components/ui/changelog-modal'
 import Layout from '@/components/layout/Layout'
 import LandingPage from '@/pages/LandingPage'
 import CameraPage from '@/pages/CameraPage'
@@ -30,6 +31,7 @@ function App() {
         </Route>
       </Routes>
       <Toaster />
+      <ChangelogModal />
     </>
   )
 }

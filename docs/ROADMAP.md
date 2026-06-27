@@ -5,7 +5,7 @@
 
 ---
 
-## Shipped — Phase 1
+## Shipped — Phase 1 (DONE)
 
 | # | Feature | What was built |
 |---|---|---|
@@ -17,38 +17,31 @@
 
 ---
 
-## Building Next — Phase 2
+## Shipped — Phase 2 (DONE)
 
-### Photo Output
-
-| # | Feature | What it does | Effort |
-|---|---|---|---|
-| P1 | Full photo strip export | Download all photos composited into one vertical strip PNG with a ClickStudio watermark | Low |
-| P3 | Polaroid caption text | Add a short text line below the white polaroid border before downloading | Medium |
-| X1 | Changelog / What's New popup | Show a modal on first launch after an update listing what changed; dismissed state stored in localStorage | Very Low |
+| # | Feature | What was built |
+|---|---|---|
+| P1 | Full photo strip export | `compositor.ts` — all photos composited into one canvas PNG per layout and composite style; ClickStudio watermark in footer; Download Strip button in PreviewPage |
+| P3 | Polaroid caption text | Input field in PreviewPage when template `compositeStyle === 'polaroid'`; text baked into each polaroid bottom strip at render time |
+| X1 | Changelog / What's New popup | `constants/changelog.ts` + `ChangelogModal` component; auto-shows once per `APP_VERSION`; dismissed state in localStorage |
+| — | Frame Templates (real) | 4 pre-designed frame templates — Polaroid Memories, Film Roll, Blush Edit, Minimal Clean — each applies a unique composite style to the strip output |
+| — | Classic Layouts tab fixed | Separate template arrays per tab; Frame Templates and Classic Layouts now show distinct content |
+| — | Composite Preview in PreviewPage | Preview page now shows the final composited strip as the primary result; individual shots in a retake filmstrip sidebar |
+| — | Image upload (U1 / U2) | "or upload a photo" link on CameraPage; `CameraManager.processUploadedImage()` runs JPG / PNG / WEBP through the same filter + frame pipeline as a live capture |
+| — | Session History export fixed | Export button generates and downloads the full composite strip via `compositor.ts` |
+| — | Carousel arrows wired | TemplatesPage left/right arrows now scroll the carousel via `scrollBy` |
+| — | `CompositeStyle` type | Added to `src/types/index.ts`; `Template` interface extended with `compositeStyle` and `description` fields |
 
 ---
 
 ## Building Next — Phase 3
 
-### Upload & Edit
+### Sharing & Social
 
 | # | Feature | What it does | Effort |
 |---|---|---|---|
-| U1 | Image upload | Upload an existing JPG / PNG / WEBP and run it through the same filter + frame pipeline | Medium |
-| U2 | Filter + frame on upload | Same 13 filters and 5 frame overlays apply to uploaded images | Included in U1 |
-
-**Uploaded images go through the same Supabase Storage pipeline as captured photos.**
-
----
-
-## Building Next — Phase 4
-
-### Sharing
-
-| # | Feature | What it does | Effort |
-|---|---|---|---|
-| S1 | QR Code share | Each session gets a `/share/[sessionId]` page; QR code generated client-side | Medium |
+| S1 | QR Code share | Each session gets a `/share/[sessionId]` public page; QR code generated client-side with the `qrcode` package | Medium |
+| H1 | Feedback / Comment Wall | Post-session comment form; `feedback` Supabase table; scrolling card wall on the landing page | Medium |
 
 ---
 
@@ -58,10 +51,11 @@
 |---|---|
 | Feedback moderation | Auto-approved. A dedicated feedback page lets the dev read and reply to comments and bug reports. |
 | Uploaded image storage | Same Supabase Storage bucket as captured photos — consistent pipeline. |
-| Polaroid frame rendering | Canvas code only — no SVG/PNG assets. Done. |
+| Polaroid frame rendering | Canvas code only — no SVG / PNG assets. Done. |
 | Strip export watermark | Yes — small "ClickStudio" text at the bottom of every strip. |
-| User accounts scope | Free for everyone. Email/password auth added later. Google OAuth deferred. |
+| User accounts scope | Free for everyone. Email / password auth added later. Google OAuth deferred. |
 | Burst mode default | Opt-in only. Done. |
+| Image upload size cap | 10 MB — matches the Supabase Storage limit. |
 
 ---
 
@@ -69,21 +63,19 @@
 
 | # | Feature | Why it's parked | Revisit when |
 |---|---|---|---|
-| H1 | Feedback & Comment Wall | Needs moderation page + dev reply system | After Phase 2 ships |
-| H2 | Full Polaroid / Film Strip Template Editor | Complex; simple polaroid frame covers the need for now | After upload + edit is stable |
-| H3 | Stickers & Text Overlays | Drag-and-drop canvas is complex; P3 (caption) covers basic text | After Phase 2 ships |
-| H4 | Aesthetic Preset Packs | Depends on stickers | After H3 |
-| H5 | Optional User Accounts | Supabase Auth ready — deferred to avoid friction before core UX is solid | When gallery/sharing is mature |
-| H6 | Print-Ready PDF Export | jsPDF adds ~200 KB; PNG strip covers most use cases | After event/wedding use case grows |
+| H2 | Full Polaroid / Film Strip Template Editor | Complex; current frame templates cover the need | After Phase 3 ships |
+| H3 | Stickers & Text Overlays | Drag-and-drop canvas is complex; Polaroid caption covers basic text | After Phase 3 ships |
+| H4 | Aesthetic Preset Packs | Depends on stickers (H3) | After H3 |
+| H5 | Optional User Accounts | Supabase Auth ready — deferred to avoid friction before core UX is solid | When gallery / sharing is mature |
+| H6 | Print-Ready PDF Export | jsPDF adds ~200 KB; PNG strip covers most use cases | After event / wedding use case grows |
 
 ---
 
 ## Full Build Order
 
 ```
-Phase 1 — Camera      →  C1, C2, C3, C4, P2         ✅ SHIPPED
-Phase 2 — Output      →  P1, P3, X1
-Phase 3 — Upload      →  U1, U2
-Phase 4 — Share       →  S1
-Phase 5 — Hold        →  H1, H5, H3, H4, H2, H6
+Phase 1 — Camera      →  C1, C2, C3, C4, P2                    ✅ SHIPPED
+Phase 2 — Output      →  P1, P3, X1, U1/U2, Frame Templates    ✅ SHIPPED
+Phase 3 — Share       →  S1, H1
+Phase 4 — Hold        →  H3, H4, H5, H2, H6
 ```

@@ -17,6 +17,7 @@ import { Input } from '@/components/ui/input'
 import { Modal } from '@/components/ui/modal'
 import { usePhotoStore } from '@/store/usePhotoStore'
 import { useToast } from '@/store/useUIStore'
+import { composeStrip, downloadComposite } from '@/utils/compositor'
 import { cn } from '@/utils/cn'
 import type { PhotoSession } from '@/types'
 
@@ -30,7 +31,7 @@ export default function SessionHistoryPage() {
     fetchSessions,
     deleteSession,
   } = usePhotoStore()
-  const { success } = useToast()
+  const { success, error } = useToast()
 
   const [searchTerm, setSearchTerm] = useState('')
   const [sortBy, setSortBy] = useState<'newest' | 'oldest'>('newest')
@@ -79,8 +80,22 @@ export default function SessionHistoryPage() {
     success('Session deleted', 'Removed from your history.')
   }
 
-  const handleExportSession = (_session: PhotoSession) => {
-    success('Export started', 'Session is being prepared for download.')
+  const handleExportSession = async (session: PhotoSession) => {
+    if (session.photos.length === 0) {
+      error('No photos', 'This session has no photos to export')
+      return
+    }
+    try {
+      const url = await composeStrip(session.photos, session.template)
+      const slug = session.template.name.toLowerCase().replace(/\s+/g, '-')
+      downloadComposite(
+        url,
+        `clickstudio-${slug}-${session.id.slice(0, 8)}.png`
+      )
+      success('Exported! 🎉', 'Your photo strip has been downloaded')
+    } catch {
+      error('Export failed', 'Could not generate the strip. Please try again.')
+    }
   }
 
   const formatDuration = (createdAt: number, updatedAt: number) => {

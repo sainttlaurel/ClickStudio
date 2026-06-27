@@ -13,6 +13,7 @@ import {
   FlipHorizontal,
   Repeat2,
   X,
+  Upload,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
@@ -121,6 +122,7 @@ function CameraUnsupportedCard() {
 export default function CameraPage() {
   const navigate = useNavigate()
   const videoRef = useRef<HTMLVideoElement>(null)
+  const uploadRef = useRef<HTMLInputElement>(null)
 
   // ── Camera state ──
   const [isStreaming, setIsStreaming] = useState(false)
@@ -160,6 +162,64 @@ export default function CameraPage() {
     [success]
   )
   const showError = useCallback((t: string, d: string) => error(t, d), [error])
+
+  // ── Image upload (U1 / U2) ──────────────────────────────────────────────
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    if (file.size > 10 * 1024 * 1024) {
+      error('File too large', 'Please upload an image under 10 MB')
+      e.target.value = ''
+      return
+    }
+
+    try {
+      // Read file as data URL
+      const dataUrl = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => resolve(reader.result as string)
+        reader.onerror = reject
+        reader.readAsDataURL(file)
+      })
+
+      // Load into an Image element so we can draw it on a canvas
+      const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+        const el = new Image()
+        el.onload = () => resolve(el)
+        el.onerror = reject
+        el.src = dataUrl
+      })
+
+      // Run through the same filter + frame pipeline as a camera capture
+      const processedUrl = cameraManager.processUploadedImage(img, {
+        filterCss: activeFilter.css,
+        frameId: selectedFrame,
+      })
+
+      addPhoto({
+        id: crypto.randomUUID(),
+        url: processedUrl,
+        timestamp: Date.now(),
+        metadata: {
+          width: img.naturalWidth,
+          height: img.naturalHeight,
+          size: file.size,
+          format: 'png',
+        },
+      })
+
+      const frameName = FRAMES.find(f => f.id === selectedFrame)?.name ?? 'None'
+      success(
+        'Photo uploaded! 📸',
+        `${activeFilter.name} filter · ${frameName} frame applied`
+      )
+    } catch {
+      error('Upload failed', 'Could not process the image. Please try again.')
+    } finally {
+      e.target.value = ''
+    }
+  }
 
   const activeFilter = FILTERS.find(f => f.id === selectedFilter) ?? FILTERS[0]
 
@@ -705,6 +765,24 @@ export default function CameraPage() {
               {isStreaming ? 'Ready ✦' : cameraError ? 'Denied' : 'Connecting…'}
             </div>
           </div>
+        </div>
+
+        {/* ── Upload option ── */}
+        <div className="flex justify-center pb-2">
+          <button
+            onClick={() => uploadRef.current?.click()}
+            className="flex items-center gap-1.5 text-xs text-muted hover:text-primary transition-colors py-1 px-3 rounded-full hover:bg-rose-50"
+          >
+            <Upload className="h-3.5 w-3.5" />
+            or upload a photo
+          </button>
+          <input
+            ref={uploadRef}
+            type="file"
+            accept="image/png,image/jpeg,image/webp"
+            className="hidden"
+            onChange={handleFileUpload}
+          />
         </div>
       </div>
     </div>
