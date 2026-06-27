@@ -61,6 +61,15 @@
 
 ---
 
+## Shipped — Phase 5 (DONE)
+
+| # | Feature | What was built |
+|---|---|---|
+| H3 | Stickers & Text Overlays | `src/constants/stickers.ts` — 6 sticker packs (48 emoji); Stickers tab in EditorPage with pack selector, tap-to-add, drag-to-reposition, resize/rotate/delete controls; Text tab with 4 font presets, 10 colors, size slider, drag-to-reposition; stickers and text composited onto canvas on save |
+| H4 | Aesthetic Preset Packs | — |
+
+---
+
 ## Decisions Locked
 
 | Question | Decision |
@@ -79,9 +88,7 @@
 
 | # | Feature | Why it's parked | Revisit when |
 |---|---|---|---|
-| H2 | Full Polaroid / Film Strip Template Editor | Complex; current frame templates cover the need | After H3, H4 ship |
-| H3 | Stickers & Text Overlays | Drag-and-drop canvas is complex; Polaroid caption covers basic text | Next up |
-| H4 | Aesthetic Preset Packs | Depends on stickers (H3) | After H3 |
+| H2 | Full Polaroid / Film Strip Template Editor | Complex; current frame templates cover the need | After sharing grows |
 | H5 | Optional User Accounts | Supabase Auth ready — deferred to avoid friction before core UX is solid | When gallery / sharing is mature |
 
 ---
@@ -94,6 +101,6 @@ Phase 2 — Output      →  P1, P3, X1, U1/U2, Frame Templates    ✅ SHIPPED
 Phase 2b — Branding   →  Logo, Contact, Copyright               ✅ SHIPPED
 Phase 3 — Share       →  S1, H1                                 ✅ SHIPPED
 Phase 4 — PDF Export  →  H6                                     ✅ SHIPPED
-Phase 5 — Creative    →  H3, H4, H2
-Phase 6 — Accounts    →  H5 (HOLD)
+Phase 5 — Creative    →  H3                                     ✅ SHIPPED
+Phase 6 — Accounts    →  H5                                     (HOLD)
 ```
