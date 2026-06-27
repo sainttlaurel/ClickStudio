@@ -1,28 +1,27 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "framework": "vite",
   "routes": [
     {
       "src": "/sitemap\\.xml",
+      "dest": "/sitemap.xml",
       "headers": {
         "Content-Type": "application/xml; charset=utf-8"
-      },
-      "continue": true
+      }
     },
     {
       "src": "/robots\\.txt",
+      "dest": "/robots.txt",
       "headers": {
         "Content-Type": "text/plain; charset=utf-8"
-      },
-      "continue": true
+      }
     },
     {
       "src": "/(google[a-z0-9]+\\.html)",
+      "dest": "/$1",
       "headers": {
         "Content-Type": "text/html; charset=utf-8"
-      },
-      "continue": true
+      }
     },
     {
       "handle": "filesystem"
