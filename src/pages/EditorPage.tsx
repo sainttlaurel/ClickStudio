@@ -637,13 +637,13 @@ export default function EditorPage() {
           </div>
 
           {/* ── Quick filter bar ── */}
-          <div className="flex items-center gap-1.5 px-4 lg:px-6 pb-4 overflow-x-auto max-w-full">
+          <div className="flex items-center gap-2 px-4 lg:px-6 pb-4 overflow-x-auto max-w-full">
             {FILTERS.map(filter => (
               <button
                 key={filter.id}
                 onClick={() => { setActiveFilter(filter.id); setHasChanges(true) }}
                 className={cn(
-                  'flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium border transition-all whitespace-nowrap',
+                  'flex-shrink-0 px-2.5 py-1.5 rounded-full text-[11px] font-medium border transition-all whitespace-nowrap',
                   activeFilter === filter.id
                     ? 'bg-primary text-white border-primary shadow-sm'
                     : 'bg-white text-muted border-border hover:border-primary/40 hover:text-primary'
@@ -669,24 +669,24 @@ export default function EditorPage() {
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
                 className={cn(
-                  'flex-1 flex items-center justify-center gap-1 py-3 text-xs font-medium',
+                  'flex-1 flex items-center justify-center gap-1.5 py-2.5 text-[11px] font-medium',
                   'border-b-2 transition-colors',
                   activeTab === tab.key
                     ? 'border-primary text-primary bg-primary/5'
                     : 'border-transparent text-muted hover:text-text'
                 )}
               >
-                <tab.icon className="h-4 w-4" />
-                <span className="hidden xl:inline">{tab.label}</span>
+                <tab.icon className="h-3.5 w-3.5" />
+                <span>{tab.label}</span>
               </button>
             ))}
           </div>
 
-          <div className="flex-1 overflow-auto p-5">
+          <div className="flex-1 overflow-auto p-4">
             {activeTab === 'adjust' && (
-              <div className="space-y-5">
-                <h3 className="font-semibold text-text">Adjustments</h3>
-                <div className="space-y-4">
+              <div className="space-y-3">
+                <h3 className="font-semibold text-text text-sm">Adjustments</h3>
+                <div className="space-y-3">
                   {adjustmentControls.map(control => (
                     <div key={control.key} className="space-y-1">
                       <div className="flex items-center justify-between">
@@ -722,8 +722,8 @@ export default function EditorPage() {
             )}
 
             {activeTab === 'filters' && (
-              <div className="space-y-5">
-                <h3 className="font-semibold text-text">Filters</h3>
+              <div className="space-y-3">
+                <h3 className="font-semibold text-text text-sm">Filters</h3>
                 <div className="grid grid-cols-3 gap-2">
                   {FILTERS.map(filter => (
                     <motion.button
@@ -777,8 +777,8 @@ export default function EditorPage() {
             )}
 
             {activeTab === 'stickers' && (
-              <div className="space-y-5">
-                <h3 className="font-semibold text-text">Stickers</h3>
+              <div className="space-y-3">
+                <h3 className="font-semibold text-text text-sm">Stickers</h3>
                 <div className="flex flex-wrap gap-2">
                   {STICKER_PACKS.map((pack, i) => (
                     <button
@@ -847,8 +847,8 @@ export default function EditorPage() {
             )}
 
             {activeTab === 'text' && (
-              <div className="space-y-5">
-                <h3 className="font-semibold text-text">Text Overlay</h3>
+              <div className="space-y-3">
+                <h3 className="font-semibold text-text text-sm">Text Overlay</h3>
                 <div>
                   <input
                     type="text"
@@ -962,8 +962,8 @@ export default function EditorPage() {
             )}
 
             {activeTab === 'frame' && (
-              <div className="space-y-4">
-                <h3 className="font-semibold text-text">Frame Overlay</h3>
+              <div className="space-y-3">
+                <h3 className="font-semibold text-text text-sm">Frame Overlay</h3>
                 <div className="grid grid-cols-2 gap-3">
                   {FRAMES.map(frame => (
                     <button
