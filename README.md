@@ -53,9 +53,9 @@ A modern, production-ready web photo booth application built with React 19, Type
 
 1. **Landing page** — click **Start the Studio**
 2. **Templates** — pick a Classic Layout or a Frame Template
-3. **Camera** — choose timer, mirror, filter, and per-photo frame overlay; capture (or use burst mode); or upload existing photos — auto-redirects to Preview when all shots are done
-4. **Preview** — see the final composited strip; retake individual shots from the filmstrip sidebar; add a Polaroid caption if applicable; generate QR code to share; download as PNG or print-ready PDF
-5. **Editor** — fine-tune brightness, contrast, saturation; apply filters with live preview thumbnails; add stickers and text overlays
+3. **Camera** — choose timer, mirror, filter, and per-photo frame overlay; capture (or use burst mode); or upload existing photos — auto-redirects to Editor when all shots are done
+4. **Editor** — fine-tune brightness, contrast, saturation; apply filters with live preview thumbnails; add stickers and text overlays
+5. **Preview** — see the final composited strip; retake individual shots from the filmstrip sidebar; add a Polaroid caption if applicable; generate QR code to share; download as PNG or print-ready PDF
 6. **Download** the strip, share it, or save the session to the cloud
 
 ---

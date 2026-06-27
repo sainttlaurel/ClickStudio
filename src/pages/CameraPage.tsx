@@ -295,16 +295,16 @@ export default function CameraPage() {
     }
   }, [])
 
-  /* ── Auto-redirect to Preview when all shots captured ── */
+  /* ── Auto-redirect to Editor when all shots captured ── */
   useEffect(() => {
     if (capturedPhotos.length >= photosNeeded && !isCapturing && !burstInfo) {
-      success('All shots captured! 🎉', 'Taking you to preview…')
+      success('All shots captured! 🎉', 'Taking you to the editor…')
       const timeout = setTimeout(() => {
-        navigate('/preview')
+        navigate('/editor', { state: { photoId: capturedPhotos[capturedPhotos.length - 1]?.id } })
       }, 1000)
       return () => clearTimeout(timeout)
     }
-  }, [capturedPhotos.length, photosNeeded, isCapturing, burstInfo, navigate, success])
+  }, [capturedPhotos.length, photosNeeded, isCapturing, burstInfo, navigate, success, capturedPhotos])
 
   /* ── Countdown tick ── */
   useEffect(() => {

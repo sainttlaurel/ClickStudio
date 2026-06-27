@@ -24,7 +24,7 @@ export const CHANGELOG: ChangelogVersion[] = [
     version: '1.6.0',
     date: 'June 27, 2026',
     entries: [
-      { type: 'new',      text: 'Auto-redirect to Preview when all shots are captured — no manual tap needed' },
+      { type: 'new',      text: 'Auto-redirect to Editor when all shots are captured — straight to editing' },
       { type: 'new',      text: 'Celebration toast "All shots captured!" before redirecting' },
       { type: 'improved', text: 'Works with burst mode — redirect triggers after full sequence completes' },
     ],
