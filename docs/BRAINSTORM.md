@@ -41,7 +41,7 @@ Feature ideas for ClickStudio. Shipped items are checked off; everything else is
 - **Polaroid caption input in Editor** — Currently only in Preview; should be editable per-photo in the Editor too
 - **Photo reordering** — Drag-and-drop reorder shots before compositing
 - **Improved composite quality** — Higher resolution composites for print
-- **Vercel migration** — Switch back to Vercel for bandwidth (Netlify credits at 50%)
+- **Vercel migration** — Switch back to Vercel for bandwidth
 
 ### Medium Priority
 - **Session History page** — Browse past sessions with thumbnails and composite previews

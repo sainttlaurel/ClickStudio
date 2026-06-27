@@ -1,37 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://clickstudiodev.netlify.app/</loc>
+    <loc>https://clickstudio.vercel.app/</loc>
     <lastmod>2026-06-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://clickstudiodev.netlify.app/templates</loc>
+    <loc>https://clickstudio.vercel.app/camera</loc>
     <lastmod>2026-06-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://clickstudiodev.netlify.app/camera</loc>
-    <lastmod>2026-06-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://clickstudiodev.netlify.app/editor</loc>
+    <loc>https://clickstudio.vercel.app/preview</loc>
     <lastmod>2026-06-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://clickstudiodev.netlify.app/preview</loc>
+    <loc>https://clickstudio.vercel.app/editor</loc>
     <lastmod>2026-06-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://clickstudiodev.netlify.app/about</loc>
+    <loc>https://clickstudio.vercel.app/about</loc>
     <lastmod>2026-06-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>

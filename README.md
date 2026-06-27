@@ -2,7 +2,7 @@
 
 A modern web photo booth — capture, edit, and share photo strips directly in the browser. No app download required.
 
-**Live:** [clickstudiodev.netlify.app](https://clickstudiodev.netlify.app)
+**Live:** [clickstudio.vercel.app](https://clickstudio.vercel.app)
 
 ---
 
@@ -53,7 +53,7 @@ A modern web photo booth — capture, edit, and share photo strips directly in t
 | Backend | Supabase (Database, Storage) |
 | Icons | Lucide React |
 | Fonts | Inter, DM Serif Display, Dancing Script |
-| Deployment | Netlify |
+| Deployment | Vercel |
 
 ---
 
@@ -198,13 +198,13 @@ Add to the `templates` array in `src/constants/templates.ts`:
 
 ## Deployment
 
-**Netlify** (current):
+**Vercel** (current):
 
-1. Connect the GitHub repo in Netlify Dashboard
+1. Import the GitHub repo in Vercel Dashboard
 2. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in environment variables
 3. Pushes to `main` deploy automatically
 
-`netlify.toml` + `public/_redirects` handle SPA routing. `Permissions-Policy: camera=*` is set for camera API access.
+`vercel.json` handles SPA routing via rewrites. `Permissions-Policy: camera=*` is set for camera API access.
 
 ---
 

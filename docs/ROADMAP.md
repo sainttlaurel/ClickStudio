@@ -54,8 +54,8 @@ Active development phases for ClickStudio.
 ## Phase 4 — Polish & Deployment ✅
 **Status:** Complete
 
-- [x] Netlify deployment
-- [x] SPA routing (_redirects + netlify.toml)
+- [x] Vercel deployment
+- [x] SPA routing (vercel.json rewrites)
 - [x] Security headers
 - [x] SEO (OG tags, Twitter Cards, JSON-LD, canonical URL)
 - [x] Google Search Console verified
@@ -100,5 +100,5 @@ User accounts, payment processing, premium templates, collaborative sessions, cu
 | Filters | 13 film presets |
 | Frames | 5 overlay styles |
 | Sticker Packs | 10 themes, 160+ emoji |
-| Deployment | Netlify |
-| URL | [clickstudiodev.netlify.app](https://clickstudiodev.netlify.app) |
+| Deployment | Vercel |
+| URL | [clickstudio.vercel.app](https://clickstudio.vercel.app) |

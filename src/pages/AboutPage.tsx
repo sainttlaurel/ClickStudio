@@ -43,7 +43,7 @@ export default function AboutPage() {
               'Zustand',
               'Supabase',
               'Vite',
-              'Netlify',
+              'Vercel',
             ].map(tech => (
               <div key={tech} className="text-center p-3 bg-rose-50 rounded-lg">
                 <span className="text-sm font-medium text-text">{tech}</span>

@@ -104,7 +104,7 @@ All notable changes to ClickStudio are documented here. Auto-shows in the What's
 
 ### Security
 - **Security headers** — X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy
-- **SPA routing** — Netlify `_redirects` + `netlify.toml`
+- **SPA routing** — Vercel `vercel.json` rewrites
 
 ---
 
