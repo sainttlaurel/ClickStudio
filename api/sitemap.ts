@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
+import type { IncomingMessage, ServerResponse } from 'http';
+
+export default function handler(req: IncomingMessage, res: ServerResponse) {
+  res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=86400');
+  res.end(`<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://clickstudio.app/</loc>
@@ -36,4 +41,9 @@
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
-</urlset>
+</urlset>`);
+}
+
+export const config = {
+  path: '/sitemap.xml',
+};
