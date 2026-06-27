@@ -53,6 +53,14 @@
 
 ---
 
+## Shipped — Phase 4 (DONE)
+
+| # | Feature | What was built |
+|---|---|---|
+| H6 | Print-Ready PDF Export | `src/utils/pdf.ts` — generates print-ready PDF at 300 DPI via jsPDF; supports 6 print sizes: 2×6 strip, 4×6 print, A4 (1/2 strips), US Letter (1/2 strips); Print/PDF button + size picker modal in PreviewPage |
+
+---
+
 ## Decisions Locked
 
 | Question | Decision |
@@ -71,11 +79,10 @@
 
 | # | Feature | Why it's parked | Revisit when |
 |---|---|---|---|
-| H2 | Full Polaroid / Film Strip Template Editor | Complex; current frame templates cover the need | After Phase 4 ships |
-| H3 | Stickers & Text Overlays | Drag-and-drop canvas is complex; Polaroid caption covers basic text | After Phase 4 ships |
+| H2 | Full Polaroid / Film Strip Template Editor | Complex; current frame templates cover the need | After H3, H4 ship |
+| H3 | Stickers & Text Overlays | Drag-and-drop canvas is complex; Polaroid caption covers basic text | Next up |
 | H4 | Aesthetic Preset Packs | Depends on stickers (H3) | After H3 |
 | H5 | Optional User Accounts | Supabase Auth ready — deferred to avoid friction before core UX is solid | When gallery / sharing is mature |
-| H6 | Print-Ready PDF Export | jsPDF adds ~200 KB; PNG strip covers most use cases | After event / wedding use case grows |
 
 ---
 
@@ -86,5 +93,7 @@ Phase 1 — Camera      →  C1, C2, C3, C4, P2                    ✅ SHIPPED
 Phase 2 — Output      →  P1, P3, X1, U1/U2, Frame Templates    ✅ SHIPPED
 Phase 2b — Branding   →  Logo, Contact, Copyright               ✅ SHIPPED
 Phase 3 — Share       →  S1, H1                                 ✅ SHIPPED
-Phase 4 — Hold        →  H3, H4, H5, H2, H6
+Phase 4 — PDF Export  →  H6                                     ✅ SHIPPED
+Phase 5 — Creative    →  H3, H4, H2
+Phase 6 — Accounts    →  H5 (HOLD)
 ```

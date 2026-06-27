@@ -14,6 +14,8 @@ import {
   QrCode,
   Copy,
   Check,
+  Printer,
+  FileText,
 } from 'lucide-react'
 import QRCode from 'qrcode'
 import { Button } from '@/components/ui/button'
@@ -21,6 +23,7 @@ import { usePhotoStore } from '@/store/usePhotoStore'
 import { useToast } from '@/store/useUIStore'
 import { cn } from '@/utils/cn'
 import { composeStrip, downloadComposite } from '@/utils/compositor'
+import { generatePrintPDF, getPrintSizes, type PrintSize } from '@/utils/pdf'
 
 const LAYOUT_PHOTO_COUNTS: Record<string, number> = {
   single: 1,
@@ -53,6 +56,11 @@ export default function PreviewPage() {
 
   // ── Individual photo retake panel ─────────────────────────────────────────
   const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null)
+
+  // ── Print/PDF state ────────────────────────────────────────────────────────
+  const [printSize, setPrintSize] = useState<PrintSize>('2x6')
+  const [showPrintModal, setShowPrintModal] = useState(false)
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false)
 
   const isPolaroid = currentSession?.template?.compositeStyle === 'polaroid'
   const layout = currentSession?.template?.layout ?? 'quad'
@@ -97,6 +105,27 @@ export default function PreviewPage() {
       }
     } catch {
       handleDownload()
+    }
+  }
+
+  const handlePrintPDF = () => {
+    if (!compositeUrl) return
+    setShowPrintModal(true)
+  }
+
+  const handleGeneratePDF = async () => {
+    if (!compositeUrl) return
+
+    setIsGeneratingPdf(true)
+    try {
+      const sizeLabel = getPrintSizes().find(s => s.value === printSize)?.label ?? printSize
+      await generatePrintPDF(compositeUrl, printSize, `clickstudio-print-${printSize}.pdf`)
+      success('PDF downloaded!', `Print-ready ${sizeLabel} PDF saved`)
+      setShowPrintModal(false)
+    } catch {
+      error('PDF failed', 'Could not generate print-ready PDF')
+    } finally {
+      setIsGeneratingPdf(false)
     }
   }
 
@@ -360,6 +389,22 @@ export default function PreviewPage() {
 
             <Button
               variant="outline"
+              onClick={handlePrintPDF}
+              disabled={!compositeUrl || isGeneratingPdf}
+              icon={
+                isGeneratingPdf ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Printer className="h-4 w-4" />
+                )
+              }
+              className="w-full justify-start"
+            >
+              Print / PDF
+            </Button>
+
+            <Button
+              variant="outline"
               onClick={handleSaveToCloud}
               disabled={isSyncing}
               loading={isSyncing}
@@ -585,6 +630,80 @@ export default function PreviewPage() {
                   className="flex-1"
                 >
                   Done
+                </Button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Print / PDF Modal */}
+      <AnimatePresence>
+        {showPrintModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+            onClick={() => setShowPrintModal(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl"
+              onClick={e => e.stopPropagation()}
+            >
+              <h3 className="font-display text-xl text-text text-center mb-2">
+                Print-Ready PDF
+              </h3>
+              <p className="text-muted text-sm text-center mb-4">
+                Choose a print size for your photo strip
+              </p>
+
+              <div className="space-y-2 mb-6">
+                {getPrintSizes().map(size => (
+                  <button
+                    key={size.value}
+                    onClick={() => setPrintSize(size.value)}
+                    className={cn(
+                      'w-full text-left px-4 py-3 rounded-xl border-2 transition-all text-sm',
+                      printSize === size.value
+                        ? 'border-primary bg-primary/5 text-text font-medium'
+                        : 'border-border hover:border-primary/40 text-muted'
+                    )}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span>{size.label}</span>
+                      {printSize === size.value && (
+                        <Check className="h-4 w-4 text-primary" />
+                      )}
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowPrintModal(false)}
+                  className="flex-1"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleGeneratePDF}
+                  disabled={isGeneratingPdf}
+                  icon={
+                    isGeneratingPdf ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <FileText className="h-4 w-4" />
+                    )
+                  }
+                  className="flex-1"
+                >
+                  {isGeneratingPdf ? 'Generating...' : 'Download PDF'}
                 </Button>
               </div>
             </motion.div>
