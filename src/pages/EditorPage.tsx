@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
@@ -25,6 +25,7 @@ import {
   TEXT_PRESETS,
   TEXT_COLORS,
 } from '@/constants/stickers'
+import { FILTERS } from '@/constants/filters'
 import type { PhotoAdjustments } from '@/types'
 
 const defaultAdjustments: PhotoAdjustments = {
@@ -76,6 +77,7 @@ export default function EditorPage() {
     'adjust' | 'filters' | 'crop' | 'stickers' | 'text'
   >('adjust')
   const [hasChanges, setHasChanges] = useState(false)
+  const [activeFilter, setActiveFilter] = useState('none')
 
   // ── Sticker state ──────────────────────────────────────────────────────
   const [placedStickers, setPlacedStickers] = useState<PlacedSticker[]>([])
@@ -96,13 +98,15 @@ export default function EditorPage() {
   const adjustmentsRef = useRef(adjustments)
   const stickersRef = useRef(placedStickers)
   const textsRef = useRef(placedTexts)
+  const filterRef = useRef(activeFilter)
 
   useEffect(() => { adjustmentsRef.current = adjustments }, [adjustments])
   useEffect(() => { stickersRef.current = placedStickers }, [placedStickers])
   useEffect(() => { textsRef.current = placedTexts }, [placedTexts])
+  useEffect(() => { filterRef.current = activeFilter }, [activeFilter])
 
   // ── Draw image (reads from refs to avoid re-render loops) ──────────────
-  const drawImage = () => {
+  const drawImage = useCallback(() => {
     if (!currentPhoto || !canvasRef.current) return
 
     const canvas = canvasRef.current
@@ -114,14 +118,25 @@ export default function EditorPage() {
       canvas.width = img.width
       canvas.height = img.height
 
-      // Apply adjustments
+      // Build filter string: active filter + adjustments
+      const filterDef = FILTERS.find(f => f.id === filterRef.current)
+      const filterCss = filterDef && filterDef.id !== 'none' ? filterDef.css : 'none'
+
       const adj = adjustmentsRef.current
-      ctx.filter = `
+      const adjustmentFilter = `
         brightness(${100 + adj.brightness}%)
         contrast(${100 + adj.contrast}%)
         saturate(${100 + adj.saturation}%)
         hue-rotate(${adj.temperature}deg)
-      `
+      `.trim()
+
+      // Combine filter + adjustments
+      const combinedFilter =
+        filterCss === 'none'
+          ? adjustmentFilter
+          : `${filterCss} ${adjustmentFilter}`
+
+      ctx.filter = combinedFilter || 'none'
       ctx.drawImage(img, 0, 0)
       ctx.filter = 'none'
 
@@ -151,7 +166,7 @@ export default function EditorPage() {
       }
     }
     img.src = currentPhoto.url
-  }
+  }, [currentPhoto])
 
   useEffect(() => {
     if (!currentPhoto) {
@@ -159,12 +174,12 @@ export default function EditorPage() {
       return
     }
     drawImage()
-  }, [currentPhoto]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [currentPhoto, drawImage])
 
-  // Redraw when adjustments, stickers, or texts change
+  // Redraw when adjustments, stickers, texts, or filter change
   useEffect(() => {
     drawImage()
-  }, [adjustments, placedStickers, placedTexts]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [adjustments, placedStickers, placedTexts, activeFilter, drawImage])
 
   const handleAdjustmentChange = (
     key: keyof PhotoAdjustments,
@@ -202,6 +217,7 @@ export default function EditorPage() {
 
   const handleReset = () => {
     setAdjustments(defaultAdjustments)
+    setActiveFilter('none')
     setPlacedStickers([])
     setPlacedTexts([])
     setHasChanges(true)
@@ -343,14 +359,14 @@ export default function EditorPage() {
   if (!currentPhoto) return null
 
   const adjustmentControls = [
-    { key: 'brightness' as const, label: 'Brightness', min: -100, max: 100 },
-    { key: 'contrast' as const, label: 'Contrast', min: -100, max: 100 },
-    { key: 'saturation' as const, label: 'Saturation', min: -100, max: 100 },
-    { key: 'exposure' as const, label: 'Exposure', min: -100, max: 100 },
-    { key: 'shadows' as const, label: 'Shadows', min: -100, max: 100 },
-    { key: 'highlights' as const, label: 'Highlights', min: -100, max: 100 },
-    { key: 'temperature' as const, label: 'Temperature', min: -50, max: 50 },
-    { key: 'tint' as const, label: 'Tint', min: -50, max: 50 },
+    { key: 'brightness' as const, label: 'Brightness', min: -100, max: 100, icon: '☀️' },
+    { key: 'contrast' as const, label: 'Contrast', min: -100, max: 100, icon: '◐' },
+    { key: 'saturation' as const, label: 'Saturation', min: -100, max: 100, icon: '🎨' },
+    { key: 'exposure' as const, label: 'Exposure', min: -100, max: 100, icon: '📷' },
+    { key: 'shadows' as const, label: 'Shadows', min: -100, max: 100, icon: '🌑' },
+    { key: 'highlights' as const, label: 'Highlights', min: -100, max: 100, icon: '🌕' },
+    { key: 'temperature' as const, label: 'Temperature', min: -50, max: 50, icon: '🌡️' },
+    { key: 'tint' as const, label: 'Tint', min: -50, max: 50, icon: '💜' },
   ]
 
   return (
@@ -517,9 +533,9 @@ export default function EditorPage() {
           <div className="flex bg-white border-b border-border flex-shrink-0">
             {[
               { key: 'adjust' as const, label: 'Adjust', icon: Sliders },
+              { key: 'filters' as const, label: 'Filters', icon: Palette },
               { key: 'stickers' as const, label: 'Stickers', icon: Sticker },
               { key: 'text' as const, label: 'Text', icon: Type },
-              { key: 'filters' as const, label: 'Filters', icon: Palette },
               { key: 'crop' as const, label: 'Crop', icon: Crop },
             ].map(tab => (
               <button
@@ -545,17 +561,26 @@ export default function EditorPage() {
                 <h3 className="font-semibold text-text">Adjustments</h3>
                 <div className="space-y-4">
                   {adjustmentControls.map(control => (
-                    <Slider
-                      key={control.key}
-                      label={control.label}
-                      value={adjustments[control.key]}
-                      onChange={value =>
-                        handleAdjustmentChange(control.key, value)
-                      }
-                      min={control.min}
-                      max={control.max}
-                      step={1}
-                    />
+                    <div key={control.key} className="space-y-1">
+                      <div className="flex items-center justify-between">
+                        <label className="text-xs text-muted flex items-center gap-1.5">
+                          <span>{control.icon}</span>
+                          {control.label}
+                        </label>
+                        <span className="text-xs text-text font-mono w-10 text-right">
+                          {adjustments[control.key] > 0 ? '+' : ''}{adjustments[control.key]}
+                        </span>
+                      </div>
+                      <Slider
+                        value={adjustments[control.key]}
+                        onChange={value =>
+                          handleAdjustmentChange(control.key, value)
+                        }
+                        min={control.min}
+                        max={control.max}
+                        step={1}
+                      />
+                    </div>
                   ))}
                 </div>
                 <Button
@@ -566,6 +591,61 @@ export default function EditorPage() {
                 >
                   Reset All
                 </Button>
+              </div>
+            )}
+
+            {activeTab === 'filters' && (
+              <div className="space-y-5">
+                <h3 className="font-semibold text-text">Filters</h3>
+                <div className="grid grid-cols-3 gap-2">
+                  {FILTERS.map(filter => (
+                    <motion.button
+                      key={filter.id}
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => {
+                        setActiveFilter(filter.id)
+                        setHasChanges(true)
+                      }}
+                      className={cn(
+                        'rounded-xl border-2 p-2 flex flex-col items-center gap-1.5 transition-all',
+                        activeFilter === filter.id
+                          ? 'border-primary bg-primary/5 ring-2 ring-primary/20'
+                          : 'border-border hover:border-primary/40 bg-white hover:bg-rose-50'
+                      )}
+                    >
+                      {/* Mini preview using the actual photo */}
+                      <div
+                        className="w-full aspect-square rounded-lg overflow-hidden bg-gray-100"
+                        style={{
+                          filter: filter.id === 'none' ? 'none' : filter.css,
+                        }}
+                      >
+                        <img
+                          src={currentPhoto.url}
+                          alt={filter.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <span className={cn(
+                        'text-xs font-medium',
+                        activeFilter === filter.id ? 'text-primary' : 'text-muted'
+                      )}>
+                        {filter.name}
+                      </span>
+                    </motion.button>
+                  ))}
+                </div>
+                {activeFilter !== 'none' && (
+                  <Button
+                    variant="outline"
+                    onClick={() => { setActiveFilter('none'); setHasChanges(true) }}
+                    className="w-full"
+                    icon={<Undo className="h-4 w-4" />}
+                  >
+                    Remove Filter
+                  </Button>
+                )}
               </div>
             )}
 
@@ -588,7 +668,7 @@ export default function EditorPage() {
                     </button>
                   ))}
                 </div>
-                <div className="grid grid-cols-4 gap-2">
+                <div className="grid grid-cols-5 gap-2">
                   {STICKER_PACKS[selectedStickerPack].stickers.map(
                     (emoji, i) => (
                       <motion.button
@@ -752,26 +832,6 @@ export default function EditorPage() {
               </div>
             )}
 
-            {activeTab === 'filters' && (
-              <div className="space-y-5">
-                <h3 className="font-semibold text-text">Filters</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  {['Original', 'B&W', 'Vintage', 'Vibrant', 'Cool', 'Warm'].map(
-                    filter => (
-                      <motion.button
-                        key={filter}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        className="aspect-square rounded-xl border-2 border-border hover:border-primary/30 bg-white hover:bg-rose-50 flex items-center justify-center text-sm font-medium transition-all"
-                      >
-                        {filter}
-                      </motion.button>
-                    )
-                  )}
-                </div>
-              </div>
-            )}
-
             {activeTab === 'crop' && (
               <div className="space-y-5">
                 <h3 className="font-semibold text-text">Crop & Rotate</h3>
@@ -814,6 +874,11 @@ export default function EditorPage() {
             Size: {currentPhoto.metadata?.width}×{currentPhoto.metadata?.height}
           </div>
           <div className="flex items-center gap-4">
+            {activeFilter !== 'none' && (
+              <span className="text-primary text-xs font-medium">
+                Filter: {FILTERS.find(f => f.id === activeFilter)?.name}
+              </span>
+            )}
             {placedStickers.length > 0 && (
               <span className="text-muted">
                 {placedStickers.length} sticker{placedStickers.length !== 1 ? 's' : ''}

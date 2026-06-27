@@ -414,6 +414,21 @@ export default function PreviewPage() {
               {isSyncing ? 'Saving…' : 'Save to Cloud'}
             </Button>
 
+            {capturedPhotos.length > 0 && (
+              <Button
+                variant="outline"
+                onClick={() =>
+                  navigate('/editor', {
+                    state: { photoId: capturedPhotos[0].id },
+                  })
+                }
+                icon={<Edit className="h-4 w-4" />}
+                className="w-full justify-start"
+              >
+                Edit Photo
+              </Button>
+            )}
+
             <Button
               variant="ghost"
               onClick={() => navigate('/camera')}
