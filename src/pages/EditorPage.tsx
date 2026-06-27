@@ -498,11 +498,11 @@ export default function EditorPage() {
         </div>
       </div>
 
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
         {/* Canvas Area */}
         <div
           ref={containerRef}
-          className="flex-1 flex items-center justify-center p-6 bg-white overflow-auto"
+          className="flex-1 flex items-center justify-center p-4 lg:p-6 bg-white overflow-auto"
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
@@ -630,7 +630,7 @@ export default function EditorPage() {
         </div>
 
         {/* Controls Panel */}
-        <div className="w-80 border-l border-border bg-white flex flex-col">
+        <div className="w-full lg:w-80 border-t lg:border-t-0 lg:border-l border-border bg-white flex flex-col">
           <div className="flex bg-white border-b border-border flex-shrink-0">
             {[
               { key: 'adjust' as const, label: 'Adjust', icon: Sliders },

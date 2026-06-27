@@ -612,7 +612,7 @@ export default function CameraPage() {
           <button
             onClick={() => setIsMirrored(m => !m)}
             className={cn(
-              'h-8 px-3 rounded-full text-xs font-medium border flex items-center gap-1.5 transition-all',
+              'h-9 lg:h-8 px-3 rounded-full text-xs font-medium border flex items-center gap-1.5 transition-all touch-target',
               isMirrored
                 ? 'bg-primary text-white border-primary shadow-sm'
                 : 'bg-white text-muted border-border hover:border-primary/40'
@@ -631,7 +631,7 @@ export default function CameraPage() {
               setCameraSettings({ grid: !showGrid })
             }}
             className={cn(
-              'h-8 px-3 rounded-full text-xs font-medium border flex items-center gap-1.5 transition-all',
+              'h-9 lg:h-8 px-3 rounded-full text-xs font-medium border flex items-center gap-1.5 transition-all touch-target',
               showGrid
                 ? 'bg-primary text-white border-primary shadow-sm'
                 : 'bg-white text-muted border-border hover:border-primary/40'
@@ -643,7 +643,7 @@ export default function CameraPage() {
           <button
             onClick={() => setCameraSettings({ flash: !cameraSettings.flash })}
             className={cn(
-              'h-8 px-3 rounded-full text-xs font-medium border flex items-center gap-1.5 transition-all',
+              'h-9 lg:h-8 px-3 rounded-full text-xs font-medium border flex items-center gap-1.5 transition-all touch-target',
               cameraSettings.flash
                 ? 'bg-primary text-white border-primary shadow-sm'
                 : 'bg-white text-muted border-border hover:border-primary/40'
@@ -749,13 +749,13 @@ export default function CameraPage() {
               key={frame.id}
               onClick={() => setSelectedFrame(frame.id)}
               className={cn(
-                'h-7 px-2.5 rounded-full text-xs font-medium border transition-all flex items-center gap-1 flex-shrink-0',
+                'h-9 lg:h-7 px-3 lg:px-2.5 rounded-full text-xs font-medium border transition-all flex items-center gap-1 flex-shrink-0 touch-target',
                 selectedFrame === frame.id
                   ? 'bg-primary text-white border-primary shadow-sm'
                   : 'bg-white text-muted border-border hover:border-primary/40 hover:text-primary'
               )}
             >
-              <span className="text-[11px]">{frame.emoji}</span>
+              <span className="text-sm lg:text-[11px]">{frame.emoji}</span>
               {frame.name}
             </button>
           ))}
@@ -772,7 +772,7 @@ export default function CameraPage() {
                   key={t}
                   onClick={() => setCameraSettings({ countdown: t })}
                   className={cn(
-                    'h-6 px-2.5 rounded-full text-[11px] font-medium transition-all',
+                    'h-9 lg:h-6 px-3 lg:px-2.5 rounded-full text-xs lg:text-[11px] font-medium transition-all touch-target',
                     cameraSettings.countdown === t
                       ? 'bg-primary text-white shadow-sm'
                       : 'text-muted hover:text-primary'
@@ -792,7 +792,7 @@ export default function CameraPage() {
               setBurstInfo(null)
             }}
             className={cn(
-              'h-7 px-3 rounded-full text-xs font-medium border flex items-center gap-1.5 transition-all',
+              'h-9 lg:h-7 px-3 rounded-full text-xs font-medium border flex items-center gap-1.5 transition-all touch-target',
               burstMode
                 ? 'bg-primary text-white border-primary shadow-sm'
                 : 'bg-white text-muted border-border hover:border-primary/40 hover:text-primary'

@@ -275,9 +275,9 @@ export default function PreviewPage() {
       </div>
 
       {/* ── Body: composite + sidebar ── */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
         {/* ── Composite preview (main area) ── */}
-        <div className="flex-1 flex flex-col items-center justify-start p-6 overflow-auto bg-[#F9F0F4]/40 gap-4">
+        <div className="flex-1 flex flex-col items-center justify-start p-4 lg:p-6 overflow-auto bg-[#F9F0F4]/40 gap-4">
           {/* Not-all-done notice */}
           {!allDone && (
             <motion.div
@@ -346,7 +346,7 @@ export default function PreviewPage() {
         </div>
 
         {/* ── Sidebar: actions + retake strip ── */}
-        <div className="w-72 border-l border-border bg-white flex flex-col overflow-hidden flex-shrink-0">
+        <div className="w-full lg:w-72 border-t lg:border-t-0 lg:border-l border-border bg-white flex flex-col overflow-hidden flex-shrink-0">
           {/* Actions */}
           <div className="p-5 border-b border-border space-y-2.5">
             <h3 className="font-display text-base text-text mb-3">Actions</h3>
