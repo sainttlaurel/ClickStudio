@@ -4,17 +4,6 @@
 
 ---
 
-## v1.6.0 — Smart Flow
-
-**June 27, 2026**
-
-### Camera → Editor Flow
-- **Auto-redirect to Editor** — When all shots are captured, automatically navigates to the Editor page (no manual tap needed)
-- **"All shots captured!" toast** — Shows a celebration message before redirecting
-- **Works with burst mode** — Redirect triggers after the full burst sequence completes
-
----
-
 ## v1.5.0 — Editor Improvements
 
 **June 27, 2026**
