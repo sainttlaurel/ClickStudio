@@ -472,217 +472,193 @@ export default function EditorPage() {
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-border">
-        <div className="flex items-center gap-4">
+      <div className="flex items-center justify-between px-4 py-2.5 border-b border-border bg-white/90 flex-shrink-0">
+        <div className="flex items-center gap-3">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => navigate('/preview')}
             icon={<ArrowLeft className="h-4 w-4" />}
           >
-            Back to Preview
+            Preview
           </Button>
-          <h1 className="font-display text-xl text-text">Edit your photo ✶</h1>
+          <h1 className="font-display text-base text-text">Edit photo ✶</h1>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
+          {hasChanges && (
+            <span className="text-[10px] text-warning font-medium mr-1">Unsaved</span>
+          )}
           <Button
             variant="outline"
             size="sm"
             onClick={handleReset}
-            icon={<Undo className="h-4 w-4" />}
+            icon={<Undo className="h-3.5 w-3.5" />}
+            className="!px-2.5"
           >
             Reset
           </Button>
-
           <Button
             variant="primary"
             size="sm"
             onClick={handleSave}
             disabled={!hasChanges}
-            icon={<Save className="h-4 w-4" />}
+            icon={<Save className="h-3.5 w-3.5" />}
           >
-            Save Changes
+            Save
           </Button>
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden">
-        {/* Canvas Area */}
-        <div
-          ref={containerRef}
-          className="flex-1 flex items-center justify-center p-4 lg:p-6 bg-white overflow-auto"
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-        >
-          <div ref={canvasWrapperRef} className="relative max-w-4xl w-full">
-            <canvas
-              ref={canvasRef}
-              className="max-w-full rounded-xl shadow-2xl block max-h-[55vh] lg:max-h-[70vh]"
-              style={{
-                width: 'auto',
-                height: 'auto',
-                maxWidth: '100%',
-                cursor: selectedSticker ? 'crosshair' : 'default',
-              }}
-              onClick={handleCanvasClick}
-            />
+      {/* Canvas area — fills remaining space */}
+      <div
+        ref={containerRef}
+        className="flex-1 flex items-center justify-center p-4 bg-white overflow-auto min-h-0"
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        <div ref={canvasWrapperRef} className="relative max-w-4xl w-full">
+          <canvas
+            ref={canvasRef}
+            className="max-w-full rounded-xl shadow-2xl block max-h-[60vh] lg:max-h-[75vh]"
+            style={{
+              width: 'auto',
+              height: 'auto',
+              maxWidth: '100%',
+              cursor: selectedSticker ? 'crosshair' : 'default',
+            }}
+            onClick={handleCanvasClick}
+          />
 
-            {/* Draggable sticker overlays */}
-            {placedStickers.map(sticker => {
-              const wrapper = canvasWrapperRef.current
-              const canvas = canvasRef.current
-              if (!wrapper || !canvas) return null
-              const rect = wrapper.getBoundingClientRect()
-              const displayScaleX = rect.width / canvas.width
-              const displayScaleY = rect.height / canvas.height
-              const displayX = sticker.x * displayScaleX
-              const displayY = sticker.y * displayScaleY
-              const displaySize = Math.max(20, sticker.size * displayScaleX)
+          {/* Draggable sticker overlays */}
+          {placedStickers.map(sticker => {
+            const wrapper = canvasWrapperRef.current
+            const canvas = canvasRef.current
+            if (!wrapper || !canvas) return null
+            const rect = wrapper.getBoundingClientRect()
+            const displayScaleX = rect.width / canvas.width
+            const displayScaleY = rect.height / canvas.height
+            const displayX = sticker.x * displayScaleX
+            const displayY = sticker.y * displayScaleY
+            const displaySize = Math.max(20, sticker.size * displayScaleX)
 
-              return (
-                <div
-                  key={sticker.id}
-                  data-sticker-overlay
-                  className={cn(
-                    'absolute cursor-move select-none group',
-                    draggingSticker === sticker.id ? 'z-20' : 'z-10'
-                  )}
-                  style={{
-                    left: displayX - displaySize / 2,
-                    top: displayY - displaySize / 2,
-                    fontSize: displaySize,
-                    transform: `rotate(${sticker.rotation}deg)`,
-                  }}
-                  onMouseDown={e => handleStickerMouseDown(e, sticker.id)}
-                  onTouchStart={e => handleTouchStart(e, sticker.id)}
-                >
-                  <span className="pointer-events-none">{sticker.emoji}</span>
-                  <div className="absolute -top-8 left-1/2 -translate-x-1/2 hidden group-hover:flex gap-1">
-                    <button
-                      onClick={e => { e.stopPropagation(); handleSizeSticker(sticker.id, -8) }}
-                      className="bg-white/90 hover:bg-white rounded-md p-0.5 shadow-sm text-xs"
-                    >
-                      −
-                    </button>
-                    <button
-                      onClick={e => { e.stopPropagation(); handleRotateSticker(sticker.id) }}
-                      className="bg-white/90 hover:bg-white rounded-md p-0.5 shadow-sm text-xs"
-                    >
-                      <RotateCcw className="h-3 w-3" />
-                    </button>
-                    <button
-                      onClick={e => { e.stopPropagation(); handleSizeSticker(sticker.id, 8) }}
-                      className="bg-white/90 hover:bg-white rounded-md p-0.5 shadow-sm text-xs"
-                    >
-                      +
-                    </button>
-                    <button
-                      onClick={e => { e.stopPropagation(); handleDeleteSticker(sticker.id) }}
-                      className="bg-white/90 hover:bg-white rounded-md p-0.5 shadow-sm text-xs text-red-500"
-                    >
-                      <Trash2 className="h-3 w-3" />
-                    </button>
-                  </div>
-                </div>
-              )
-            })}
-
-            {/* Draggable text overlays */}
-            {placedTexts.map(t => {
-              const wrapper = canvasWrapperRef.current
-              const canvas = canvasRef.current
-              if (!wrapper || !canvas) return null
-              const rect = wrapper.getBoundingClientRect()
-              const displayScaleX = rect.width / canvas.width
-              const displayScaleY = rect.height / canvas.height
-              const displayX = t.x * displayScaleX
-              const displayY = t.y * displayScaleY
-              const displaySize = Math.max(12, t.size * displayScaleX)
-
-              return (
-                <div
-                  key={t.id}
-                  data-sticker-overlay
-                  className={cn(
-                    'absolute cursor-move select-none group whitespace-nowrap',
-                    draggingText === t.id ? 'z-20' : 'z-10'
-                  )}
-                  style={{
-                    left: displayX,
-                    top: displayY,
-                    transform: 'translate(-50%, -50%)',
-                    fontSize: displaySize,
-                    fontFamily: `"${t.font}", serif`,
-                    fontStyle: t.style,
-                    color: t.color,
-                    textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-                  }}
-                  onMouseDown={e => handleTextMouseDown(e, t.id)}
-                  onTouchStart={e => handleTextTouchStart(e, t.id)}
-                >
-                  <span className="pointer-events-none">{t.text}</span>
+            return (
+              <div
+                key={sticker.id}
+                data-sticker-overlay
+                className={cn(
+                  'absolute cursor-move select-none group',
+                  draggingSticker === sticker.id ? 'z-20' : 'z-10'
+                )}
+                style={{
+                  left: displayX - displaySize / 2,
+                  top: displayY - displaySize / 2,
+                  fontSize: displaySize,
+                  transform: `rotate(${sticker.rotation}deg)`,
+                }}
+                onMouseDown={e => handleStickerMouseDown(e, sticker.id)}
+                onTouchStart={e => handleTouchStart(e, sticker.id)}
+              >
+                <span className="pointer-events-none">{sticker.emoji}</span>
+                <div className="absolute -top-8 left-1/2 -translate-x-1/2 hidden group-hover:flex gap-1">
                   <button
-                    onClick={e => { e.stopPropagation(); handleDeleteText(t.id) }}
-                    className="absolute -top-6 left-1/2 -translate-x-1/2 hidden group-hover:block bg-white/90 hover:bg-white rounded-md p-0.5 shadow-sm text-xs text-red-500"
-                  >
-                    <Trash2 className="h-3 w-3" />
-                  </button>
+                    onClick={e => { e.stopPropagation(); handleSizeSticker(sticker.id, -8) }}
+                    className="bg-white/90 hover:bg-white rounded-md p-0.5 shadow-sm text-xs"
+                  >−</button>
+                  <button
+                    onClick={e => { e.stopPropagation(); handleRotateSticker(sticker.id) }}
+                    className="bg-white/90 hover:bg-white rounded-md p-0.5 shadow-sm text-xs"
+                  ><RotateCcw className="h-3 w-3" /></button>
+                  <button
+                    onClick={e => { e.stopPropagation(); handleSizeSticker(sticker.id, 8) }}
+                    className="bg-white/90 hover:bg-white rounded-md p-0.5 shadow-sm text-xs"
+                  >+</button>
+                  <button
+                    onClick={e => { e.stopPropagation(); handleDeleteSticker(sticker.id) }}
+                    className="bg-white/90 hover:bg-white rounded-md p-0.5 shadow-sm text-xs text-red-500"
+                  ><Trash2 className="h-3 w-3" /></button>
                 </div>
-              )
-            })}
-          </div>
+              </div>
+            )
+          })}
 
-          {/* ── Quick filter bar ── */}
-          <div className="flex items-center gap-2 px-4 lg:px-6 pb-4 overflow-x-auto max-w-full">
-            {FILTERS.map(filter => (
-              <button
-                key={filter.id}
-                onClick={() => { setActiveFilter(filter.id); setHasChanges(true) }}
+          {/* Draggable text overlays */}
+          {placedTexts.map(t => {
+            const wrapper = canvasWrapperRef.current
+            const canvas = canvasRef.current
+            if (!wrapper || !canvas) return null
+            const rect = wrapper.getBoundingClientRect()
+            const displayScaleX = rect.width / canvas.width
+            const displayScaleY = rect.height / canvas.height
+            const displayX = t.x * displayScaleX
+            const displayY = t.y * displayScaleY
+            const displaySize = Math.max(12, t.size * displayScaleX)
+
+            return (
+              <div
+                key={t.id}
+                data-sticker-overlay
                 className={cn(
-                  'flex-shrink-0 px-2.5 py-1.5 rounded-full text-[11px] font-medium border transition-all whitespace-nowrap',
-                  activeFilter === filter.id
-                    ? 'bg-primary text-white border-primary shadow-sm'
-                    : 'bg-white text-muted border-border hover:border-primary/40 hover:text-primary'
+                  'absolute cursor-move select-none group whitespace-nowrap',
+                  draggingText === t.id ? 'z-20' : 'z-10'
                 )}
+                style={{
+                  left: displayX,
+                  top: displayY,
+                  transform: 'translate(-50%, -50%)',
+                  fontSize: displaySize,
+                  fontFamily: `"${t.font}", serif`,
+                  fontStyle: t.style,
+                  color: t.color,
+                  textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
+                }}
+                onMouseDown={e => handleTextMouseDown(e, t.id)}
+                onTouchStart={e => handleTextTouchStart(e, t.id)}
               >
-                {filter.id === 'none' ? 'Original' : filter.name}
-              </button>
-            ))}
-          </div>
+                <span className="pointer-events-none">{t.text}</span>
+                <button
+                  onClick={e => { e.stopPropagation(); handleDeleteText(t.id) }}
+                  className="absolute -top-6 left-1/2 -translate-x-1/2 hidden group-hover:block bg-white/90 hover:bg-white rounded-md p-0.5 shadow-sm text-xs text-red-500"
+                ><Trash2 className="h-3 w-3" /></button>
+              </div>
+            )
+          })}
         </div>
+      </div>
 
-        {/* Controls Panel */}
-        <div className="w-full lg:w-80 border-t lg:border-t-0 lg:border-l border-border bg-white flex flex-col">
-          <div className="flex bg-white border-b border-border flex-shrink-0">
-            {[
-              { key: 'adjust' as const, label: 'Adjust', icon: Sliders },
-              { key: 'filters' as const, label: 'Filters', icon: Palette },
-              { key: 'stickers' as const, label: 'Stickers', icon: Sticker },
-              { key: 'text' as const, label: 'Text', icon: Type },
-              { key: 'frame' as const, label: 'Frame', icon: Layout },
-            ].map(tab => (
-              <button
-                key={tab.key}
-                onClick={() => setActiveTab(tab.key)}
-                className={cn(
-                  'flex-1 flex items-center justify-center gap-1.5 py-2.5 text-[11px] font-medium',
-                  'border-b-2 transition-colors',
-                  activeTab === tab.key
-                    ? 'border-primary text-primary bg-primary/5'
-                    : 'border-transparent text-muted hover:text-text'
-                )}
-              >
-                <tab.icon className="h-3.5 w-3.5" />
-                <span>{tab.label}</span>
-              </button>
-            ))}
-          </div>
+      {/* Tab bar */}
+      <div className="flex bg-white border-t border-border flex-shrink-0">
+        {[
+          { key: 'adjust' as const, label: 'Adjust', icon: Sliders },
+          { key: 'filters' as const, label: 'Filters', icon: Palette },
+          { key: 'stickers' as const, label: 'Stickers', icon: Sticker },
+          { key: 'text' as const, label: 'Text', icon: Type },
+          { key: 'frame' as const, label: 'Frame', icon: Layout },
+        ].map(tab => (
+          <button
+            key={tab.key}
+            onClick={() => setActiveTab(tab.key)}
+            className={cn(
+              'flex-1 flex items-center justify-center gap-1.5 py-2.5 text-[11px] font-medium',
+              'border-b-2 transition-colors',
+              activeTab === tab.key
+                ? 'border-primary text-primary bg-primary/5'
+                : 'border-transparent text-muted hover:text-text'
+            )}
+          >
+            <tab.icon className="h-3.5 w-3.5" />
+            <span>{tab.label}</span>
+          </button>
+        ))}
+      </div>
 
-          <div className="flex-1 overflow-auto p-4">
+      {/* Tab content panel */}
+      {activeTab && (
+        <div className="border-t border-border bg-white overflow-y-auto max-h-[45vh] lg:max-h-[38vh] flex-shrink-0">
+          <div className="p-4">
             {activeTab === 'adjust' && (
               <div className="space-y-3">
                 <h3 className="font-semibold text-text text-sm">Adjustments</h3>
@@ -741,7 +717,6 @@ export default function EditorPage() {
                           : 'border-border hover:border-primary/40 bg-white hover:bg-rose-50'
                       )}
                     >
-                      {/* Mini preview using the actual photo */}
                       <div
                         className="w-full aspect-square rounded-lg overflow-hidden bg-gray-100"
                         style={{
@@ -817,25 +792,17 @@ export default function EditorPage() {
                 </div>
                 <p className="text-xs text-muted text-center">
                   {selectedSticker
-                    ? `Tap sticker selected — click on the photo to place`
+                    ? 'Tap sticker selected — click on the photo to place'
                     : 'Tap a sticker, then click on the photo to place'}
                 </p>
                 {placedStickers.length > 0 && (
                   <div className="space-y-2">
-                    <h4 className="text-sm font-medium text-text">
-                      Placed ({placedStickers.length})
-                    </h4>
+                    <h4 className="text-sm font-medium text-text">Placed ({placedStickers.length})</h4>
                     <div className="flex flex-wrap gap-1">
                       {placedStickers.map(s => (
-                        <div
-                          key={s.id}
-                          className="flex items-center gap-1 bg-rose-50 rounded-lg px-2 py-1 text-sm"
-                        >
+                        <div key={s.id} className="flex items-center gap-1 bg-rose-50 rounded-lg px-2 py-1 text-sm">
                           <span>{s.emoji}</span>
-                          <button
-                            onClick={() => handleDeleteSticker(s.id)}
-                            className="text-red-400 hover:text-red-600"
-                          >
+                          <button onClick={() => handleDeleteSticker(s.id)} className="text-red-400 hover:text-red-600">
                             <Trash2 className="h-3 w-3" />
                           </button>
                         </div>
@@ -857,13 +824,9 @@ export default function EditorPage() {
                     placeholder="Type your text..."
                     maxLength={40}
                     className="w-full rounded-xl border border-border bg-rose-50/50 px-4 py-2.5 text-sm text-text placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-primary/40"
-                    onKeyDown={e => {
-                      if (e.key === 'Enter') handleAddText()
-                    }}
+                    onKeyDown={e => { if (e.key === 'Enter') handleAddText() }}
                   />
-                  <p className="text-xs text-muted text-right mt-1">
-                    {textInput.length}/40
-                  </p>
+                  <p className="text-xs text-muted text-right mt-1">{textInput.length}/40</p>
                 </div>
                 <div>
                   <label className="block text-xs text-muted mb-2">Font</label>
@@ -878,10 +841,7 @@ export default function EditorPage() {
                             ? 'border-primary bg-primary/5 text-primary'
                             : 'border-border text-muted hover:border-primary/40'
                         )}
-                        style={{
-                          fontFamily: `"${preset.font}", serif`,
-                          fontStyle: preset.style,
-                        }}
+                        style={{ fontFamily: `"${preset.font}", serif`, fontStyle: preset.style }}
                       >
                         {preset.name}
                       </button>
@@ -907,9 +867,7 @@ export default function EditorPage() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs text-muted mb-2">
-                    Size: {textSize}px
-                  </label>
+                  <label className="block text-xs text-muted mb-2">Size: {textSize}px</label>
                   <input
                     type="range"
                     min={12}
@@ -929,28 +887,12 @@ export default function EditorPage() {
                 </Button>
                 {placedTexts.length > 0 && (
                   <div className="space-y-2">
-                    <h4 className="text-sm font-medium text-text">
-                      Placed ({placedTexts.length})
-                    </h4>
+                    <h4 className="text-sm font-medium text-text">Placed ({placedTexts.length})</h4>
                     <div className="space-y-1">
                       {placedTexts.map(t => (
-                        <div
-                          key={t.id}
-                          className="flex items-center justify-between bg-rose-50 rounded-lg px-3 py-2 text-sm"
-                        >
-                          <span
-                            style={{
-                              fontFamily: `"${t.font}", serif`,
-                              fontStyle: t.style,
-                              color: t.color,
-                            }}
-                          >
-                            {t.text}
-                          </span>
-                          <button
-                            onClick={() => handleDeleteText(t.id)}
-                            className="text-red-400 hover:text-red-600"
-                          >
+                        <div key={t.id} className="flex items-center justify-between bg-rose-50 rounded-lg px-3 py-2 text-sm">
+                          <span style={{ fontFamily: `"${t.font}", serif`, fontStyle: t.style, color: t.color }}>{t.text}</span>
+                          <button onClick={() => handleDeleteText(t.id)} className="text-red-400 hover:text-red-600">
                             <Trash2 className="h-3 w-3" />
                           </button>
                         </div>
@@ -977,22 +919,12 @@ export default function EditorPage() {
                       )}
                     >
                       <span className="text-2xl">{frame.emoji}</span>
-                      <span className={cn(
-                        'text-xs font-medium',
-                        activeFrame === frame.id ? 'text-primary' : 'text-muted'
-                      )}>
-                        {frame.name}
-                      </span>
+                      <span className={cn('text-xs font-medium', activeFrame === frame.id ? 'text-primary' : 'text-muted')}>{frame.name}</span>
                     </button>
                   ))}
                 </div>
                 {activeFrame !== 'none' && (
-                  <Button
-                    variant="outline"
-                    onClick={() => { setActiveFrame('none'); setHasChanges(true) }}
-                    className="w-full"
-                    icon={<Undo className="h-4 w-4" />}
-                  >
+                  <Button variant="outline" onClick={() => { setActiveFrame('none'); setHasChanges(true) }} className="w-full" icon={<Undo className="h-4 w-4" />}>
                     Remove Frame
                   </Button>
                 )}
@@ -1000,39 +932,7 @@ export default function EditorPage() {
             )}
           </div>
         </div>
-      </div>
-
-      {/* Bottom Status */}
-      <div className="border-t border-border p-4">
-        <div className="flex items-center justify-between text-sm">
-          <div className="text-muted">
-            Size: {currentPhoto.metadata?.width}×{currentPhoto.metadata?.height}
-          </div>
-          <div className="flex items-center gap-4">
-            {activeFilter !== 'none' && (
-              <span className="text-primary text-xs font-medium">
-                Filter: {FILTERS.find(f => f.id === activeFilter)?.name}
-              </span>
-            )}
-            {activeFrame !== 'none' && (
-              <span className="text-primary text-xs font-medium">
-                Frame: {FRAMES.find(f => f.id === activeFrame)?.name}
-              </span>
-            )}
-            {placedStickers.length > 0 && (
-              <span className="text-muted">
-                {placedStickers.length} sticker{placedStickers.length !== 1 ? 's' : ''}
-              </span>
-            )}
-            {placedTexts.length > 0 && (
-              <span className="text-muted">
-                {placedTexts.length} text{placedTexts.length !== 1 ? 's' : ''}
-              </span>
-            )}
-            {hasChanges && <div className="text-warning">Unsaved changes</div>}
-          </div>
-        </div>
-      </div>
+      )}
     </div>
   )
 }

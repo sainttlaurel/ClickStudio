@@ -738,7 +738,7 @@ export default function CameraPage() {
       </div>
 
       {/* ── Bottom panel ── */}
-      <div className="bg-white border-t border-border overflow-y-auto max-h-[30vh] lg:max-h-none">
+      <div className="bg-white border-t border-border overflow-y-auto max-h-[35vh] lg:max-h-none">
         {/* Frame selector (now includes Polaroid — P2) */}
         <div className="flex items-center justify-center gap-1.5 px-4 py-1.5 lg:py-2 border-b border-border/60 overflow-x-auto">
           <span className="text-[10px] font-semibold uppercase tracking-widest text-muted mr-1 flex-shrink-0">
