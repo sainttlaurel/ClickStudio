@@ -660,7 +660,7 @@ export default function CameraPage() {
             {/* Carousel track */}
             <div
               ref={carouselRef}
-              className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2 px-6 w-full justify-center"
+              className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2 px-6 w-full items-stretch"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
               {templates.map((template, idx) => {
@@ -677,7 +677,7 @@ export default function CameraPage() {
                     <div
                       onClick={() => setPreviewTemplate(template)}
                       className={cn(
-                        'group relative bg-white rounded-2xl border border-border/50 overflow-hidden',
+                        'group relative bg-white rounded-2xl border border-border/50 overflow-hidden h-full flex flex-col',
                         'shadow-[0_4px_24px_-6px_rgba(0,0,0,0.08)] hover:shadow-[0_12px_40px_-8px_rgba(233,30,140,0.15)]',
                         'transition-all duration-300 ease-out cursor-pointer hover:-translate-y-1'
                       )}
@@ -754,7 +754,7 @@ export default function CameraPage() {
                 transition={{ delay: templates.length * 0.08, duration: 0.4 }}
                 className="snap-start flex-shrink-0 w-[220px] md:w-[240px]"
               >
-                <div className="h-full bg-white/50 border-2 border-dashed border-border/50 rounded-2xl flex flex-col items-center justify-center gap-3 p-6 text-center hover:border-primary/40 hover:bg-rose-50/30 transition-all cursor-pointer min-h-[280px]">
+                <div className="h-full bg-white/50 border-2 border-dashed border-border/50 rounded-2xl flex flex-col items-center justify-center gap-3 p-6 text-center hover:border-primary/40 hover:bg-rose-50/30 transition-all cursor-pointer">
                   <div className="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center">
                     <Plus className="h-6 w-6 text-primary" />
                   </div>
