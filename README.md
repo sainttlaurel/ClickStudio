@@ -301,7 +301,7 @@ git push origin feature/your-feature
 
 ## Contact
 
-- **Email:** [miguelpilapil30@gmail.com](mailto:miguelpilapil30@gmail.com)
+- **Email:** [clickstudio.dev@gmail.com](mailto:clickstudio.dev@gmail.com)
 - **Discord:** [Join our server](https://discord.gg/4aqNkmt9RG)
 - **GitHub:** [sainttlaurel/ClickStudio](https://github.com/sainttlaurel/ClickStudio)
 

@@ -79,11 +79,11 @@ export default function AboutPage() {
           <h3 className="font-display text-lg text-text mb-4 text-center">Contact</h3>
           <div className="flex flex-col items-center gap-3 text-muted text-sm">
             <a
-              href="mailto:miguelpilapil30@gmail.com"
+              href="mailto:clickstudio.dev@gmail.com"
               className="flex items-center gap-2 hover:text-primary transition-colors"
             >
               <Mail className="h-4 w-4" />
-              miguelpilapil30@gmail.com
+              clickstudio.dev@gmail.com
             </a>
             <a
               href="https://discord.gg/4aqNkmt9RG"
@@ -104,7 +104,7 @@ export default function AboutPage() {
           </Button>
 
           <Button variant="outline" icon={<Mail className="h-4 w-4" />}>
-            <a href="mailto:miguelpilapil30@gmail.com">Email</a>
+            <a href="mailto:clickstudio.dev@gmail.com">Email</a>
           </Button>
 
           <Button variant="outline" icon={<MessageSquare className="h-4 w-4" />}>
