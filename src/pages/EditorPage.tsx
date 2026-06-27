@@ -225,29 +225,9 @@ export default function EditorPage() {
   }
 
   // ── Sticker handlers ────────────────────────────────────────────────────
-  const handleAddSticker = (emoji: string) => {
+  const handleSelectSticker = (emoji: string) => {
     // Toggle: if same sticker clicked, deselect; otherwise select for placement
-    if (selectedSticker === emoji) {
-      setSelectedSticker(null)
-    } else {
-      setSelectedSticker(emoji)
-    }
-  }
-
-  // Double-click sticker in panel to quick-add at center
-  const handleQuickAddSticker = (emoji: string) => {
-    if (!canvasRef.current) return
-    const canvas = canvasRef.current
-    const newSticker: PlacedSticker = {
-      id: `sticker-${Date.now()}`,
-      emoji,
-      x: canvas.width / 2,
-      y: canvas.height / 2,
-      size: Math.min(canvas.width, canvas.height) * 0.1,
-      rotation: 0,
-    }
-    setPlacedStickers(prev => [...prev, newSticker])
-    setHasChanges(true)
+    setSelectedSticker(prev => prev === emoji ? null : emoji)
   }
 
   const handleStickerMouseDown = (e: React.MouseEvent, stickerId: string) => {
@@ -377,6 +357,9 @@ export default function EditorPage() {
   // ── Canvas click to place sticker at position ──────────────────────────
   const handleCanvasClick = (e: React.MouseEvent) => {
     if (!selectedSticker || !canvasWrapperRef.current || !canvasRef.current) return
+    // Don't place if clicking on an overlay element
+    if ((e.target as HTMLElement).closest('[data-sticker-overlay]')) return
+
     const rect = canvasWrapperRef.current.getBoundingClientRect()
     const canvas = canvasRef.current
     const scaleX = canvas.width / rect.width
@@ -394,6 +377,7 @@ export default function EditorPage() {
     }
     setPlacedStickers(prev => [...prev, newSticker])
     setHasChanges(true)
+    // Keep selected so user can place multiple of the same sticker
   }
 
   const handleDeleteSticker = (id: string) => {
@@ -554,6 +538,7 @@ export default function EditorPage() {
               return (
                 <div
                   key={sticker.id}
+                  data-sticker-overlay
                   className={cn(
                     'absolute cursor-move select-none group',
                     draggingSticker === sticker.id ? 'z-20' : 'z-10'
@@ -613,6 +598,7 @@ export default function EditorPage() {
               return (
                 <div
                   key={t.id}
+                  data-sticker-overlay
                   className={cn(
                     'absolute cursor-move select-none group whitespace-nowrap',
                     draggingText === t.id ? 'z-20' : 'z-10'
@@ -790,8 +776,7 @@ export default function EditorPage() {
                         key={`${emoji}-${i}`}
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
-                        onClick={() => handleAddSticker(emoji)}
-                        onDoubleClick={() => handleQuickAddSticker(emoji)}
+                        onClick={() => handleSelectSticker(emoji)}
                         className={cn(
                           'aspect-square rounded-xl border-2 text-2xl flex items-center justify-center transition-all',
                           selectedSticker === emoji
@@ -806,8 +791,8 @@ export default function EditorPage() {
                 </div>
                 <p className="text-xs text-muted text-center">
                   {selectedSticker
-                    ? `Selected: ${selectedSticker} — click on the photo to place, or double-click to center`
-                    : 'Tap to select a sticker, then click on the photo to place'}
+                    ? `Tap sticker selected — click on the photo to place`
+                    : 'Tap a sticker, then click on the photo to place'}
                 </p>
                 {placedStickers.length > 0 && (
                   <div className="space-y-2">
