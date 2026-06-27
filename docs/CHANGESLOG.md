@@ -134,6 +134,138 @@
 
 ---
 
+## Discord Update Format
+
+Use this template when posting updates to the Discord community:
+
+```
+ClickStudio v{VERSION} — {TITLE}
+
+{EMOJI} {FEATURE CATEGORY}
+• {feature 1}
+• {feature 2}
+• {feature 3}
+
+{EMOJI} {FEATURE CATEGORY}
+• {feature 1}
+• {feature 2}
+
+Try it now → https://clickstudio.app
+```
+
+### Example Posts
+
+**v1.5.0**
+```
+ClickStudio v1.5.0 — Editor Improvements
+
+🎨 Editor
+• Click-to-place stickers — select, then click anywhere on your photo
+• Touch drag — move stickers & text with your finger on mobile
+• 13 filters with live preview thumbnails
+• 10 sticker packs (160+ emoji) — Coquette, Y2K, Nature & more
+• 6 text fonts, 15 colors
+
+⚡ Preview
+• Edit Photo button added to sidebar
+
+Update live now → https://clickstudio.app
+```
+
+**v1.4.0**
+```
+ClickStudio v1.4.0 — Stickers & Text Overlays
+
+🎀 Stickers
+• 6 themed packs — Favorites, Coquette, Y2K, Nature, Fun, Faces
+• Tap to add, drag to reposition, resize & rotate
+• Composited on save
+
+✏️ Text Overlays
+• 4 font presets — Script, Serif, Sans, Mono
+• 10 colors, adjustable size
+• Drag anywhere on the photo
+
+Try it now → https://clickstudio.app
+```
+
+**v1.3.0**
+```
+ClickStudio v1.3.0 — Print-Ready PDF
+
+🖨️ Print / PDF
+• Export at 300 DPI — print shop ready
+• 6 sizes: 2×6 strip, 4×6, A4, US Letter
+• Size picker modal in Preview
+
+Perfect for events & weddings 💕
+
+Try it now → https://clickstudio.app
+```
+
+**v1.2.0**
+```
+ClickStudio v1.2.0 — Share & Feedback
+
+📱 QR Code Share
+• Generate QR code — scan to view & download
+• Public share page for anyone
+• Copy link button
+
+💬 Feedback Wall
+• Leave a message on the landing page
+• Scrolling community card wall
+
+Try it now → https://clickstudio.app
+```
+
+**v1.1.1**
+```
+ClickStudio v1.1.1 — Branding
+
+✨ What's New
+• Official ClickStudio logo
+• Email + Discord contact on About page
+• Copyright updated to 2026
+
+Small polish, big difference 💕
+```
+
+**v1.1.0**
+```
+ClickStudio v1.1.0 — Composite Output
+
+📸 Photo Strip Compositor
+• All shots combined into one PNG
+• 4 Frame Templates — Polaroid, Film, Blush, Minimal
+• Polaroid caption text
+• Image upload support
+
+The photo booth experience is complete 🎉
+
+Try it now → https://clickstudio.app
+```
+
+**v1.0.0**
+```
+ClickStudio v1.0.0 is LIVE! 🎉
+
+📸 Camera
+• HD webcam, mirror toggle, timer, burst mode
+• 13 film filters + 5 frame overlays
+
+🎨 Editor
+• Brightness, contrast, saturation & more
+• Crop & rotate
+
+📱 App
+• PWA installable, responsive, accessible
+
+The free web photo booth is here → https://clickstudio.app
+```
+
+---
+
 ## Version Numbering
 
 - **Major (v2.0)** — Breaking changes or major feature overhaul
