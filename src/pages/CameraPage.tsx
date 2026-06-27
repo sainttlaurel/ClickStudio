@@ -660,7 +660,7 @@ export default function CameraPage() {
             {/* Carousel track */}
             <div
               ref={carouselRef}
-              className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2 px-6 w-full items-stretch"
+              className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2 px-6 w-full items-stretch justify-center"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
               {templates.map((template, idx) => {
@@ -1069,7 +1069,7 @@ export default function CameraPage() {
         {/* Content */}
         <div className="overflow-x-auto px-4 py-2">
           {bottomTab === 'filters' && (
-            <div className="flex gap-3">
+            <div className="flex gap-3 justify-center">
               {FILTERS.map(filter => (
                 <FilterThumbnail
                   key={filter.id}
@@ -1081,7 +1081,7 @@ export default function CameraPage() {
             </div>
           )}
           {bottomTab === 'frames' && (
-            <div className="flex gap-2">
+            <div className="flex gap-2 justify-center">
               {FRAMES.map(frame => (
                 <button
                   key={frame.id}

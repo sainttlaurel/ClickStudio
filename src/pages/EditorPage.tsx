@@ -700,7 +700,7 @@ export default function EditorPage() {
             {activeTab === 'filters' && (
               <div className="space-y-3">
                 <h3 className="font-semibold text-text text-sm">Filters</h3>
-                <div className="grid grid-cols-4 gap-1.5">
+                <div className="grid grid-cols-4 gap-1.5 justify-center">
                   {FILTERS.map(filter => (
                     <motion.button
                       key={filter.id}
@@ -770,7 +770,7 @@ export default function EditorPage() {
                     </button>
                   ))}
                 </div>
-                <div className="grid grid-cols-6 gap-1.5">
+                <div className="grid grid-cols-6 gap-1.5 justify-center">
                   {STICKER_PACKS[selectedStickerPack].stickers.map(
                     (emoji, i) => (
                       <motion.button
@@ -906,7 +906,7 @@ export default function EditorPage() {
             {activeTab === 'frame' && (
               <div className="space-y-2">
                 <h3 className="font-semibold text-text text-sm">Frame Overlay</h3>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-3 gap-2 justify-center">
                   {FRAMES.map(frame => (
                     <button
                       key={frame.id}
