@@ -155,20 +155,6 @@ Try it now → https://clickstudio.app
 
 ### Example Posts
 
-**v1.6.0**
-```
-ClickStudio v1.6.0 — Smart Flow
-
-📸 Camera → Editor
-• Auto-redirect when all shots captured — straight to editing
-• "All shots captured!" celebration toast before redirect
-• Works with burst mode — redirect after full sequence
-
-Smarter flow, faster results ✨
-
-Try it now → https://clickstudio.app
-```
-
 **v1.5.0**
 ```
 ClickStudio v1.5.0 — Editor Improvements
