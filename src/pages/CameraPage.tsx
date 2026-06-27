@@ -595,6 +595,7 @@ export default function CameraPage() {
   const [previewTemplate, setPreviewTemplate] = useState<TemplateCard | null>(null)
   const [showLibrary, setShowLibrary] = useState(false)
   const carouselRef = useRef<HTMLDivElement>(null)
+  const [bottomTab, setBottomTab] = useState<'filters' | 'frames'>('filters')
 
   const scrollCarousel = (dir: 'left' | 'right') => {
     if (!carouselRef.current) return
@@ -647,11 +648,11 @@ export default function CameraPage() {
           </div>
 
           {/* ── Carousel ── */}
-          <div className="relative flex-1 flex items-center px-4 md:px-10 min-h-0">
+          <div className="relative flex-1 flex items-center px-4 md:px-14 min-h-0">
             {/* Left arrow */}
             <button
               onClick={() => scrollCarousel('left')}
-              className="hidden md:flex absolute left-2 md:left-4 z-10 w-10 h-10 rounded-full bg-white/70 backdrop-blur-md border border-white/50 shadow-lg items-center justify-center hover:bg-white/90 transition-all"
+              className="hidden md:flex absolute left-0 md:left-2 z-10 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md border border-border/40 shadow-lg items-center justify-center hover:bg-white hover:shadow-xl transition-all"
             >
               <ChevronLeft className="h-5 w-5 text-text" />
             </button>
@@ -659,7 +660,7 @@ export default function CameraPage() {
             {/* Carousel track */}
             <div
               ref={carouselRef}
-              className="flex gap-5 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2 px-2 w-full"
+              className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2 px-6 w-full justify-center"
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
               {templates.map((template, idx) => {
@@ -671,7 +672,7 @@ export default function CameraPage() {
                     initial={{ opacity: 0, y: 24 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.08, duration: 0.4 }}
-                    className="snap-start flex-shrink-0 w-[240px] md:w-[260px]"
+                    className="snap-start flex-shrink-0 w-[220px] md:w-[240px]"
                   >
                     <div
                       onClick={() => setPreviewTemplate(template)}
@@ -751,7 +752,7 @@ export default function CameraPage() {
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: templates.length * 0.08, duration: 0.4 }}
-                className="snap-start flex-shrink-0 w-[240px] md:w-[260px]"
+                className="snap-start flex-shrink-0 w-[220px] md:w-[240px]"
               >
                 <div className="h-full bg-white/50 border-2 border-dashed border-border/50 rounded-2xl flex flex-col items-center justify-center gap-3 p-6 text-center hover:border-primary/40 hover:bg-rose-50/30 transition-all cursor-pointer min-h-[280px]">
                   <div className="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center">
@@ -768,7 +769,7 @@ export default function CameraPage() {
             {/* Right arrow */}
             <button
               onClick={() => scrollCarousel('right')}
-              className="hidden md:flex absolute right-2 md:right-4 z-10 w-10 h-10 rounded-full bg-white/70 backdrop-blur-md border border-white/50 shadow-lg items-center justify-center hover:bg-white/90 transition-all"
+              className="hidden md:flex absolute right-0 md:right-2 z-10 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md border border-border/40 shadow-lg items-center justify-center hover:bg-white hover:shadow-xl transition-all"
             >
               <ChevronLeft className="h-5 w-5 text-text rotate-180" />
             </button>
@@ -887,8 +888,6 @@ export default function CameraPage() {
       </>
     )
   }
-
-  const [bottomTab, setBottomTab] = useState<'filters' | 'frames'>('filters')
 
   return (
     <div className="h-full flex flex-col bg-[#faf8f6]">
