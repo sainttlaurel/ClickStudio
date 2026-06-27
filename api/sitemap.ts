@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from 'http';
 
-export default function handler(req: IncomingMessage, res: ServerResponse) {
+export default function handler(_req: IncomingMessage, res: ServerResponse) {
   res.setHeader('Content-Type', 'application/xml; charset=utf-8');
   res.setHeader('Cache-Control', 'public, max-age=86400');
   res.end(`<?xml version="1.0" encoding="UTF-8"?>
@@ -43,7 +43,3 @@ export default function handler(req: IncomingMessage, res: ServerResponse) {
   </url>
 </urlset>`);
 }
-
-export const config = {
-  path: '/sitemap.xml',
-};
