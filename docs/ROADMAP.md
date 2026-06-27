@@ -40,7 +40,7 @@
 |---|---|---|
 | — | Official logo | `public/logo.png` integrated into Header, Sidebar, About page, and Landing page footer with fallback |
 | — | Contact info | About page now shows email and Discord; Twitter replaced with Email + Discord buttons |
-| — | Copyright update | Footer and About page updated to `© 2024 - 2026 ClickStudio` |
+| — | Copyright update | Footer and About page updated to `© 2026 ClickStudio` |
 
 ---
 

@@ -114,7 +114,7 @@ export default function AboutPage() {
 
         {/* Copyright */}
         <div className="text-center text-sm text-muted border-t border-border pt-6">
-          <p>© 2024 - 2026 ClickStudio. All rights reserved.</p>
+          <p>© 2026 ClickStudio. All rights reserved.</p>
         </div>
       </div>
     </div>

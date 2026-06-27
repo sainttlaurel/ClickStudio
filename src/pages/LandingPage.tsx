@@ -555,7 +555,7 @@ export default function LandingPage() {
             </div>
 
             <p className="text-muted text-sm">
-              © 2024 - 2026 ClickStudio — Made with{' '}
+              © 2026 ClickStudio — Made with{' '}
               <span className="text-primary">♡</span>
             </p>
           </div>
