@@ -99,17 +99,17 @@ export default function AboutPage() {
 
         {/* Links */}
         <div className="flex justify-center gap-4">
-          <Button variant="outline" icon={<Github className="h-4 w-4" />}>
-            GitHub
-          </Button>
+          <a href="https://github.com/sainttlaurel/ClickStudio" target="_blank" rel="noopener noreferrer">
+            <Button variant="outline" icon={<Github className="h-4 w-4" />}>
+              GitHub
+            </Button>
+          </a>
 
-          <Button variant="outline" icon={<Mail className="h-4 w-4" />}>
-            <a href="mailto:clickstudio.dev@gmail.com">Email</a>
-          </Button>
-
-          <Button variant="outline" icon={<MessageSquare className="h-4 w-4" />}>
-            <a href="https://discord.gg/4aqNkmt9RG" target="_blank" rel="noopener noreferrer">Discord</a>
-          </Button>
+          <a href="https://discord.gg/4aqNkmt9RG" target="_blank" rel="noopener noreferrer">
+            <Button variant="outline" icon={<MessageSquare className="h-4 w-4" />}>
+              Discord
+            </Button>
+          </a>
         </div>
 
         {/* Copyright */}
