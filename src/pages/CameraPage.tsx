@@ -661,7 +661,7 @@ export default function CameraPage() {
 
       {/* ── Camera viewport ── */}
       <div className="flex-1 flex items-center justify-center p-4 min-h-0">
-        <div className="relative w-full max-w-3xl h-full max-h-[55vh] lg:max-h-[440px]">
+        <div className="relative w-full max-w-3xl h-full lg:max-h-[440px]">
           <div className="camera-viewport w-full h-full shadow-card border-2 border-border rounded-2xl overflow-hidden">
             <video
               ref={videoRef}
@@ -738,9 +738,9 @@ export default function CameraPage() {
       </div>
 
       {/* ── Bottom panel ── */}
-      <div className="bg-white border-t border-border overflow-y-auto max-h-[45vh] lg:max-h-none">
+      <div className="bg-white border-t border-border overflow-y-auto max-h-[30vh] lg:max-h-none">
         {/* Frame selector (now includes Polaroid — P2) */}
-        <div className="flex items-center justify-center gap-1.5 px-4 py-2 border-b border-border/60 overflow-x-auto">
+        <div className="flex items-center justify-center gap-1.5 px-4 py-1.5 lg:py-2 border-b border-border/60 overflow-x-auto">
           <span className="text-[10px] font-semibold uppercase tracking-widest text-muted mr-1 flex-shrink-0">
             Frame
           </span>
@@ -762,7 +762,7 @@ export default function CameraPage() {
         </div>
 
         {/* C1 + C4 — Timer selector & Burst toggle */}
-        <div className="flex items-center justify-between px-5 py-2 border-b border-border/60">
+        <div className="flex items-center justify-between px-4 lg:px-5 py-1.5 lg:py-2 border-b border-border/60">
           {/* C1: Timer options */}
           <div className="flex items-center gap-2">
             <Timer className="h-3.5 w-3.5 text-muted flex-shrink-0" />
@@ -804,12 +804,12 @@ export default function CameraPage() {
         </div>
 
         {/* Filter label */}
-        <p className="text-center text-[10px] font-semibold uppercase tracking-widest text-muted pt-2 pb-1.5">
+        <p className="text-center text-[10px] font-semibold uppercase tracking-widest text-muted pt-1.5 pb-1">
           Filter — <span className="text-primary">{activeFilter.name}</span>
         </p>
 
         {/* Filter thumbnails — centered, wraps on narrow screens */}
-        <div className="flex flex-wrap justify-center gap-x-3 gap-y-2 px-4 pb-3">
+        <div className="flex flex-wrap justify-center gap-x-3 gap-y-1.5 lg:gap-y-2 px-4 pb-2 lg:pb-3">
           {FILTERS.map(filter => (
             <FilterThumbnail
               key={filter.id}
@@ -822,7 +822,7 @@ export default function CameraPage() {
 
         {/* C3 — Retake thumbnail strip (shows when photos exist) */}
         {capturedPhotos.length > 0 && (
-          <div className="flex items-center gap-2.5 px-4 py-2 border-t border-border/60 bg-rose-50/40 overflow-x-auto">
+          <div className="flex items-center gap-2.5 px-4 py-1.5 lg:py-2 border-t border-border/60 bg-rose-50/40 overflow-x-auto">
             <span className="text-[10px] font-semibold uppercase tracking-widest text-muted flex-shrink-0">
               Shots
             </span>
@@ -904,7 +904,7 @@ export default function CameraPage() {
         </div>
 
         {/* ── Upload option ── */}
-        <div className="flex justify-center pb-2">
+        <div className="flex justify-center pb-1.5 lg:pb-2">
           <button
             onClick={() => uploadRef.current?.click()}
             className="flex items-center gap-1.5 text-xs text-muted hover:text-primary transition-colors py-1 px-3 rounded-full hover:bg-rose-50"

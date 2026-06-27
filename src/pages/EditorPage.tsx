@@ -512,12 +512,11 @@ export default function EditorPage() {
           <div ref={canvasWrapperRef} className="relative max-w-4xl w-full">
             <canvas
               ref={canvasRef}
-              className="max-w-full max-h-full rounded-xl shadow-2xl block"
+              className="max-w-full rounded-xl shadow-2xl block max-h-[55vh] lg:max-h-[70vh]"
               style={{
                 width: 'auto',
                 height: 'auto',
                 maxWidth: '100%',
-                maxHeight: '70vh',
                 cursor: selectedSticker ? 'crosshair' : 'default',
               }}
               onClick={handleCanvasClick}

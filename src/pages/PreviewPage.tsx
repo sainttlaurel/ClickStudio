@@ -309,7 +309,7 @@ export default function PreviewPage() {
                 transition={{ duration: 0.3 }}
                 src={compositeUrl}
                 alt="Photo strip composite"
-                className="max-w-full max-h-[70vh] rounded-2xl shadow-2xl object-contain"
+                className="max-w-full max-h-[55vh] lg:max-h-[70vh] rounded-2xl shadow-2xl object-contain"
                 style={{ maxWidth: '100%' }}
               />
             ) : (
