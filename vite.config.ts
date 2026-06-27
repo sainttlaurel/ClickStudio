@@ -12,20 +12,22 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,ico,png,svg,webp}']
       },
       manifest: {
-        name: 'PhotoBooth Pro',
-        short_name: 'PhotoBooth',
-        description: 'Modern PhotoBooth Web Application',
-        theme_color: '#09090B',
-        background_color: '#09090B',
+        name: 'ClickStudio — Free Aesthetic Web Photo Booth',
+        short_name: 'ClickStudio',
+        description: 'Free aesthetic web photo booth. Snap, filter, add stickers & text, and share beautiful photo strips instantly.',
+        theme_color: '#FDF5F7',
+        background_color: '#FDF5F7',
         display: 'standalone',
+        start_url: '/',
+        scope: '/',
         icons: [
           {
-            src: 'icon-192x192.png',
+            src: 'logo.png',
             sizes: '192x192',
             type: 'image/png'
           },
           {
-            src: 'icon-512x512.png',
+            src: 'logo.png',
             sizes: '512x512',
             type: 'image/png'
           }
