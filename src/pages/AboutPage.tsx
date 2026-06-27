@@ -86,13 +86,13 @@ export default function AboutPage() {
               miguelpilapil30@gmail.com
             </a>
             <a
-              href="https://discord.com/users/saintalauuuurel_"
+              href="https://discord.gg/4aqNkmt9RG"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 hover:text-primary transition-colors"
             >
               <MessageSquare className="h-4 w-4" />
-              saintalauuuurel_
+              Join our Discord
             </a>
           </div>
         </div>
@@ -108,7 +108,7 @@ export default function AboutPage() {
           </Button>
 
           <Button variant="outline" icon={<MessageSquare className="h-4 w-4" />}>
-            <a href="https://discord.com/users/saintalauuuurel_" target="_blank" rel="noopener noreferrer">Discord</a>
+            <a href="https://discord.gg/4aqNkmt9RG" target="_blank" rel="noopener noreferrer">Discord</a>
           </Button>
         </div>
 
