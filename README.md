@@ -177,6 +177,8 @@ Pink-forward, feminine aesthetic with a clean editorial structure.
 ## Project Structure
 
 ```
+public/
+└── logo.png                   # Official ClickStudio logo
 src/
 ├── components/
 │   ├── ui/                   # Button, Input, Modal, Slider, Toaster, ChangelogModal
@@ -285,6 +287,14 @@ git commit -m 'Add your feature'
 git push origin feature/your-feature
 # Open a pull request
 ```
+
+---
+
+## Contact
+
+- **Email:** [miguelpilapil30@gmail.com](mailto:miguelpilapil30@gmail.com)
+- **Discord:** [saintalauuuurel_](https://discord.com/users/saintalauuuurel_)
+- **GitHub:** [sainttlaurel/ClickStudio](https://github.com/sainttlaurel/ClickStudio)
 
 ---
 

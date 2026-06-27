@@ -34,6 +34,16 @@
 
 ---
 
+## Shipped — Branding & Polish (DONE)
+
+| # | Feature | What was built |
+|---|---|---|
+| — | Official logo | `public/logo.png` integrated into Header, Sidebar, About page, and Landing page footer with fallback |
+| — | Contact info | About page now shows email and Discord; Twitter replaced with Email + Discord buttons |
+| — | Copyright update | Footer and About page updated to `© 2024 - 2026 ClickStudio` |
+
+---
+
 ## Building Next — Phase 3
 
 ### Sharing & Social
@@ -76,6 +86,7 @@
 ```
 Phase 1 — Camera      →  C1, C2, C3, C4, P2                    ✅ SHIPPED
 Phase 2 — Output      →  P1, P3, X1, U1/U2, Frame Templates    ✅ SHIPPED
+Phase 2b — Branding   →  Logo, Contact, Copyright               ✅ SHIPPED
 Phase 3 — Share       →  S1, H1
 Phase 4 — Hold        →  H3, H4, H5, H2, H6
 ```
