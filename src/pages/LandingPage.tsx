@@ -523,9 +523,11 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2">
-              <div className="h-7 w-7 bg-primary rounded-lg flex items-center justify-center shadow-sm">
-                <Camera className="h-4 w-4 text-white" />
-              </div>
+              <img
+                src="/logo.png"
+                alt="ClickStudio"
+                className="h-8 w-auto object-contain"
+              />
               <span className="font-script text-xl text-primary">
                 ClickStudio.
               </span>
@@ -553,7 +555,7 @@ export default function LandingPage() {
             </div>
 
             <p className="text-muted text-sm">
-              © 2026 ClickStudio — Made with{' '}
+              © 2024 - 2026 ClickStudio — Made with{' '}
               <span className="text-primary">♡</span>
             </p>
           </div>

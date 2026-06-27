@@ -1,4 +1,5 @@
-import { Menu, Camera, Settings } from 'lucide-react'
+import { Menu, Settings } from 'lucide-react'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { useUIStore } from '@/store/useUIStore'
 import { usePhotoStore } from '@/store/usePhotoStore'
@@ -7,11 +8,12 @@ export default function Header() {
   const toggleSidebar = useUIStore(state => state.toggleSidebar)
   const currentSession = usePhotoStore(state => state.currentSession)
   const capturedPhotos = usePhotoStore(state => state.capturedPhotos)
+  const navigate = useNavigate()
 
   return (
     <header className="h-16 border-b border-border bg-white/80 backdrop-blur-xl sticky top-0 z-20 shadow-soft">
       <div className="flex items-center justify-between px-4 h-full">
-        {/* Left side */}
+        {/* Left — hamburger + logo (links home) */}
         <div className="flex items-center gap-3">
           <Button
             variant="ghost"
@@ -21,17 +23,28 @@ export default function Header() {
             aria-label="Toggle sidebar"
           />
 
-          <div className="flex items-center gap-2">
-            <div className="h-7 w-7 bg-primary rounded-lg flex items-center justify-center shadow-sm">
-              <Camera className="h-4 w-4 text-white" />
-            </div>
-            <h1 className="font-script text-xl text-primary hidden sm:block leading-none">
+          <button
+            onClick={() => navigate('/')}
+            className="flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
+            aria-label="Go to home"
+          >
+            <img
+              src="/logo.png"
+              alt="ClickStudio"
+              className="h-8 w-auto object-contain hidden sm:block"
+              onError={e => {
+                /* fallback: hide broken image */
+                ;(e.target as HTMLImageElement).style.display = 'none'
+              }}
+            />
+            {/* Inline fallback shown while logo.png isn't loaded */}
+            <span className="font-script text-xl text-primary leading-none sm:hidden">
               ClickStudio
-            </h1>
-          </div>
+            </span>
+          </button>
         </div>
 
-        {/* Center — Session info */}
+        {/* Center — Session info chip */}
         {currentSession && (
           <div className="flex items-center gap-3 text-xs text-muted bg-rose-50 border border-border rounded-full px-4 py-1.5">
             <span className="font-medium text-text">
@@ -45,11 +58,12 @@ export default function Header() {
           </div>
         )}
 
-        {/* Right side */}
+        {/* Right */}
         <div className="flex items-center gap-1">
           <Button
             variant="ghost"
             size="sm"
+            onClick={() => navigate('/settings')}
             icon={<Settings className="h-4 w-4 text-muted" />}
             aria-label="Settings"
           />
