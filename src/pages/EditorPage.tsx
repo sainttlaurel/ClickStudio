@@ -523,7 +523,7 @@ export default function EditorPage() {
         <div ref={canvasWrapperRef} className="relative max-w-4xl w-full">
           <canvas
             ref={canvasRef}
-            className="max-w-full rounded-xl shadow-2xl block max-h-[60vh] lg:max-h-[75vh]"
+            className="max-w-full rounded-xl shadow-2xl block max-h-[45vh] lg:max-h-[55vh]"
             style={{
               width: 'auto',
               height: 'auto',
@@ -657,12 +657,12 @@ export default function EditorPage() {
 
       {/* Tab content panel */}
       {activeTab && (
-        <div className="border-t border-border bg-white overflow-y-auto max-h-[45vh] lg:max-h-[38vh] flex-shrink-0">
+        <div className="border-t border-border bg-white overflow-y-auto max-h-[35vh] lg:max-h-[30vh] flex-shrink-0">
           <div className="p-4">
             {activeTab === 'adjust' && (
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <h3 className="font-semibold text-text text-sm">Adjustments</h3>
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {adjustmentControls.map(control => (
                     <div key={control.key} className="space-y-1">
                       <div className="flex items-center justify-between">
@@ -700,7 +700,7 @@ export default function EditorPage() {
             {activeTab === 'filters' && (
               <div className="space-y-3">
                 <h3 className="font-semibold text-text text-sm">Filters</h3>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-4 gap-1.5">
                   {FILTERS.map(filter => (
                     <motion.button
                       key={filter.id}
@@ -752,15 +752,15 @@ export default function EditorPage() {
             )}
 
             {activeTab === 'stickers' && (
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <h3 className="font-semibold text-text text-sm">Stickers</h3>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5">
                   {STICKER_PACKS.map((pack, i) => (
                     <button
                       key={pack.name}
                       onClick={() => setSelectedStickerPack(i)}
                       className={cn(
-                        'px-3 py-1.5 rounded-full text-sm border transition-all',
+                        'px-2.5 py-1 rounded-full text-xs border transition-all',
                         selectedStickerPack === i
                           ? 'border-primary bg-primary/10 text-primary'
                           : 'border-border text-muted hover:border-primary/40'
@@ -770,7 +770,7 @@ export default function EditorPage() {
                     </button>
                   ))}
                 </div>
-                <div className="grid grid-cols-5 gap-2">
+                <div className="grid grid-cols-6 gap-1.5">
                   {STICKER_PACKS[selectedStickerPack].stickers.map(
                     (emoji, i) => (
                       <motion.button
@@ -779,7 +779,7 @@ export default function EditorPage() {
                         whileTap={{ scale: 0.9 }}
                         onClick={() => handleSelectSticker(emoji)}
                         className={cn(
-                          'aspect-square rounded-xl border-2 text-2xl flex items-center justify-center transition-all',
+                          'aspect-square rounded-lg border-2 text-xl flex items-center justify-center transition-all',
                           selectedSticker === emoji
                             ? 'border-primary bg-primary/5 ring-2 ring-primary/30 scale-110'
                             : 'border-border hover:border-primary/40 bg-white hover:bg-rose-50'
@@ -823,20 +823,20 @@ export default function EditorPage() {
                     onChange={e => setTextInput(e.target.value)}
                     placeholder="Type your text..."
                     maxLength={40}
-                    className="w-full rounded-xl border border-border bg-rose-50/50 px-4 py-2.5 text-sm text-text placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-primary/40"
+                    className="w-full rounded-xl border border-border bg-rose-50/50 px-3 py-2 text-sm text-text placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-primary/40"
                     onKeyDown={e => { if (e.key === 'Enter') handleAddText() }}
                   />
                   <p className="text-xs text-muted text-right mt-1">{textInput.length}/40</p>
                 </div>
                 <div>
-                  <label className="block text-xs text-muted mb-2">Font</label>
-                  <div className="grid grid-cols-2 gap-2">
+                  <label className="block text-xs text-muted mb-1.5">Font</label>
+                  <div className="grid grid-cols-3 gap-1.5">
                     {TEXT_PRESETS.map((preset, i) => (
                       <button
                         key={preset.name}
                         onClick={() => setTextPreset(i)}
                         className={cn(
-                          'px-3 py-2 rounded-xl border-2 text-sm transition-all',
+                          'px-2 py-1.5 rounded-lg border-2 text-xs transition-all',
                           textPreset === i
                             ? 'border-primary bg-primary/5 text-primary'
                             : 'border-border text-muted hover:border-primary/40'
@@ -849,14 +849,14 @@ export default function EditorPage() {
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs text-muted mb-2">Color</label>
-                  <div className="flex flex-wrap gap-2">
+                  <label className="block text-xs text-muted mb-1.5">Color</label>
+                  <div className="flex flex-wrap gap-1.5">
                     {TEXT_COLORS.map(color => (
                       <button
                         key={color}
                         onClick={() => setTextColor(color)}
                         className={cn(
-                          'w-8 h-8 rounded-full border-2 transition-all',
+                          'w-7 h-7 rounded-full border-2 transition-all',
                           textColor === color
                             ? 'border-primary scale-110'
                             : 'border-border hover:border-primary/40'
@@ -904,22 +904,22 @@ export default function EditorPage() {
             )}
 
             {activeTab === 'frame' && (
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <h3 className="font-semibold text-text text-sm">Frame Overlay</h3>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-3 gap-2">
                   {FRAMES.map(frame => (
                     <button
                       key={frame.id}
                       onClick={() => { setActiveFrame(frame.id); setHasChanges(true) }}
                       className={cn(
-                        'flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all',
+                        'flex flex-col items-center gap-1.5 p-2.5 rounded-xl border-2 transition-all',
                         activeFrame === frame.id
                           ? 'border-primary bg-primary/5 ring-2 ring-primary/20'
                           : 'border-border hover:border-primary/40 bg-white hover:bg-rose-50'
                       )}
                     >
-                      <span className="text-2xl">{frame.emoji}</span>
-                      <span className={cn('text-xs font-medium', activeFrame === frame.id ? 'text-primary' : 'text-muted')}>{frame.name}</span>
+                      <span className="text-xl">{frame.emoji}</span>
+                      <span className={cn('text-[11px] font-medium', activeFrame === frame.id ? 'text-primary' : 'text-muted')}>{frame.name}</span>
                     </button>
                   ))}
                 </div>
