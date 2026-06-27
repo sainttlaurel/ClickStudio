@@ -1,5 +1,5 @@
 import { Menu, Settings } from 'lucide-react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { useUIStore } from '@/store/useUIStore'
 import { usePhotoStore } from '@/store/usePhotoStore'
