@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.5.0'
+export const APP_VERSION = '1.6.0'
 
 const LS_KEY = `cs_changelog_v${APP_VERSION}`
 export const isChangelogSeen = (): boolean =>
@@ -20,6 +20,15 @@ export interface ChangelogVersion {
 }
 
 export const CHANGELOG: ChangelogVersion[] = [
+  {
+    version: '1.6.0',
+    date: 'June 27, 2026',
+    entries: [
+      { type: 'new',      text: 'Auto-redirect to Preview when all shots are captured — no manual tap needed' },
+      { type: 'new',      text: 'Celebration toast "All shots captured!" before redirecting' },
+      { type: 'improved', text: 'Works with burst mode — redirect triggers after full sequence completes' },
+    ],
+  },
   {
     version: '1.5.0',
     date: 'June 27, 2026',

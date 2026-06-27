@@ -4,6 +4,20 @@
 
 ---
 
+## v1.6.0 — Smart Flow
+
+**June 27, 2026**
+
+### Camera → Preview Flow
+- **Auto-redirect to Preview** — When all shots are captured, automatically navigates to the Preview page (no manual tap needed)
+- **"All shots captured!" toast** — Shows a celebration message before redirecting
+- **Works with burst mode** — Redirect triggers after the full burst sequence completes
+
+### Camera
+- **Progress indicator** — Shot counter shows `X / Y` throughout capture
+
+---
+
 ## v1.5.0 — Editor Improvements
 
 **June 27, 2026**
@@ -155,6 +169,20 @@ Try it now → https://clickstudio.app
 
 ### Example Posts
 
+**v1.6.0**
+```
+ClickStudio v1.6.0 — Smart Flow
+
+📸 Camera → Preview
+• Auto-redirect when all shots captured — no manual tap needed
+• "All shots captured!" celebration toast before redirect
+• Works with burst mode — redirect after full sequence
+
+Smarter flow, faster results ✨
+
+Try it now → https://clickstudio.app
+```
+
 **v1.5.0**
 ```
 ClickStudio v1.5.0 — Editor Improvements
@@ -280,6 +308,7 @@ All versions are deployed automatically to Vercel on push to `main`.
 
 | Version | Date | Commit |
 |---|---|---|
+| v1.6.0 | June 27, 2026 | — |
 | v1.5.0 | June 27, 2026 | `57597fd` |
 | v1.4.0 | June 26, 2026 | `d1acb55` |
 | v1.3.0 | June 26, 2026 | — |

@@ -295,6 +295,17 @@ export default function CameraPage() {
     }
   }, [])
 
+  /* ── Auto-redirect to Preview when all shots captured ── */
+  useEffect(() => {
+    if (capturedPhotos.length >= photosNeeded && !isCapturing && !burstInfo) {
+      success('All shots captured! 🎉', 'Taking you to preview…')
+      const timeout = setTimeout(() => {
+        navigate('/preview')
+      }, 1000)
+      return () => clearTimeout(timeout)
+    }
+  }, [capturedPhotos.length, photosNeeded, isCapturing, burstInfo, navigate, success])
+
   /* ── Countdown tick ── */
   useEffect(() => {
     let timer: number
