@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /share/
 
-Sitemap: https://clickstudio.app/sitemap.xml
+Sitemap: https://click-studio-ten.vercel.app/sitemap.xml
