@@ -1067,9 +1067,9 @@ export default function CameraPage() {
         </div>
 
         {/* Content */}
-        <div className="overflow-x-auto px-4 py-2">
+        <div className="overflow-x-auto px-4 py-2 flex justify-center">
           {bottomTab === 'filters' && (
-            <div className="flex gap-3 justify-center">
+            <div className="flex gap-3">
               {FILTERS.map(filter => (
                 <FilterThumbnail
                   key={filter.id}
@@ -1081,7 +1081,7 @@ export default function CameraPage() {
             </div>
           )}
           {bottomTab === 'frames' && (
-            <div className="flex gap-2 justify-center">
+            <div className="flex gap-2">
               {FRAMES.map(frame => (
                 <button
                   key={frame.id}
