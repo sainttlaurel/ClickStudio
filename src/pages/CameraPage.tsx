@@ -14,6 +14,8 @@ import {
   Repeat2,
   X,
   Upload,
+  Plus,
+  LayoutGrid,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
@@ -24,20 +26,27 @@ import { cn } from '@/utils/cn'
 import { FILTERS, FRAMES } from '@/constants'
 import type { FilterId, FrameId, CameraError } from '@/constants'
 import type { Template } from '@/types'
+import TemplateLibrary from '@/components/templates/TemplateLibrary'
+import { playCountdownTick, playCaptureSound } from '@/utils/sounds'
 
 /* ─── Template data ──────────────────────────────────── */
-const classicTemplates: Template[] = [
-  { id: 'single-square', name: 'Single Photo', preview: '', layout: 'single', aspectRatio: '1:1', compositeStyle: 'clean', description: '1 photo' },
-  { id: 'double-vertical', name: 'Double Strip', preview: '', layout: 'double', aspectRatio: '2:3', compositeStyle: 'clean', description: '2 photos · vertical' },
-  { id: 'quad-square', name: 'Four Cuts', preview: '', layout: 'quad', aspectRatio: '1:1', compositeStyle: 'clean', description: '4 photos · 2×2 grid' },
-  { id: 'six-strip', name: 'Photo Strip', preview: '', layout: 'six', aspectRatio: '4:3', compositeStyle: 'clean', description: '6 photos · 3×2 grid' },
+interface TemplateCard extends Template {
+  badge?: { label: string; variant: 'new' | 'popular' | 'trending' | 'collab' }
+  previewEmoji?: string
+}
+
+const classicTemplates: TemplateCard[] = [
+  { id: 'single-square', name: 'Single Photo', preview: '', layout: 'single', aspectRatio: '1:1', compositeStyle: 'clean', description: '1 photo', previewEmoji: '📸', badge: { label: 'Popular', variant: 'popular' } },
+  { id: 'double-vertical', name: 'Double Strip', preview: '', layout: 'double', aspectRatio: '2:3', compositeStyle: 'clean', description: '2 photos · vertical', previewEmoji: '🎞️' },
+  { id: 'quad-square', name: 'Four Cuts', preview: '', layout: 'quad', aspectRatio: '1:1', compositeStyle: 'clean', description: '4 photos · 2×2 grid', previewEmoji: '🖼️', badge: { label: 'New', variant: 'new' } },
+  { id: 'six-strip', name: 'Photo Strip', preview: '', layout: 'six', aspectRatio: '4:3', compositeStyle: 'clean', description: '6 photos · 3×2 grid', previewEmoji: '📠' },
 ]
 
-const frameTemplates: Template[] = [
-  { id: 'frame-polaroid-quad', name: 'Polaroid Memories', preview: '', layout: 'quad', aspectRatio: '1:1', compositeStyle: 'polaroid', description: '4 shots · polaroid borders' },
-  { id: 'frame-film-double', name: 'Film Roll', preview: '', layout: 'double', aspectRatio: '2:3', compositeStyle: 'film', description: '2 shots · film strip look' },
-  { id: 'frame-blush-quad', name: 'Blush Edit', preview: '', layout: 'quad', aspectRatio: '1:1', compositeStyle: 'blush', description: '4 shots · pink gradient' },
-  { id: 'frame-minimal-single', name: 'Minimal Clean', preview: '', layout: 'single', aspectRatio: '1:1', compositeStyle: 'minimal', description: '1 shot · thin pink border' },
+const frameTemplates: TemplateCard[] = [
+  { id: 'frame-polaroid-quad', name: 'Polaroid', preview: '', layout: 'quad', aspectRatio: '1:1', compositeStyle: 'polaroid', description: '4 shots · polaroid borders', previewEmoji: '📷', badge: { label: 'Trending', variant: 'trending' } },
+  { id: 'frame-film-double', name: 'Film Roll', preview: '', layout: 'double', aspectRatio: '2:3', compositeStyle: 'film', description: '2 shots · film strip look', previewEmoji: '🎥' },
+  { id: 'frame-blush-quad', name: 'Blush Edit', preview: '', layout: 'quad', aspectRatio: '1:1', compositeStyle: 'blush', description: '4 shots · pink gradient', previewEmoji: '🌸', badge: { label: 'New', variant: 'new' } },
+  { id: 'frame-minimal-single', name: 'Minimal', preview: '', layout: 'single', aspectRatio: '1:1', compositeStyle: 'minimal', description: '1 shot · thin border', previewEmoji: '✧' },
 ]
 
 const photoCounts: Record<string, number> = { single: 1, double: 2, quad: 4, six: 6 }
@@ -48,6 +57,13 @@ const styleConfig: Record<string, { bg: string; cardBg: string; emoji: string }>
   film: { bg: 'bg-gray-800', cardBg: 'bg-gray-900/10', emoji: '🎞️' },
   blush: { bg: 'bg-rose-100', cardBg: 'bg-rose-50/60', emoji: '🌸' },
   minimal: { bg: 'bg-white', cardBg: 'bg-gray-50', emoji: '◻️' },
+}
+
+const badgeStyles: Record<string, string> = {
+  new: 'bg-emerald-500/90 text-white',
+  popular: 'bg-primary/90 text-white',
+  trending: 'bg-amber-500/90 text-white',
+  collab: 'bg-violet-500/90 text-white',
 }
 
 /* ─── FilterThumbnail ─────────────────────────────────── */
@@ -61,13 +77,15 @@ function FilterThumbnail({
   onClick: () => void
 }) {
   return (
-    <button
+    <motion.button
       onClick={onClick}
+      whileHover={{ scale: 1.08 }}
+      whileTap={{ scale: 0.95 }}
       className="flex flex-col items-center gap-1.5 group flex-shrink-0"
     >
       <div
         className={cn(
-          'h-12 w-12 rounded-full overflow-hidden ring-2 ring-offset-2 transition-all duration-200',
+          'h-12 w-12 rounded-2xl overflow-hidden ring-2 ring-offset-2 transition-all duration-200 shadow-soft',
           selected
             ? 'ring-primary ring-offset-white scale-110 shadow-md'
             : 'ring-transparent group-hover:ring-rose-200 group-hover:ring-offset-white'
@@ -90,7 +108,7 @@ function FilterThumbnail({
       >
         {filter.name}
       </span>
-    </button>
+    </motion.button>
   )
 }
 
@@ -141,6 +159,67 @@ function CameraUnsupportedCard() {
         </p>
       </div>
     </div>
+  )
+}
+
+/* ─── ToolbarButton ──────────────────────────────────── */
+function ToolbarButton({
+  icon,
+  label,
+  active,
+  onClick,
+  disabled,
+}: {
+  icon: React.ReactNode
+  label: string
+  active?: boolean
+  onClick?: () => void
+  disabled?: boolean
+}) {
+  return (
+    <motion.button
+      onClick={onClick}
+      disabled={disabled}
+      whileHover={{ scale: disabled ? 1 : 1.05 }}
+      whileTap={{ scale: disabled ? 1 : 0.95 }}
+      className={cn(
+        'w-10 h-10 rounded-xl flex items-center justify-center transition-all',
+        active
+          ? 'bg-primary text-white shadow-sm'
+          : 'text-muted hover:bg-rose-50 hover:text-primary',
+        disabled && 'opacity-30 cursor-not-allowed'
+      )}
+      title={label}
+    >
+      {icon}
+    </motion.button>
+  )
+}
+
+function MobileToolChip({
+  icon,
+  label,
+  active,
+  onClick,
+}: {
+  icon: React.ReactNode
+  label: string
+  active?: boolean
+  onClick?: () => void
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={cn(
+        'h-7 px-2 rounded-full text-[10px] font-medium border flex items-center gap-1 transition-all bg-black/40 backdrop-blur-sm',
+        active
+          ? 'bg-primary text-white border-primary'
+          : 'text-white/80 border-white/20 hover:bg-white/20'
+      )}
+    >
+      {icon}
+      {label}
+    </button>
   )
 }
 
@@ -338,12 +417,14 @@ export default function CameraPage() {
     }
   }, [capturedPhotos.length, photosNeeded, isCapturing, burstInfo, navigate, success, capturedPhotos])
 
-  /* ── Countdown tick ── */
+  /* ── Countdown tick with sound ── */
   useEffect(() => {
     let timer: number
     if (countdown > 0) {
+      playCountdownTick(countdown)
       timer = window.setTimeout(() => setCountdown(c => c - 1), 1000)
     } else if (countdown === 0 && isCapturing) {
+      playCaptureSound()
       capturePhoto()
     }
     return () => clearTimeout(timer)
@@ -490,289 +571,529 @@ export default function CameraPage() {
     return null
   }
 
+  // ── Template preview modal state ──
+  const [previewTemplate, setPreviewTemplate] = useState<TemplateCard | null>(null)
+  const [showLibrary, setShowLibrary] = useState(false)
+  const carouselRef = useRef<HTMLDivElement>(null)
+
+  const scrollCarousel = (dir: 'left' | 'right') => {
+    if (!carouselRef.current) return
+    const scrollAmount = carouselRef.current.clientWidth * 0.6
+    carouselRef.current.scrollBy({
+      left: dir === 'left' ? -scrollAmount : scrollAmount,
+      behavior: 'smooth',
+    })
+  }
+
   if (!hasTemplate) {
     const templates = templateTab === 'classic' ? classicTemplates : frameTemplates
 
     return (
-      <div className="h-full flex flex-col bg-background overflow-auto">
-        <div className="flex-1 flex flex-col items-center justify-center px-6 py-10">
-          <div className="text-center mb-8">
-            <p className="font-script text-primary text-base mb-1">Pick your template</p>
-            <h1 className="font-display text-3xl md:text-4xl text-text">
+      <>
+        <div className="h-full flex flex-col bg-[#faf8f6] overflow-auto">
+          {/* ── Header ── */}
+          <div className="flex-shrink-0 text-center pt-10 pb-2 px-6">
+            <p className="font-script text-primary text-lg mb-1">Pick your template</p>
+            <h1 className="font-display text-3xl md:text-4xl text-text leading-tight">
               Choose a <em className="font-script not-italic text-primary">look.</em>
             </h1>
-            <p className="text-muted mt-2 text-sm">Select a layout, then start capturing.</p>
+            <p className="text-muted/70 mt-2 text-sm">Select a layout, then start capturing.</p>
           </div>
 
-          {/* Tab toggle */}
-          <div className="inline-flex items-center bg-white border border-border rounded-full p-1 shadow-soft mb-6">
+          {/* ── Category tabs ── */}
+          <div className="flex-shrink-0 flex items-center justify-center gap-2 px-6 pb-4">
             <button
               onClick={() => setTemplateTab('classic')}
               className={cn(
-                'px-5 py-2 rounded-full text-sm font-medium transition-all',
+                'px-5 py-2 rounded-full text-sm font-medium transition-all border',
                 templateTab === 'classic'
-                  ? 'bg-primary text-white shadow-sm'
-                  : 'text-muted hover:text-primary'
+                  ? 'bg-primary text-white border-primary shadow-md shadow-primary/20'
+                  : 'bg-white/80 text-muted border-border/60 hover:border-primary/40 hover:text-primary backdrop-blur-sm'
               )}
             >
-              Classic Layouts
+              Classic
             </button>
             <button
               onClick={() => setTemplateTab('frame')}
               className={cn(
-                'px-5 py-2 rounded-full text-sm font-medium transition-all',
+                'px-5 py-2 rounded-full text-sm font-medium transition-all border',
                 templateTab === 'frame'
-                  ? 'bg-primary text-white shadow-sm'
-                  : 'text-muted hover:text-primary'
+                  ? 'bg-primary text-white border-primary shadow-md shadow-primary/20'
+                  : 'bg-white/80 text-muted border-border/60 hover:border-primary/40 hover:text-primary backdrop-blur-sm'
               )}
             >
-              Frame Templates ✦
+              Frame Styles
             </button>
           </div>
 
-          {/* Template grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl">
-            {templates.map((template) => {
-              const count = photoCounts[template.layout]
-              const cfg = styleConfig[template.compositeStyle ?? 'clean']
-              return (
-                <motion.button
-                  key={template.id}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  onClick={() => {
-                    startNewSession(template)
-                    success('Template selected ✨', `"${template.name}"`)
-                  }}
-                  className={cn(
-                    'flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all bg-white shadow-card hover:-translate-y-1 hover:shadow-polaroid',
-                    'border-border hover:border-primary/40'
-                  )}
-                >
-                  <div className={cn('w-full h-28 rounded-xl flex items-center justify-center', cfg.bg)}>
-                    <div className={cn(
-                      'grid gap-1',
-                      template.layout === 'single' && 'grid-cols-1 w-12 h-12',
-                      template.layout === 'double' && 'grid-cols-1 grid-rows-2 w-10 h-20',
-                      template.layout === 'quad' && 'grid-cols-2 grid-rows-2 w-16 h-16',
-                      template.layout === 'six' && 'grid-cols-3 grid-rows-2 w-20 h-14'
-                    )}>
-                      {Array.from({ length: count }).map((_, i) => (
-                        <div key={i} className="rounded-sm bg-white border border-rose-200 flex items-center justify-center">
-                          <Camera className="h-2 w-2 text-rose-400 opacity-60" />
+          {/* ── Carousel ── */}
+          <div className="relative flex-1 flex items-center px-4 md:px-10 min-h-0">
+            {/* Left arrow */}
+            <button
+              onClick={() => scrollCarousel('left')}
+              className="hidden md:flex absolute left-2 md:left-4 z-10 w-10 h-10 rounded-full bg-white/70 backdrop-blur-md border border-white/50 shadow-lg items-center justify-center hover:bg-white/90 transition-all"
+            >
+              <ChevronLeft className="h-5 w-5 text-text" />
+            </button>
+
+            {/* Carousel track */}
+            <div
+              ref={carouselRef}
+              className="flex gap-5 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2 px-2 w-full"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+              {templates.map((template, idx) => {
+                const count = photoCounts[template.layout]
+                const cfg = styleConfig[template.compositeStyle ?? 'clean']
+                return (
+                  <motion.div
+                    key={template.id}
+                    initial={{ opacity: 0, y: 24 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.08, duration: 0.4 }}
+                    className="snap-start flex-shrink-0 w-[240px] md:w-[260px]"
+                  >
+                    <div
+                      onClick={() => setPreviewTemplate(template)}
+                      className={cn(
+                        'group relative bg-white rounded-2xl border border-border/50 overflow-hidden',
+                        'shadow-[0_4px_24px_-6px_rgba(0,0,0,0.08)] hover:shadow-[0_12px_40px_-8px_rgba(233,30,140,0.15)]',
+                        'transition-all duration-300 ease-out cursor-pointer hover:-translate-y-1'
+                      )}
+                    >
+                      {/* Badge */}
+                      {template.badge && (
+                        <div className={cn(
+                          'absolute top-3 left-3 z-10 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider',
+                          badgeStyles[template.badge.variant]
+                        )}>
+                          {template.badge.label}
                         </div>
-                      ))}
+                      )}
+
+                      {/* Favorite button */}
+                      <div className="absolute top-3 right-3 z-10 w-7 h-7 rounded-full bg-white/70 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm">
+                        <button className="text-muted hover:text-primary transition-colors">♡</button>
+                      </div>
+
+                      {/* Preview area */}
+                      <div className={cn('h-36 flex items-center justify-center', cfg.bg)}>
+                        <div className="relative">
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <span className="text-4xl opacity-30">{template.previewEmoji || '📸'}</span>
+                          </div>
+                          <div className={cn(
+                            'grid gap-1.5 relative z-10',
+                            template.layout === 'single' && 'grid-cols-1 w-14 h-14',
+                            template.layout === 'double' && 'grid-cols-1 grid-rows-2 w-12 h-24',
+                            template.layout === 'quad' && 'grid-cols-2 grid-rows-2 w-20 h-20',
+                            template.layout === 'six' && 'grid-cols-3 grid-rows-2 w-24 h-16'
+                          )}>
+                            {Array.from({ length: count }).map((_, i) => (
+                              <div key={i} className="rounded-md bg-white/90 border border-rose-200/50 shadow-sm flex items-center justify-center">
+                                <Camera className="h-2.5 w-2.5 text-rose-400/60" />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Info */}
+                      <div className="p-4">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <h3 className="font-display text-sm text-text">{template.name}</h3>
+                            <p className="text-[11px] text-muted/70 mt-0.5">{template.description}</p>
+                          </div>
+                          <div className="flex items-center gap-1 text-[10px] text-muted/50 flex-shrink-0 ml-2">
+                            <span className="font-mono">{count} poses</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1.5 mt-3">
+                          <div className="text-[10px] text-muted/50 border border-border/40 rounded-md px-2 py-0.5">
+                            {template.aspectRatio}
+                          </div>
+                          <div className="text-[10px] text-muted/50 border border-border/40 rounded-md px-2 py-0.5">
+                            {template.compositeStyle === 'clean' ? 'Clean' :
+                             template.compositeStyle === 'polaroid' ? 'Polaroid' :
+                             template.compositeStyle === 'film' ? 'Film' :
+                             template.compositeStyle === 'blush' ? 'Blush' : 'Minimal'}
+                          </div>
+                        </div>
+                      </div>
                     </div>
+                  </motion.div>
+                )
+              })}
+
+              {/* Create your own card */}
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: templates.length * 0.08, duration: 0.4 }}
+                className="snap-start flex-shrink-0 w-[240px] md:w-[260px]"
+              >
+                <div className="h-full bg-white/50 border-2 border-dashed border-border/50 rounded-2xl flex flex-col items-center justify-center gap-3 p-6 text-center hover:border-primary/40 hover:bg-rose-50/30 transition-all cursor-pointer min-h-[280px]">
+                  <div className="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center">
+                    <Plus className="h-6 w-6 text-primary" />
                   </div>
-                  <div className="text-center">
-                    <span className="block font-display text-sm text-text">{template.name}</span>
-                    <span className="text-xs text-muted">{template.description}</span>
+                  <div>
+                    <h3 className="font-display text-sm text-text mb-1">Custom Layout</h3>
+                    <p className="text-xs text-muted/60">Create your own template</p>
                   </div>
-                </motion.button>
-              )
-            })}
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Right arrow */}
+            <button
+              onClick={() => scrollCarousel('right')}
+              className="hidden md:flex absolute right-2 md:right-4 z-10 w-10 h-10 rounded-full bg-white/70 backdrop-blur-md border border-white/50 shadow-lg items-center justify-center hover:bg-white/90 transition-all"
+            >
+              <ChevronLeft className="h-5 w-5 text-text rotate-180" />
+            </button>
+          </div>
+
+          {/* ── Bottom hint ── */}
+          <div className="flex-shrink-0 text-center pb-6">
+            <p className="text-xs text-muted/40 flex items-center justify-center gap-1.5 mb-3">
+              <span>←</span>
+              <span>Scroll to browse</span>
+              <span>→</span>
+            </p>
+            <button
+              onClick={() => setShowLibrary(true)}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium border border-border/50 bg-white/80 text-muted hover:text-primary hover:border-primary/30 transition-all shadow-sm"
+            >
+              <LayoutGrid className="h-3.5 w-3.5" />
+              Browse All Templates
+            </button>
           </div>
         </div>
-      </div>
+
+        {/* ── Template Preview Modal ── */}
+        {previewTemplate && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            onClick={() => setPreviewTemplate(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.92, y: 30 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              onClick={e => e.stopPropagation()}
+              className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden border border-border/30"
+            >
+              {/* Preview image */}
+              <div className={cn(
+                'h-48 flex items-center justify-center',
+                styleConfig[previewTemplate.compositeStyle ?? 'clean'].bg
+              )}>
+                <div className="text-6xl opacity-40">{previewTemplate.previewEmoji || '📸'}</div>
+              </div>
+
+              {/* Content */}
+              <div className="p-6">
+                <div className="flex items-start justify-between mb-3">
+                  <div>
+                    <h2 className="font-display text-xl text-text">{previewTemplate.name}</h2>
+                    <p className="text-sm text-muted/70 mt-1">{previewTemplate.description}</p>
+                  </div>
+                  {previewTemplate.badge && (
+                    <span className={cn(
+                      'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider flex-shrink-0',
+                      badgeStyles[previewTemplate.badge.variant]
+                    )}>
+                      {previewTemplate.badge.label}
+                    </span>
+                  )}
+                </div>
+
+                {/* Details */}
+                <div className="flex flex-wrap gap-2 mb-5">
+                  <div className="text-xs bg-rose-50 border border-border/40 rounded-lg px-3 py-1.5 flex items-center gap-1.5">
+                    <Camera className="h-3 w-3 text-primary" />
+                    {photoCounts[previewTemplate.layout]} poses
+                  </div>
+                  <div className="text-xs bg-rose-50 border border-border/40 rounded-lg px-3 py-1.5">
+                    {previewTemplate.aspectRatio}
+                  </div>
+                  <div className="text-xs bg-rose-50 border border-border/40 rounded-lg px-3 py-1.5">
+                    {previewTemplate.compositeStyle === 'clean' ? 'Clean finish' :
+                     previewTemplate.compositeStyle === 'polaroid' ? 'Polaroid borders' :
+                     previewTemplate.compositeStyle === 'film' ? 'Film strip' :
+                     previewTemplate.compositeStyle === 'blush' ? 'Blush tone' : 'Minimal frame'}
+                  </div>
+                </div>
+
+                {/* CTA */}
+                <button
+                  onClick={() => {
+                    startNewSession(previewTemplate)
+                    setPreviewTemplate(null)
+                    success('Template selected ✨', `"${previewTemplate.name}"`)
+                  }}
+                  className="w-full py-3 rounded-2xl bg-gradient-to-r from-primary to-rose-400 text-white font-semibold text-sm shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 active:translate-y-0 transition-all"
+                >
+                  Use This Layout
+                </button>
+
+                <button
+                  onClick={() => setPreviewTemplate(null)}
+                  className="w-full mt-2 py-2 text-xs text-muted/50 hover:text-muted transition-colors"
+                >
+                  Browse other templates
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+
+        {/* ── Template Library ── */}
+        <TemplateLibrary
+          isOpen={showLibrary}
+          onClose={() => setShowLibrary(false)}
+          onSelect={(t) => {
+            startNewSession(t)
+            setShowLibrary(false)
+            success('Template selected ✨', `"${t.name}"`)
+          }}
+        />
+      </>
     )
   }
 
-  return (
-    <div className="h-full flex flex-col bg-background">
-      {/* ── Top controls bar ── */}
-      <div className="flex items-center justify-between px-4 py-2 border-b border-border bg-white/90 backdrop-blur-sm">
-        {/* Left */}
-        <div className="flex items-center gap-1">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              if (capturedPhotos.length > 0) {
-                navigate('/preview')
-              } else {
-                clearPhotos()
-              }
-            }}
-            icon={<ChevronLeft className="h-4 w-4" />}
-            className="text-muted"
-          >
-            {capturedPhotos.length > 0 ? 'Preview' : 'Templates'}
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={switchCamera}
-            disabled={!isStreaming}
-            icon={<SwitchCamera className="h-4 w-4 text-muted" />}
-            className="text-muted"
-          >
-            Flip
-          </Button>
-          {/* C2 — Mirror toggle */}
-          <button
-            onClick={() => setIsMirrored(m => !m)}
-            className={cn(
-              'h-9 lg:h-8 px-3 rounded-full text-xs font-medium border flex items-center gap-1.5 transition-all touch-target',
-              isMirrored
-                ? 'bg-primary text-white border-primary shadow-sm'
-                : 'bg-white text-muted border-border hover:border-primary/40'
-            )}
-          >
-            <FlipHorizontal className="h-3.5 w-3.5" />
-            Mirror
-          </button>
-        </div>
+  const [bottomTab, setBottomTab] = useState<'filters' | 'frames'>('filters')
 
-        {/* Right */}
+  return (
+    <div className="h-full flex flex-col bg-[#faf8f6]">
+      {/* ── Top bar ── */}
+      <div className="flex items-center justify-between px-4 py-2.5 border-b border-border/50 bg-white/80 backdrop-blur-md flex-shrink-0">
         <div className="flex items-center gap-1.5">
           <button
             onClick={() => {
-              setShowGrid(s => !s)
-              setCameraSettings({ grid: !showGrid })
+              if (capturedPhotos.length > 0) navigate('/preview')
+              else clearPhotos()
             }}
-            className={cn(
-              'h-9 lg:h-8 px-3 rounded-full text-xs font-medium border flex items-center gap-1.5 transition-all touch-target',
-              showGrid
-                ? 'bg-primary text-white border-primary shadow-sm'
-                : 'bg-white text-muted border-border hover:border-primary/40'
-            )}
+            className="h-8 px-3 rounded-full text-xs font-medium border border-border/50 bg-white text-muted hover:text-primary hover:border-primary/30 transition-all flex items-center gap-1.5"
           >
-            <Grid3X3 className="h-3.5 w-3.5" />
-            Grid
+            <ChevronLeft className="h-3.5 w-3.5" />
+            {capturedPhotos.length > 0 ? 'Preview' : 'Back'}
           </button>
+        </div>
+
+        {/* Upload */}
+        <div className="flex items-center gap-2">
           <button
-            onClick={() => setCameraSettings({ flash: !cameraSettings.flash })}
-            className={cn(
-              'h-9 lg:h-8 px-3 rounded-full text-xs font-medium border flex items-center gap-1.5 transition-all touch-target',
-              cameraSettings.flash
-                ? 'bg-primary text-white border-primary shadow-sm'
-                : 'bg-white text-muted border-border hover:border-primary/40'
-            )}
+            onClick={() => uploadRef.current?.click()}
+            className="h-8 px-3 rounded-full text-xs font-medium border border-border/50 bg-white text-muted hover:text-primary hover:border-primary/30 transition-all flex items-center gap-1.5"
           >
-            {cameraSettings.flash ? (
-              <Zap className="h-3.5 w-3.5" />
-            ) : (
-              <ZapOff className="h-3.5 w-3.5" />
-            )}
-            Flash
+            <Upload className="h-3.5 w-3.5" />
+            Upload
           </button>
+          <input
+            ref={uploadRef}
+            type="file"
+            accept="image/png,image/jpeg,image/webp"
+            className="hidden"
+            onChange={handleFileUpload}
+          />
         </div>
       </div>
 
-      {/* ── Camera viewport ── */}
-      <div className="flex-1 flex items-center justify-center p-4 min-h-0">
-        <div className="relative w-full max-w-3xl h-full max-h-[60vh] lg:max-h-[440px]">
-          <div className="camera-viewport w-full h-full shadow-card border-2 border-border rounded-2xl overflow-hidden">
-            <video
-              ref={videoRef}
-              className="w-full h-full object-cover"
-              style={{
-                filter:
-                  activeFilter.css === 'none' ? undefined : activeFilter.css,
-                transform: isMirrored ? 'scaleX(-1)' : undefined,
-              }}
-              autoPlay
-              playsInline
-              muted
-            />
+      {/* ── Main content: toolbar + camera ── */}
+      <div className="flex-1 flex min-h-0">
+        {/* Floating toolbar (desktop) */}
+        <div className="hidden lg:flex flex-col items-center gap-2 py-4 px-2 flex-shrink-0">
+          <div className="flex flex-col items-center gap-2 bg-white/80 backdrop-blur-md rounded-2xl border border-border/40 shadow-soft p-2">
+            <ToolbarButton icon={<Grid3X3 className="h-4 w-4" />} label="Grid" active={showGrid} onClick={() => { setShowGrid(s => !s); setCameraSettings({ grid: !showGrid }) }} />
+            <ToolbarButton icon={<FlipHorizontal className="h-4 w-4" />} label="Mirror" active={isMirrored} onClick={() => setIsMirrored(m => !m)} />
+            <ToolbarButton icon={<SwitchCamera className="h-4 w-4" />} label="Flip" onClick={switchCamera} disabled={!isStreaming} />
+            <ToolbarButton icon={cameraSettings.flash ? <Zap className="h-4 w-4" /> : <ZapOff className="h-4 w-4" />} label="Flash" active={cameraSettings.flash} onClick={() => setCameraSettings({ flash: !cameraSettings.flash })} />
+            <div className="w-8 border-t border-border/40 my-1" />
+            <ToolbarButton icon={<Timer className="h-4 w-4" />} label="Timer" />
+          </div>
+          {/* Timer sub-options */}
+          <div className="flex flex-col gap-1 bg-white/80 backdrop-blur-md rounded-2xl border border-border/40 shadow-soft p-1.5">
+            {[3, 5, 10].map(t => (
+              <button
+                key={t}
+                onClick={() => setCameraSettings({ countdown: t })}
+                className={cn(
+                  'w-8 h-8 rounded-xl text-[10px] font-bold transition-all',
+                  cameraSettings.countdown === t
+                    ? 'bg-primary text-white shadow-sm'
+                    : 'text-muted hover:text-primary hover:bg-rose-50'
+                )}
+              >
+                {t}s
+              </button>
+            ))}
+          </div>
+        </div>
 
-            <FrameOverlay />
+        {/* Camera viewport */}
+        <div className="flex-1 flex items-center justify-center p-3 md:p-4 min-h-0">
+          <div className="relative w-full max-w-3xl max-h-[55vh] lg:max-h-[480px] aspect-[4/3]">
+            <div className="camera-viewport w-full h-full shadow-xl border border-border/40 rounded-2xl overflow-hidden bg-gray-900">
+              <video
+                ref={videoRef}
+                className="w-full h-full object-cover"
+                style={{
+                  filter: activeFilter.css === 'none' ? undefined : activeFilter.css,
+                  transform: isMirrored ? 'scaleX(-1)' : undefined,
+                }}
+                autoPlay playsInline muted
+              />
 
-            {showGrid && isStreaming && (
-              <div className="absolute inset-0 pointer-events-none z-20">
-                <div className="w-full h-full grid grid-cols-3 grid-rows-3">
-                  {Array.from({ length: 9 }).map((_, i) => (
-                    <div key={i} className="border border-white/20" />
-                  ))}
-                </div>
-              </div>
-            )}
+              <FrameOverlay />
 
-            <AnimatePresence>
-              {countdown > 0 && (
-                <motion.div
-                  key={countdown}
-                  initial={{ scale: 0.4, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 1.6, opacity: 0 }}
-                  transition={{ duration: 0.6, ease: 'easeOut' }}
-                  className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm z-30 gap-3"
-                >
-                  <span className="font-display text-[8rem] text-white drop-shadow-2xl leading-none">
-                    {countdown}
-                  </span>
-                  {burstInfo && (
-                    <span className="bg-primary/80 text-white text-sm font-semibold px-4 py-1 rounded-full">
-                      Shot {burstInfo.current} of {burstInfo.total}
-                    </span>
-                  )}
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {!isStreaming && cameraError === 'denied' && (
-              <CameraDeniedCard onRetry={retryCamera} />
-            )}
-            {!isStreaming && cameraError === 'unsupported' && (
-              <CameraUnsupportedCard />
-            )}
-            {!isStreaming && !cameraError && (
-              <div className="absolute inset-0 flex items-center justify-center bg-white/90 backdrop-blur-sm z-30">
-                <div className="text-center space-y-3">
-                  <div className="relative mx-auto w-12 h-12">
-                    <div className="absolute inset-0 rounded-full border-4 border-border" />
-                    <div className="absolute inset-0 rounded-full border-4 border-t-primary animate-spin" />
+              {showGrid && isStreaming && (
+                <div className="absolute inset-0 pointer-events-none z-20">
+                  <div className="w-full h-full grid grid-cols-3 grid-rows-3">
+                    {Array.from({ length: 9 }).map((_, i) => (
+                      <div key={i} className="border border-white/15" />
+                    ))}
                   </div>
-                  <p className="text-muted text-sm">Initializing camera…</p>
                 </div>
-              </div>
-            )}
+              )}
 
-            {selectedFilter !== 'none' && isStreaming && (
-              <div className="absolute top-3 right-3 z-20 bg-black/55 backdrop-blur-sm text-white text-xs font-medium px-2.5 py-1 rounded-full">
-                {activeFilter.name}
+              {/* Filter name badge */}
+              {selectedFilter !== 'none' && isStreaming && (
+                <div className="absolute top-3 left-3 z-20 bg-black/50 backdrop-blur-sm text-white text-[10px] font-medium px-2.5 py-1 rounded-full border border-white/10">
+                  {activeFilter.name}
+                </div>
+              )}
+
+              {/* Mobile toolbar row (above countdown) */}
+              <div className="lg:hidden absolute top-3 right-3 z-20 flex gap-1.5">
+                <MobileToolChip icon={<Grid3X3 className="h-3 w-3" />} label="Grid" active={showGrid} onClick={() => { setShowGrid(s => !s); setCameraSettings({ grid: !showGrid }) }} />
+                <MobileToolChip icon={<FlipHorizontal className="h-3 w-3" />} label="Mirr" active={isMirrored} onClick={() => setIsMirrored(m => !m)} />
+                <MobileToolChip icon={<SwitchCamera className="h-3 w-3" />} label="Flip" onClick={switchCamera} />
               </div>
-            )}
+
+              {/* Countdown */}
+              <AnimatePresence>
+                {countdown > 0 && (
+                  <motion.div
+                    key={countdown}
+                    initial={{ scale: 0.4, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 1.6, opacity: 0 }}
+                    transition={{ duration: 0.6, ease: 'easeOut' }}
+                    className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm z-30 gap-3"
+                  >
+                    <span className="font-display text-[8rem] text-white drop-shadow-2xl leading-none">
+                      {countdown}
+                    </span>
+                    {burstInfo && (
+                      <span className="bg-primary/80 text-white text-sm font-semibold px-4 py-1 rounded-full">
+                        Shot {burstInfo.current} of {burstInfo.total}
+                      </span>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Error states */}
+              {!isStreaming && cameraError === 'denied' && <CameraDeniedCard onRetry={retryCamera} />}
+              {!isStreaming && cameraError === 'unsupported' && <CameraUnsupportedCard />}
+              {!isStreaming && !cameraError && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm z-30">
+                  <div className="text-center space-y-3">
+                    <div className="relative mx-auto w-12 h-12">
+                      <div className="absolute inset-0 rounded-full border-4 border-white/20" />
+                      <div className="absolute inset-0 rounded-full border-4 border-t-primary animate-spin" />
+                    </div>
+                    <p className="text-white/60 text-sm">Initializing camera…</p>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
 
       {/* ── Bottom panel ── */}
-      <div className="bg-white border-t border-border overflow-y-auto max-h-[35vh] lg:max-h-none">
-        {/* Frame selector (now includes Polaroid — P2) */}
-        <div className="flex items-center justify-center gap-1.5 px-4 py-1.5 lg:py-2 border-b border-border/60 overflow-x-auto">
-          <span className="text-[10px] font-semibold uppercase tracking-widest text-muted mr-1 flex-shrink-0">
-            Frame
-          </span>
-          {FRAMES.map(frame => (
-            <button
-              key={frame.id}
-              onClick={() => setSelectedFrame(frame.id)}
-              className={cn(
-                'h-9 lg:h-7 px-3 lg:px-2.5 rounded-full text-xs font-medium border transition-all flex items-center gap-1 flex-shrink-0 touch-target',
-                selectedFrame === frame.id
-                  ? 'bg-primary text-white border-primary shadow-sm'
-                  : 'bg-white text-muted border-border hover:border-primary/40 hover:text-primary'
-              )}
-            >
-              <span className="text-sm lg:text-[11px]">{frame.emoji}</span>
-              {frame.name}
-            </button>
-          ))}
+      <div className="bg-white/90 backdrop-blur-md border-t border-border/40 flex-shrink-0">
+        {/* Tab row: Filters | Frames */}
+        <div className="flex px-4 pt-2 gap-2">
+          <button
+            onClick={() => setBottomTab('filters')}
+            className={cn(
+              'px-4 py-1.5 rounded-full text-xs font-medium transition-all',
+              bottomTab === 'filters'
+                ? 'bg-primary text-white shadow-sm'
+                : 'text-muted hover:text-primary bg-rose-50/50'
+            )}
+          >
+            Filters
+          </button>
+          <button
+            onClick={() => setBottomTab('frames')}
+            className={cn(
+              'px-4 py-1.5 rounded-full text-xs font-medium transition-all',
+              bottomTab === 'frames'
+                ? 'bg-primary text-white shadow-sm'
+                : 'text-muted hover:text-primary bg-rose-50/50'
+            )}
+          >
+            Frames
+          </button>
         </div>
 
-        {/* C1 + C4 — Timer selector & Burst toggle */}
-        <div className="flex items-center justify-between px-4 lg:px-5 py-1.5 lg:py-2 border-b border-border/60">
-          {/* C1: Timer options */}
-          <div className="flex items-center gap-2">
-            <Timer className="h-3.5 w-3.5 text-muted flex-shrink-0" />
-            <div className="flex items-center bg-rose-50 border border-border rounded-full p-0.5">
+        {/* Content */}
+        <div className="overflow-x-auto px-4 py-2">
+          {bottomTab === 'filters' && (
+            <div className="flex gap-3">
+              {FILTERS.map(filter => (
+                <FilterThumbnail
+                  key={filter.id}
+                  filter={filter}
+                  selected={selectedFilter === filter.id}
+                  onClick={() => setSelectedFilter(filter.id)}
+                />
+              ))}
+            </div>
+          )}
+          {bottomTab === 'frames' && (
+            <div className="flex gap-2">
+              {FRAMES.map(frame => (
+                <button
+                  key={frame.id}
+                  onClick={() => setSelectedFrame(frame.id)}
+                  className={cn(
+                    'flex-shrink-0 h-10 px-3.5 rounded-2xl text-xs font-medium border transition-all flex items-center gap-1.5',
+                    selectedFrame === frame.id
+                      ? 'bg-primary text-white border-primary shadow-sm'
+                      : 'bg-white text-muted border-border/60 hover:border-primary/40 hover:text-primary'
+                  )}
+                >
+                  <span className="text-base">{frame.emoji}</span>
+                  {frame.name}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* ── Timer + Burst controls ── */}
+        <div className="flex items-center justify-center gap-3 px-4 py-1.5 border-t border-border/30">
+          {/* Timer */}
+          <div className="flex items-center gap-1.5">
+            <Timer className="h-3.5 w-3.5 text-muted" />
+            <div className="flex items-center bg-rose-50 border border-border/50 rounded-full p-0.5">
               {[3, 5, 10].map(t => (
                 <button
                   key={t}
                   onClick={() => setCameraSettings({ countdown: t })}
                   className={cn(
-                    'h-9 lg:h-6 px-3 lg:px-2.5 rounded-full text-xs lg:text-[11px] font-medium transition-all touch-target',
+                    'h-7 px-2.5 rounded-full text-[10px] font-medium transition-all',
                     cameraSettings.countdown === t
                       ? 'bg-primary text-white shadow-sm'
                       : 'text-muted hover:text-primary'
@@ -784,7 +1105,7 @@ export default function CameraPage() {
             </div>
           </div>
 
-          {/* C4: Burst mode toggle */}
+          {/* Burst toggle (mobile: in condensed row) */}
           <button
             onClick={() => {
               setBurstMode(b => !b)
@@ -792,80 +1113,42 @@ export default function CameraPage() {
               setBurstInfo(null)
             }}
             className={cn(
-              'h-9 lg:h-7 px-3 rounded-full text-xs font-medium border flex items-center gap-1.5 transition-all touch-target',
+              'h-7 px-3 rounded-full text-[10px] font-medium border flex items-center gap-1.5 transition-all',
               burstMode
                 ? 'bg-primary text-white border-primary shadow-sm'
-                : 'bg-white text-muted border-border hover:border-primary/40 hover:text-primary'
+                : 'bg-white text-muted border-border/60 hover:text-primary'
             )}
           >
-            <Repeat2 className="h-3.5 w-3.5" />
-            Burst {burstMode ? 'On' : 'Off'}
+            <Repeat2 className="h-3 w-3" />
+            Burst
           </button>
         </div>
 
-        {/* Filter label */}
-        <p className="text-center text-[10px] font-semibold uppercase tracking-widest text-muted pt-1.5 pb-1">
-          Filter — <span className="text-primary">{activeFilter.name}</span>
-        </p>
-
-        {/* Filter thumbnails — centered, wraps on narrow screens */}
-        <div className="flex flex-wrap justify-center gap-x-3 gap-y-1.5 lg:gap-y-2 px-4 pb-2 lg:pb-3">
-          {FILTERS.map(filter => (
-            <FilterThumbnail
-              key={filter.id}
-              filter={filter}
-              selected={selectedFilter === filter.id}
-              onClick={() => setSelectedFilter(filter.id)}
-            />
-          ))}
-        </div>
-
-        {/* C3 — Retake thumbnail strip (shows when photos exist) */}
-        {capturedPhotos.length > 0 && (
-          <div className="flex items-center gap-2.5 px-4 py-1.5 lg:py-2 border-t border-border/60 bg-rose-50/40 overflow-x-auto">
-            <span className="text-[10px] font-semibold uppercase tracking-widest text-muted flex-shrink-0">
-              Shots
-            </span>
-            {capturedPhotos.map((photo, i) => (
-              <div key={photo.id} className="relative flex-shrink-0 group">
-                <img
-                  src={photo.url}
-                  alt={`Shot ${i + 1}`}
-                  className="w-11 h-11 object-cover rounded-lg border-2 border-white shadow-sm"
-                />
-                {/* Retake × button */}
-                <button
-                  onClick={() => removePhoto(photo.id)}
-                  className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-error text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
-                  title="Retake this shot"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-                <span className="absolute bottom-0.5 left-0 right-0 text-center text-[9px] text-white/90 font-bold">
-                  {i + 1}
-                </span>
-              </div>
-            ))}
-            <span className="text-[11px] text-muted flex-shrink-0 ml-1 font-medium">
-              {capturedPhotos.length} / {photosNeeded}
-            </span>
-          </div>
-        )}
-
-        {/* Capture controls */}
-        <div className="flex items-center justify-center gap-4 lg:gap-6 px-4 lg:px-6 py-2 lg:py-3 border-t border-border/60">
-          {/* Left: burst progress or timer display */}
-          <div className="w-24 flex justify-center">
-            {burstInfo ? (
-              <div className="flex items-center gap-1.5 bg-primary/10 border border-primary/20 rounded-full px-3 py-1.5 text-xs font-semibold text-primary animate-pulse">
-                <Repeat2 className="h-3 w-3" />
-                {burstInfo.current}/{burstInfo.total}
+        {/* ── Capture row ── */}
+        <div className="flex items-center justify-center gap-6 px-4 py-3 border-t border-border/30">
+          {/* Shot count */}
+          <div className="flex items-center gap-2">
+            {capturedPhotos.length > 0 ? (
+              <div className="flex items-center gap-1">
+                {capturedPhotos.slice(-5).map((photo, i) => (
+                  <div key={photo.id} className="relative group">
+                    <img
+                      src={photo.url}
+                      alt={`Shot ${capturedPhotos.length - capturedPhotos.slice(-5).length + i + 1}`}
+                      className="w-8 h-8 object-cover rounded-lg border-2 border-white shadow-sm"
+                    />
+                    <button
+                      onClick={() => removePhoto(photo.id)}
+                      className="absolute -top-1 -right-1 w-4 h-4 bg-error text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <X className="h-2.5 w-2.5" />
+                    </button>
+                  </div>
+                ))}
+                <span className="text-[10px] text-muted font-medium ml-0.5">{capturedPhotos.length}/{photosNeeded}</span>
               </div>
             ) : (
-              <div className="flex items-center gap-1.5 text-xs text-muted bg-rose-50 border border-border rounded-full px-3 py-1.5">
-                <Timer className="h-3.5 w-3.5 text-primary flex-shrink-0" />
-                {cameraSettings.countdown}s
-              </div>
+              <div className="text-[10px] text-muted/40">No shots yet</div>
             )}
           </div>
 
@@ -873,52 +1156,34 @@ export default function CameraPage() {
           <motion.button
             onClick={handleCaptureButton}
             disabled={!isStreaming || isCapturing}
-            whileHover={{ scale: isStreaming && !isCapturing ? 1.07 : 1 }}
-            whileTap={{ scale: isStreaming && !isCapturing ? 0.93 : 1 }}
+            whileHover={{ scale: isStreaming && !isCapturing ? 1.08 : 1 }}
+            whileTap={{ scale: isStreaming && !isCapturing ? 0.92 : 1 }}
             className={cn(
-              'relative h-14 lg:h-16 w-14 lg:w-16 rounded-full flex items-center justify-center',
-              'bg-primary transition-all animate-pulse-pink',
-              'disabled:opacity-40 disabled:cursor-not-allowed'
+              'relative h-16 w-16 rounded-full flex items-center justify-center',
+              'bg-gradient-to-br from-primary to-rose-400 shadow-lg shadow-primary/30',
+              'disabled:opacity-30 disabled:cursor-not-allowed',
+              isCapturing && 'animate-pulse'
             )}
           >
-            <div className="absolute inset-0 rounded-full border-4 border-white/40" />
+            <div className="absolute inset-1 rounded-full border-[3px] border-white/40" />
+            <div className="absolute inset-2 rounded-full bg-white/10" />
             {isCapturing ? (
-              <Square className="h-6 w-6 text-white" />
+              <Square className="h-6 w-6 text-white relative z-10" />
             ) : (
-              <Camera className="h-7 w-7 text-white" />
+              <Camera className="h-7 w-7 text-white relative z-10" />
             )}
           </motion.button>
 
-          {/* Status chip */}
-          <div className="w-24 flex justify-center">
-            <div className="flex items-center gap-1.5 text-xs text-muted bg-rose-50 border border-border rounded-full px-3 py-1.5">
-              <div
-                className={cn(
-                  'h-2 w-2 rounded-full flex-shrink-0',
-                  isStreaming ? 'bg-green-400 animate-pulse' : 'bg-border'
-                )}
-              />
-              {isStreaming ? 'Ready ✦' : cameraError ? 'Denied' : 'Connecting…'}
-            </div>
+          {/* Status */}
+          <div className="flex items-center gap-1.5">
+            <div className={cn(
+              'h-2 w-2 rounded-full',
+              isStreaming ? 'bg-green-400' : 'bg-border'
+            )} />
+            <span className="text-[10px] text-muted">
+              {isStreaming ? 'Ready' : cameraError ? 'Offline' : '...'}
+            </span>
           </div>
-        </div>
-
-        {/* ── Upload option ── */}
-        <div className="flex justify-center pb-1.5 lg:pb-2">
-          <button
-            onClick={() => uploadRef.current?.click()}
-            className="flex items-center gap-1.5 text-xs text-muted hover:text-primary transition-colors py-1 px-3 rounded-full hover:bg-rose-50"
-          >
-            <Upload className="h-3.5 w-3.5" />
-            or upload a photo
-          </button>
-          <input
-            ref={uploadRef}
-            type="file"
-            accept="image/png,image/jpeg,image/webp"
-            className="hidden"
-            onChange={handleFileUpload}
-          />
         </div>
       </div>
     </div>
