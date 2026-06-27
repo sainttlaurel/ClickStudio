@@ -180,7 +180,7 @@ export default function LandingPage() {
         // permission will be re-requested on camera page
       }
     }
-    navigate('/templates')
+    navigate('/camera')
   }
 
   return (

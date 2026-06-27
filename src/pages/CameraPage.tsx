@@ -23,6 +23,32 @@ import { cameraManager } from '@/utils/camera'
 import { cn } from '@/utils/cn'
 import { FILTERS, FRAMES } from '@/constants'
 import type { FilterId, FrameId, CameraError } from '@/constants'
+import type { Template } from '@/types'
+
+/* ─── Template data ──────────────────────────────────── */
+const classicTemplates: Template[] = [
+  { id: 'single-square', name: 'Single Photo', preview: '', layout: 'single', aspectRatio: '1:1', compositeStyle: 'clean', description: '1 photo' },
+  { id: 'double-vertical', name: 'Double Strip', preview: '', layout: 'double', aspectRatio: '2:3', compositeStyle: 'clean', description: '2 photos · vertical' },
+  { id: 'quad-square', name: 'Four Cuts', preview: '', layout: 'quad', aspectRatio: '1:1', compositeStyle: 'clean', description: '4 photos · 2×2 grid' },
+  { id: 'six-strip', name: 'Photo Strip', preview: '', layout: 'six', aspectRatio: '4:3', compositeStyle: 'clean', description: '6 photos · 3×2 grid' },
+]
+
+const frameTemplates: Template[] = [
+  { id: 'frame-polaroid-quad', name: 'Polaroid Memories', preview: '', layout: 'quad', aspectRatio: '1:1', compositeStyle: 'polaroid', description: '4 shots · polaroid borders' },
+  { id: 'frame-film-double', name: 'Film Roll', preview: '', layout: 'double', aspectRatio: '2:3', compositeStyle: 'film', description: '2 shots · film strip look' },
+  { id: 'frame-blush-quad', name: 'Blush Edit', preview: '', layout: 'quad', aspectRatio: '1:1', compositeStyle: 'blush', description: '4 shots · pink gradient' },
+  { id: 'frame-minimal-single', name: 'Minimal Clean', preview: '', layout: 'single', aspectRatio: '1:1', compositeStyle: 'minimal', description: '1 shot · thin pink border' },
+]
+
+const photoCounts: Record<string, number> = { single: 1, double: 2, quad: 4, six: 6 }
+
+const styleConfig: Record<string, { bg: string; cardBg: string; emoji: string }> = {
+  clean: { bg: 'bg-rose-50', cardBg: 'bg-white', emoji: '🤍' },
+  polaroid: { bg: 'bg-amber-50', cardBg: 'bg-amber-50/60', emoji: '📷' },
+  film: { bg: 'bg-gray-800', cardBg: 'bg-gray-900/10', emoji: '🎞️' },
+  blush: { bg: 'bg-rose-100', cardBg: 'bg-rose-50/60', emoji: '🌸' },
+  minimal: { bg: 'bg-white', cardBg: 'bg-gray-50', emoji: '◻️' },
+}
 
 /* ─── FilterThumbnail ─────────────────────────────────── */
 function FilterThumbnail({
@@ -153,9 +179,15 @@ export default function CameraPage() {
     removePhoto,
     capturedPhotos,
     currentSession,
+    startNewSession,
+    clearPhotos,
     setCountdown: setCountdownState,
   } = usePhotoStore()
   const { success, error } = useToast()
+
+  // ── Template picker state ──
+  const [templateTab, setTemplateTab] = useState<'classic' | 'frame'>('classic')
+  const hasTemplate = currentSession?.template != null
 
   const showSuccess = useCallback(
     (t: string, d: string) => success(t, d),
@@ -295,12 +327,12 @@ export default function CameraPage() {
     }
   }, [])
 
-  /* ── Auto-redirect to Editor when all shots captured ── */
+  /* ── Auto-redirect to Preview when all shots captured ── */
   useEffect(() => {
     if (capturedPhotos.length >= photosNeeded && !isCapturing && !burstInfo) {
-      success('All shots captured! 🎉', 'Taking you to the editor…')
+      success('All shots captured! 🎉', 'Taking you to the preview…')
       const timeout = setTimeout(() => {
-        navigate('/editor', { state: { photoId: capturedPhotos[capturedPhotos.length - 1]?.id } })
+        navigate('/preview')
       }, 1000)
       return () => clearTimeout(timeout)
     }
@@ -458,6 +490,93 @@ export default function CameraPage() {
     return null
   }
 
+  if (!hasTemplate) {
+    const templates = templateTab === 'classic' ? classicTemplates : frameTemplates
+
+    return (
+      <div className="h-full flex flex-col bg-background overflow-auto">
+        <div className="flex-1 flex flex-col items-center justify-center px-6 py-10">
+          <div className="text-center mb-8">
+            <p className="font-script text-primary text-base mb-1">Pick your template</p>
+            <h1 className="font-display text-3xl md:text-4xl text-text">
+              Choose a <em className="font-script not-italic text-primary">look.</em>
+            </h1>
+            <p className="text-muted mt-2 text-sm">Select a layout, then start capturing.</p>
+          </div>
+
+          {/* Tab toggle */}
+          <div className="inline-flex items-center bg-white border border-border rounded-full p-1 shadow-soft mb-6">
+            <button
+              onClick={() => setTemplateTab('classic')}
+              className={cn(
+                'px-5 py-2 rounded-full text-sm font-medium transition-all',
+                templateTab === 'classic'
+                  ? 'bg-primary text-white shadow-sm'
+                  : 'text-muted hover:text-primary'
+              )}
+            >
+              Classic Layouts
+            </button>
+            <button
+              onClick={() => setTemplateTab('frame')}
+              className={cn(
+                'px-5 py-2 rounded-full text-sm font-medium transition-all',
+                templateTab === 'frame'
+                  ? 'bg-primary text-white shadow-sm'
+                  : 'text-muted hover:text-primary'
+              )}
+            >
+              Frame Templates ✦
+            </button>
+          </div>
+
+          {/* Template grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl">
+            {templates.map((template) => {
+              const count = photoCounts[template.layout]
+              const cfg = styleConfig[template.compositeStyle ?? 'clean']
+              return (
+                <motion.button
+                  key={template.id}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  onClick={() => {
+                    startNewSession(template)
+                    success('Template selected ✨', `"${template.name}"`)
+                  }}
+                  className={cn(
+                    'flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all bg-white shadow-card hover:-translate-y-1 hover:shadow-polaroid',
+                    'border-border hover:border-primary/40'
+                  )}
+                >
+                  <div className={cn('w-full h-28 rounded-xl flex items-center justify-center', cfg.bg)}>
+                    <div className={cn(
+                      'grid gap-1',
+                      template.layout === 'single' && 'grid-cols-1 w-12 h-12',
+                      template.layout === 'double' && 'grid-cols-1 grid-rows-2 w-10 h-20',
+                      template.layout === 'quad' && 'grid-cols-2 grid-rows-2 w-16 h-16',
+                      template.layout === 'six' && 'grid-cols-3 grid-rows-2 w-20 h-14'
+                    )}>
+                      {Array.from({ length: count }).map((_, i) => (
+                        <div key={i} className="rounded-sm bg-white border border-rose-200 flex items-center justify-center">
+                          <Camera className="h-2 w-2 text-rose-400 opacity-60" />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <span className="block font-display text-sm text-text">{template.name}</span>
+                    <span className="text-xs text-muted">{template.description}</span>
+                  </div>
+                </motion.button>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="h-full flex flex-col bg-background">
       {/* ── Top controls bar ── */}
@@ -467,11 +586,17 @@ export default function CameraPage() {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate('/templates')}
+            onClick={() => {
+              if (capturedPhotos.length > 0) {
+                navigate('/preview')
+              } else {
+                clearPhotos()
+              }
+            }}
             icon={<ChevronLeft className="h-4 w-4" />}
             className="text-muted"
           >
-            Frames
+            {capturedPhotos.length > 0 ? 'Preview' : 'Templates'}
           </Button>
           <Button
             variant="ghost"

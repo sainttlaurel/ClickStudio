@@ -6,7 +6,6 @@ import LandingPage from '@/pages/LandingPage'
 import CameraPage from '@/pages/CameraPage'
 import PreviewPage from '@/pages/PreviewPage'
 import EditorPage from '@/pages/EditorPage'
-import TemplatesPage from '@/pages/TemplatesPage'
 import GalleryPage from '@/pages/GalleryPage'
 import SessionHistoryPage from '@/pages/SessionHistoryPage'
 import SettingsPage from '@/pages/SettingsPage'
@@ -24,7 +23,6 @@ function App() {
           <Route path="/camera" element={<CameraPage />} />
           <Route path="/preview" element={<PreviewPage />} />
           <Route path="/editor" element={<EditorPage />} />
-          <Route path="/templates" element={<TemplatesPage />} />
           <Route path="/gallery" element={<GalleryPage />} />
           <Route path="/history" element={<SessionHistoryPage />} />
           <Route path="/settings" element={<SettingsPage />} />

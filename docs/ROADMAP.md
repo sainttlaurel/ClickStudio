@@ -70,6 +70,18 @@
 
 ---
 
+## Shipped — Flow Simplification (DONE)
+
+| # | Feature | What was built |
+|---|---|---|
+| — | Simplified page flow | Reduced from 5 pages (Landing → Templates → Camera → Editor → Preview) to 3 (Landing → Camera → Preview) |
+| — | Template picker in Camera | Template selection (Classic Layouts / Frame Templates) is the first step on CameraPage before camera starts |
+| — | Auto-redirect to Preview | CameraPage auto-redirects to Preview (not Editor) when all shots are captured |
+| — | Editor accessible from Preview | "Edit Photo" button in Preview navigates to /editor for per-photo editing |
+| — | Removed standalone /templates route | No separate Templates page; LandingPage navigates directly to /camera |
+
+---
+
 ## Shipped — SEO & Deployment (DONE)
 
 | # | Feature | What was built |
@@ -116,5 +128,6 @@ Phase 3 — Share       →  S1, H1                                 ✅ SHIPPED
 Phase 4 — PDF Export  →  H6                                     ✅ SHIPPED
 Phase 5 — Creative    →  H3                                     ✅ SHIPPED
 Phase 6 — SEO & Deploy →  OG tags, sitemap, robots.txt, GSC      ✅ SHIPPED
-Phase 7 — Accounts     →  H5                                     (HOLD)
+Phase 7 — Flow Simplify → Templates in Camera, redirect to Preview ✅ SHIPPED
+Phase 8 — Accounts     →  H5                                     (HOLD)
 ```

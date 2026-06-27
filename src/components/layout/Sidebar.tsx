@@ -4,7 +4,6 @@ import {
   Camera,
   ImageIcon,
   Edit3,
-  Layout,
   History,
   Settings,
   HelpCircle,
@@ -19,7 +18,6 @@ const navigation = [
   { name: 'Camera', href: '/camera', icon: Camera },
   { name: 'Preview', href: '/preview', icon: ImageIcon },
   { name: 'Editor', href: '/editor', icon: Edit3 },
-  { name: 'Templates', href: '/templates', icon: Layout },
   { name: 'History', href: '/history', icon: History },
 ]
 

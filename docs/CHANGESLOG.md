@@ -4,6 +4,18 @@
 
 ---
 
+## v1.6.0 — Simplified Flow
+
+**June 27, 2026**
+
+### Flow
+- **Templates in Camera** — Template selection is now the first step on CameraPage (no more separate Templates page)
+- **Auto-redirect to Preview** — CameraPage redirects to Preview (not Editor) when all shots are captured
+- **Editor accessible from Preview** — "Edit Photo" button in Preview navigates to Editor
+- **Simplified navigation** — Removed standalone Templates route; LandingPage goes directly to Camera
+
+---
+
 ## v1.5.0 — Editor Improvements
 
 **June 27, 2026**
@@ -276,10 +288,11 @@ The free web photo booth is here → https://clickstudio.app
 
 ## Deploys
 
-All versions are deployed automatically to Vercel on push to `main`.
+All versions are deployed automatically to Netlify on push to `main`.
 
 | Version | Date | Commit |
 |---|---|---|
+| v1.6.0 | June 27, 2026 | `current` |
 | v1.5.0 | June 27, 2026 | `57597fd` |
 | v1.4.0 | June 26, 2026 | `d1acb55` |
 | v1.3.0 | June 26, 2026 | — |

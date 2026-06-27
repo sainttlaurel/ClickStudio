@@ -52,11 +52,8 @@ A modern, production-ready web photo booth application built with React 19, Type
 ## User Flow
 
 1. **Landing page** — click **Start the Studio**
-2. **Templates** — pick a Classic Layout or a Frame Template
-3. **Camera** — choose timer, mirror, filter, and per-photo frame overlay; capture (or use burst mode); or upload existing photos — auto-redirects to Editor when all shots are done
-4. **Editor** — fine-tune brightness, contrast, saturation; apply filters with live preview thumbnails; add stickers and text overlays
-5. **Preview** — see the final composited strip; retake individual shots from the filmstrip sidebar; add a Polaroid caption if applicable; generate QR code to share; download as PNG or print-ready PDF
-6. **Download** the strip, share it, or save the session to the cloud
+2. **Camera** — pick a template, then capture photos with timer, mirror, filters, and frame overlays (or upload existing photos) — auto-redirects to Preview when all shots are done
+3. **Preview** — see the final composited strip; edit individual photos with filters, stickers, and text; retake shots; add Polaroid captions; generate QR code; download as PNG or print-ready PDF; save to cloud
 
 ---
 
@@ -203,7 +200,7 @@ src/
 ├── pages/
 │   ├── LandingPage.tsx       # Landing page with feedback wall
 │   ├── CameraPage.tsx        # Filters, frames, mirror, timer, burst, retake, upload
-│   ├── TemplatesPage.tsx     # Classic Layouts + Frame Templates tabs
+│   ├── TemplatesPage.tsx     # (deprecated — template picker in CameraPage)
 │   ├── PreviewPage.tsx       # Composite result, retake, QR code, PDF export, download
 │   ├── EditorPage.tsx        # Adjustments, stickers, text overlays, filters, crop
 │   ├── GalleryPage.tsx
@@ -259,7 +256,7 @@ The CSS string is applied live to the `<video>` element and baked into every cap
 
 ## Adding a Custom Frame Template
 
-Add an entry to the `frameTemplates` array in `src/pages/TemplatesPage.tsx`:
+Add an entry to the `frameTemplates` array in `src/pages/CameraPage.tsx`:
 
 ```typescript
 {
