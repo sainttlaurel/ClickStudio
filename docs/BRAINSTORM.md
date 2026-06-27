@@ -22,7 +22,7 @@
 
 ---
 
-### 1. Feedback & Comment Wall (HOLD)
+### 1. Feedback & Comment Wall (DONE ✅)
 
 Users can leave a short message after their session — "drop a note, spread the love."
 
@@ -49,7 +49,7 @@ Users can leave a short message after their session — "drop a note, spread the
 
 ---
 
-### 2. Image Upload + Edit (ADD)
+### 2. Image Upload + Edit (DONE ✅)
 
 Users can upload an existing photo (JPG, PNG, WEBP) and apply ClickStudio's filters, frames, and polaroid templates to it — not just webcam shots.
 
@@ -105,7 +105,7 @@ Apply a polaroid frame, film strip border, or aesthetic collage layout to an upl
 
 ---
 
-### 4. Full Photo Strip Export (single image download) (ADD)
+### 4. Full Photo Strip Export (single image download) (DONE ✅)
 
 Right now users download individual photos. The killer feature of a photo booth is the **strip** — all photos arranged vertically in one image, like a real photo booth printout.
 
@@ -128,7 +128,7 @@ Right now users download individual photos. The killer feature of a photo booth 
 
 ---
 
-### 5. Stickers & Text Overlays (HOLD)
+### 5. Stickers & Text Overlays (DONE ✅)
 
 Drag-and-drop stickers (hearts, stars, bows, sparkles) and add short captions on top of photos before exporting.
 
@@ -152,7 +152,7 @@ Drag-and-drop stickers (hearts, stars, bows, sparkles) and add short captions on
 
 ---
 
-### 6. Aesthetic Preset Packs (SOON)
+### 6. Aesthetic Preset Packs (PARKED)
 
 Pre-made aesthetic bundles that apply a named vibe in one click: filter + frame + sticker combo.
 
@@ -177,7 +177,7 @@ Examples:
 
 ---
 
-### 7. QR Code Share (ADD)
+### 7. QR Code Share (DONE ✅)
 
 After capturing, generate a QR code that links to a shared gallery page so someone can scan it on their phone and download the strip instantly.
 
@@ -237,7 +237,7 @@ Let users sign up to save their strips permanently and access them from any devi
 
 ---
 
-### 11. Print-Ready PDF Export (HOLD)
+### 11. Print-Ready PDF Export (DONE ✅)
 
 Export the photo strip as a properly sized, print-optimized PDF — ready to send to a print shop or home printer.
 
@@ -259,7 +259,7 @@ Export the photo strip as a properly sized, print-optimized PDF — ready to sen
 
 ---
 
-### 12. Changelog / What's New popup (ADD)
+### 12. Changelog / What's New popup (DONE ✅)
 
 Show a modal or banner when the user opens the app after a new update — listing what changed in plain language.
 

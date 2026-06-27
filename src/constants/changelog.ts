@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.1.0'
+export const APP_VERSION = '1.5.0'
 
 const LS_KEY = `cs_changelog_v${APP_VERSION}`
 export const isChangelogSeen = (): boolean =>
@@ -21,8 +21,58 @@ export interface ChangelogVersion {
 
 export const CHANGELOG: ChangelogVersion[] = [
   {
+    version: '1.5.0',
+    date: 'June 27, 2026',
+    entries: [
+      { type: 'new',      text: 'Click-to-place stickers — select a sticker, click on the photo to place it anywhere' },
+      { type: 'new',      text: 'Touch drag support — stickers and text can be dragged with finger on mobile' },
+      { type: 'improved', text: 'Fixed sticker/text positioning — overlays now track correctly with the canvas' },
+      { type: 'new',      text: '13 filters with live preview thumbnails in the Editor' },
+      { type: 'new',      text: '10 sticker packs (160+ emoji) — Favorites, Coquette, Y2K, Nature, Fun, Faces, Hearts, Food & Drink, Animals, Accessories' },
+      { type: 'new',      text: '6 text font presets — Script, Serif, Sans, Mono, Cursive, Display' },
+      { type: 'new',      text: '15 text colors for overlays' },
+      { type: 'new',      text: 'Edit Photo button in PreviewPage Actions sidebar' },
+    ],
+  },
+  {
+    version: '1.4.0',
+    date: 'June 26, 2026',
+    entries: [
+      { type: 'new',      text: 'Stickers tab — 6 themed packs with tap-to-add, drag, resize, rotate, delete' },
+      { type: 'new',      text: 'Text overlay tab — 4 font presets, 10 colors, adjustable size' },
+      { type: 'new',      text: 'Stickers and text composited onto canvas on save' },
+    ],
+  },
+  {
+    version: '1.3.0',
+    date: 'June 26, 2026',
+    entries: [
+      { type: 'new',      text: 'Print-Ready PDF — export at 300 DPI in 6 sizes: 2×6, 4×6, A4, US Letter' },
+      { type: 'new',      text: 'Print/PDF button with size picker modal' },
+    ],
+  },
+  {
+    version: '1.2.0',
+    date: 'June 26, 2026',
+    entries: [
+      { type: 'new',      text: 'QR Code share — generate a QR code to share your strip' },
+      { type: 'new',      text: 'Public share page — anyone can view and download your strip' },
+      { type: 'new',      text: 'Feedback wall — leave a message on the landing page' },
+      { type: 'new',      text: 'Copy Link button for easy sharing' },
+    ],
+  },
+  {
+    version: '1.1.1',
+    date: 'June 26, 2026',
+    entries: [
+      { type: 'new',      text: 'Official ClickStudio logo on Header, Sidebar, About page, and Landing page' },
+      { type: 'improved', text: 'Contact info — email and Discord on the About page' },
+      { type: 'fixed',    text: 'Copyright updated to 2026' },
+    ],
+  },
+  {
     version: '1.1.0',
-    date: 'June 2026',
+    date: 'June 25, 2026',
     entries: [
       { type: 'new',      text: 'Photo strip compositor — all shots combined into one beautiful result' },
       { type: 'new',      text: 'Frame Templates with Polaroid, Film, Blush, and Minimal composite styles' },
@@ -36,7 +86,7 @@ export const CHANGELOG: ChangelogVersion[] = [
   },
   {
     version: '1.0.0',
-    date: 'June 2026',
+    date: 'June 25, 2026',
     entries: [
       { type: 'new', text: 'Timer options — 3 s, 5 s, or 10 s countdown before each shot' },
       { type: 'new', text: 'Mirror toggle — flip live feed and bake correct orientation into the capture' },

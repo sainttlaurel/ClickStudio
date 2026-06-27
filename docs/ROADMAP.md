@@ -65,7 +65,7 @@
 
 | # | Feature | What was built |
 |---|---|---|
-| H3 | Stickers & Text Overlays | `src/constants/stickers.ts` — 10 sticker packs (160+ emoji): Favorites, Coquette, Y2K, Nature, Fun, Faces, Hearts, Food & Drink, Animals, Accessories; Stickers tab in EditorPage with pack selector, tap-to-add, drag-to-reposition, resize/rotate/delete controls; Text tab with 6 font presets (Script, Serif, Sans, Mono, Cursive, Display), 15 colors, size slider, drag-to-reposition; 13 filters with live preview thumbnails in Editor; stickers and text composited onto canvas on save |
+| H3 | Stickers & Text Overlays | `src/constants/stickers.ts` — 10 sticker packs (160+ emoji): Favorites, Coquette, Y2K, Nature, Fun, Faces, Hearts, Food & Drink, Animals, Accessories; Stickers tab in EditorPage with pack selector, click-to-place on canvas, drag-to-reposition, touch support, resize/rotate/delete controls; Text tab with 6 font presets (Script, Serif, Sans, Mono, Cursive, Display), 15 colors, size slider, drag-to-reposition; 13 filters with live preview thumbnails in Editor; stickers and text composited onto canvas on save |
 
 ---
 
