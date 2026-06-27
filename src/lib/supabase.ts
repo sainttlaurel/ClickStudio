@@ -33,6 +33,16 @@ export interface DbPhoto {
   created_at: string
 }
 
+export interface DbFeedback {
+  id: string
+  name: string | null
+  message: string
+  emoji: string
+  session_id: string | null
+  approved: boolean
+  created_at: string
+}
+
 // ─── Supabase client ───────────────────────────────────────────
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
@@ -49,6 +59,7 @@ export const STORAGE_BUCKETS = {
 export const TABLES = {
   SESSIONS: 'sessions',
   PHOTOS: 'photos',
+  FEEDBACK: 'feedback',
 } as const
 
 // ─── Upload a base64 data-URL photo to Supabase Storage ───────
@@ -83,4 +94,35 @@ export async function removePhotosFromStorage(paths: string[]): Promise<void> {
     .from(STORAGE_BUCKETS.PHOTOS)
     .remove(paths)
   if (error) console.error('Storage remove error:', error)
+}
+
+// ─── Feedback helpers ─────────────────────────────────────────
+
+export async function submitFeedback(
+  name: string | null,
+  message: string,
+  emoji: string = '♡',
+  sessionId?: string
+): Promise<void> {
+  const { error } = await supabase
+    .from(TABLES.FEEDBACK)
+    .insert({
+      name: name?.trim() || null,
+      message: message.trim().slice(0, 160),
+      emoji,
+      session_id: sessionId || null,
+      approved: true,
+    })
+  if (error) throw error
+}
+
+export async function fetchApprovedFeedback(): Promise<DbFeedback[]> {
+  const { data, error } = await supabase
+    .from(TABLES.FEEDBACK)
+    .select('*')
+    .eq('approved', true)
+    .order('created_at', { ascending: false })
+    .limit(50)
+  if (error) throw error
+  return data || []
 }

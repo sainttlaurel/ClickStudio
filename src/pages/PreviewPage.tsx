@@ -11,7 +11,11 @@ import {
   RotateCcw,
   Loader2,
   ImageIcon,
+  QrCode,
+  Copy,
+  Check,
 } from 'lucide-react'
+import QRCode from 'qrcode'
 import { Button } from '@/components/ui/button'
 import { usePhotoStore } from '@/store/usePhotoStore'
 import { useToast } from '@/store/useUIStore'
@@ -40,6 +44,12 @@ export default function PreviewPage() {
   const [compositeUrl, setCompositeUrl] = useState<string | null>(null)
   const [isComposing, setIsComposing] = useState(false)
   const [polaroidCaption, setPolaroidCaption] = useState('')
+
+  // ── QR code state ────────────────────────────────────────────────────────
+  const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null)
+  const [showQrModal, setShowQrModal] = useState(false)
+  const [isGeneratingQr, setIsGeneratingQr] = useState(false)
+  const [copied, setCopied] = useState(false)
 
   // ── Individual photo retake panel ─────────────────────────────────────────
   const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null)
@@ -115,6 +125,50 @@ export default function PreviewPage() {
       setSelectedPhoto(null)
     }
     success('Photo removed', 'Photo deleted from the session')
+  }
+
+  // ── QR Code handlers ──────────────────────────────────────────────────────
+
+  const generateQrCode = async () => {
+    if (!currentSession?.id) {
+      error('No session', 'Save your session to the cloud first to generate a QR code')
+      return
+    }
+
+    setIsGeneratingQr(true)
+    try {
+      // Ensure session is saved to cloud
+      await saveSession()
+
+      const shareUrl = `${window.location.origin}/share/${currentSession.id}`
+      const qrDataUrl = await QRCode.toDataURL(shareUrl, {
+        width: 256,
+        margin: 2,
+        color: {
+          dark: '#1C0B1A',
+          light: '#FFFFFF',
+        },
+      })
+      setQrCodeUrl(qrDataUrl)
+      setShowQrModal(true)
+    } catch {
+      error('QR failed', 'Could not generate QR code')
+    } finally {
+      setIsGeneratingQr(false)
+    }
+  }
+
+  const handleCopyLink = async () => {
+    if (!currentSession?.id) return
+    const shareUrl = `${window.location.origin}/share/${currentSession.id}`
+    try {
+      await navigator.clipboard.writeText(shareUrl)
+      setCopied(true)
+      success('Link copied!', 'Share link copied to clipboard')
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      error('Copy failed', 'Could not copy link to clipboard')
+    }
   }
 
   // ── Empty state ───────────────────────────────────────────────────────────
@@ -286,6 +340,22 @@ export default function PreviewPage() {
               className="w-full justify-start"
             >
               Share
+            </Button>
+
+            <Button
+              variant="outline"
+              onClick={generateQrCode}
+              disabled={isGeneratingQr || !currentSession?.id}
+              icon={
+                isGeneratingQr ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <QrCode className="h-4 w-4" />
+                )
+              }
+              className="w-full justify-start"
+            >
+              QR Code
             </Button>
 
             <Button
@@ -467,6 +537,60 @@ export default function PreviewPage() {
           )}
         </div>
       </div>
+      {/* QR Code Modal */}
+      <AnimatePresence>
+        {showQrModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+            onClick={() => setShowQrModal(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl"
+              onClick={e => e.stopPropagation()}
+            >
+              <h3 className="font-display text-xl text-text text-center mb-2">
+                Scan to view strip
+              </h3>
+              <p className="text-muted text-sm text-center mb-4">
+                Scan this QR code or copy the link to share your photo strip
+              </p>
+
+              {qrCodeUrl && (
+                <div className="flex justify-center mb-4">
+                  <img
+                    src={qrCodeUrl}
+                    alt="QR Code"
+                    className="w-48 h-48 rounded-xl border border-border"
+                  />
+                </div>
+              )}
+
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  onClick={handleCopyLink}
+                  className="flex-1"
+                  icon={copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                >
+                  {copied ? 'Copied!' : 'Copy Link'}
+                </Button>
+                <Button
+                  onClick={() => setShowQrModal(false)}
+                  className="flex-1"
+                >
+                  Done
+                </Button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

@@ -12,12 +12,14 @@ import SessionHistoryPage from '@/pages/SessionHistoryPage'
 import SettingsPage from '@/pages/SettingsPage'
 import HelpPage from '@/pages/HelpPage'
 import AboutPage from '@/pages/AboutPage'
+import SharePage from '@/pages/SharePage'
 
 function App() {
   return (
     <>
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/share/:sessionId" element={<SharePage />} />
         <Route element={<Layout />}>
           <Route path="/camera" element={<CameraPage />} />
           <Route path="/preview" element={<PreviewPage />} />

@@ -40,9 +40,25 @@ create table if not exists public.photos (
 comment on table public.photos is 'Individual captured photos linked to sessions';
 
 
+-- ─── Feedback ────────────────────────────────────────────────────
+-- User feedback and comments displayed on the landing page wall
+create table if not exists public.feedback (
+  id          uuid        primary key default gen_random_uuid(),
+  name        text,                            -- optional display name
+  message     text        not null,            -- feedback message (max 160 chars)
+  emoji       text        default '♡',         -- emoji reaction
+  session_id  uuid        references public.sessions(id) on delete set null,
+  approved    boolean     not null default true,
+  created_at  timestamptz not null default now()
+);
+
+comment on table public.feedback is 'User feedback and comments for the landing page wall';
+
+
 -- ─── Indexes ─────────────────────────────────────────────────────
 create index if not exists photos_session_id_idx  on public.photos(session_id);
 create index if not exists sessions_created_at_idx on public.sessions(created_at desc);
+create index if not exists feedback_created_at_idx on public.feedback(created_at desc);
 
 
 -- ─── updated_at auto-trigger ─────────────────────────────────────
@@ -63,6 +79,7 @@ create trigger sessions_updated_at
 -- ─── Row Level Security ──────────────────────────────────────────
 alter table public.sessions enable row level security;
 alter table public.photos    enable row level security;
+alter table public.feedback  enable row level security;
 
 -- Public access — no login required for basic use.
 -- Swap these for auth-based policies when you add user accounts.
@@ -75,6 +92,17 @@ drop policy if exists "allow_all_photos" on public.photos;
 create policy "allow_all_photos"
   on public.photos for all
   using (true) with check (true);
+
+-- Feedback: anyone can read approved items, anyone can insert
+drop policy if exists "feedback_select_approved" on public.feedback;
+create policy "feedback_select_approved"
+  on public.feedback for select
+  using (approved = true);
+
+drop policy if exists "feedback_insert_anyone" on public.feedback;
+create policy "feedback_insert_anyone"
+  on public.feedback for insert
+  with check (true);
 
 
 -- ─── Storage: "photos" public bucket ─────────────────────────────

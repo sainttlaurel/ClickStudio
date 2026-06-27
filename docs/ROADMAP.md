@@ -44,14 +44,12 @@
 
 ---
 
-## Building Next — Phase 3
+## Shipped — Phase 3 (DONE)
 
-### Sharing & Social
-
-| # | Feature | What it does | Effort |
-|---|---|---|---|
-| S1 | QR Code share | Each session gets a `/share/[sessionId]` public page; QR code generated client-side with the `qrcode` package | Medium |
-| H1 | Feedback / Comment Wall | Post-session comment form; `feedback` Supabase table; scrolling card wall on the landing page | Medium |
+| # | Feature | What was built |
+|---|---|---|
+| S1 | QR Code share | `/share/[sessionId]` public page with composite preview + download; QR code generated client-side via `qrcode` package; Copy Link button; QR modal in PreviewPage |
+| H1 | Feedback / Comment Wall | `feedback` Supabase table with name, message, emoji, approved fields; feedback form on LandingPage; scrolling card wall displaying approved feedback; auto-approved on submit |
 
 ---
 
@@ -73,8 +71,8 @@
 
 | # | Feature | Why it's parked | Revisit when |
 |---|---|---|---|
-| H2 | Full Polaroid / Film Strip Template Editor | Complex; current frame templates cover the need | After Phase 3 ships |
-| H3 | Stickers & Text Overlays | Drag-and-drop canvas is complex; Polaroid caption covers basic text | After Phase 3 ships |
+| H2 | Full Polaroid / Film Strip Template Editor | Complex; current frame templates cover the need | After Phase 4 ships |
+| H3 | Stickers & Text Overlays | Drag-and-drop canvas is complex; Polaroid caption covers basic text | After Phase 4 ships |
 | H4 | Aesthetic Preset Packs | Depends on stickers (H3) | After H3 |
 | H5 | Optional User Accounts | Supabase Auth ready — deferred to avoid friction before core UX is solid | When gallery / sharing is mature |
 | H6 | Print-Ready PDF Export | jsPDF adds ~200 KB; PNG strip covers most use cases | After event / wedding use case grows |
@@ -87,6 +85,6 @@
 Phase 1 — Camera      →  C1, C2, C3, C4, P2                    ✅ SHIPPED
 Phase 2 — Output      →  P1, P3, X1, U1/U2, Frame Templates    ✅ SHIPPED
 Phase 2b — Branding   →  Logo, Contact, Copyright               ✅ SHIPPED
-Phase 3 — Share       →  S1, H1
+Phase 3 — Share       →  S1, H1                                 ✅ SHIPPED
 Phase 4 — Hold        →  H3, H4, H5, H2, H6
 ```

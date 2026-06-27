@@ -1,7 +1,11 @@
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Camera, Star } from 'lucide-react'
+import { Camera, Star, Send, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { submitFeedback, fetchApprovedFeedback, type DbFeedback } from '@/lib/supabase'
+import { useToast } from '@/store/useUIStore'
+import { cn } from '@/utils/cn'
 
 /* ─── Feature cards ─────────────────────────────────────── */
 const features = [
@@ -113,6 +117,57 @@ function PolaroidFloatie({
 /* ─── Component ─────────────────────────────────────────── */
 export default function LandingPage() {
   const navigate = useNavigate()
+  const { success, error: showError } = useToast()
+
+  // ── Feedback state ──────────────────────────────────────────────────────
+  const [feedbackName, setFeedbackName] = useState('')
+  const [feedbackMessage, setFeedbackMessage] = useState('')
+  const [feedbackEmoji, setFeedbackEmoji] = useState('♡')
+  const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false)
+  const [feedbackList, setFeedbackList] = useState<DbFeedback[]>([])
+  const [isLoadingFeedback, setIsLoadingFeedback] = useState(true)
+
+  const emojiOptions = ['♡', '📸', '✨', '🎀', '⭐', '🌸', '💕', '🔥']
+
+  // Fetch approved feedback on mount
+  useEffect(() => {
+    const loadFeedback = async () => {
+      try {
+        const data = await fetchApprovedFeedback()
+        setFeedbackList(data)
+      } catch {
+        // Silently fail — feedback wall is non-critical
+      } finally {
+        setIsLoadingFeedback(false)
+      }
+    }
+    loadFeedback()
+  }, [])
+
+  const handleSubmitFeedback = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!feedbackMessage.trim()) return
+
+    setIsSubmittingFeedback(true)
+    try {
+      await submitFeedback(
+        feedbackName || null,
+        feedbackMessage,
+        feedbackEmoji
+      )
+      success('Thanks for your feedback! ♡', 'Your message has been added to the wall')
+      setFeedbackName('')
+      setFeedbackMessage('')
+      setFeedbackEmoji('♡')
+      // Refresh feedback list
+      const data = await fetchApprovedFeedback()
+      setFeedbackList(data)
+    } catch {
+      showError('Oops!', 'Could not submit feedback. Please try again.')
+    } finally {
+      setIsSubmittingFeedback(false)
+    }
+  }
 
   const handleGetStarted = async () => {
     if (
@@ -467,6 +522,150 @@ export default function LandingPage() {
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ── Feedback Wall ── */}
+      <section className="relative z-10 py-20 px-4 sm:px-6">
+        <div className="max-w-5xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-14"
+          >
+            <p className="font-script text-primary text-lg mb-2">
+              Drop a note
+            </p>
+            <h2 className="font-display text-4xl md:text-5xl text-text">
+              What people{' '}
+              <em className="font-script not-italic text-primary">say.</em>
+            </h2>
+            <p className="text-muted mt-4 max-w-md mx-auto">
+              Leave a little message — spread the love ♡
+            </p>
+          </motion.div>
+
+          {/* Feedback form */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="bg-white rounded-3xl p-6 md:p-8 border border-border shadow-card max-w-lg mx-auto mb-12"
+          >
+            <form onSubmit={handleSubmitFeedback} className="space-y-4">
+              <div>
+                <label className="block text-sm text-text font-medium mb-1.5">
+                  Name <span className="text-muted">(optional)</span>
+                </label>
+                <input
+                  type="text"
+                  value={feedbackName}
+                  onChange={e => setFeedbackName(e.target.value)}
+                  placeholder="Your name"
+                  maxLength={30}
+                  className="w-full rounded-xl border border-border bg-rose-50/50 px-4 py-2.5 text-sm text-text placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-primary/40"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm text-text font-medium mb-1.5">
+                  Message
+                </label>
+                <textarea
+                  value={feedbackMessage}
+                  onChange={e => setFeedbackMessage(e.target.value.slice(0, 160))}
+                  placeholder="Say something nice..."
+                  rows={3}
+                  maxLength={160}
+                  className="w-full rounded-xl border border-border bg-rose-50/50 px-4 py-2.5 text-sm text-text placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-primary/40 resize-none"
+                />
+                <p className="text-xs text-muted text-right mt-1">
+                  {feedbackMessage.length}/160
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm text-text font-medium mb-2">
+                  Pick an emoji
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {emojiOptions.map(emoji => (
+                    <button
+                      key={emoji}
+                      type="button"
+                      onClick={() => setFeedbackEmoji(emoji)}
+                      className={cn(
+                        'w-10 h-10 rounded-xl text-lg flex items-center justify-center transition-all',
+                        feedbackEmoji === emoji
+                          ? 'bg-primary/10 border-2 border-primary scale-110'
+                          : 'bg-rose-50 border border-border hover:border-primary/40'
+                      )}
+                    >
+                      {emoji}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <Button
+                type="submit"
+                disabled={!feedbackMessage.trim() || isSubmittingFeedback}
+                icon={
+                  isSubmittingFeedback ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Send className="h-4 w-4" />
+                  )
+                }
+                className="w-full"
+              >
+                {isSubmittingFeedback ? 'Sending...' : 'Send Feedback'}
+              </Button>
+            </form>
+          </motion.div>
+
+          {/* Feedback wall cards */}
+          {isLoadingFeedback ? (
+            <div className="flex justify-center py-8">
+              <Loader2 className="h-6 w-6 text-primary animate-spin" />
+            </div>
+          ) : feedbackList.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {feedbackList.map((item, i) => (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: i * 0.05 }}
+                  className="bg-white rounded-2xl p-5 border border-border shadow-card hover:shadow-polaroid transition-all"
+                >
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl">{item.emoji}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-text text-sm leading-relaxed">
+                        {item.message}
+                      </p>
+                      <p className="text-muted text-xs mt-2">
+                        {item.name || 'Anonymous'} ·{' '}
+                        {new Date(item.created_at).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-muted text-sm py-4">
+              No feedback yet — be the first to leave a note!
+            </p>
+          )}
         </div>
       </section>
 
