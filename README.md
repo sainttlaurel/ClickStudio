@@ -117,7 +117,7 @@ Frame Templates define how the final composited strip looks. Classic Layouts use
 | Backend | Supabase (Database, Storage) |
 | Icons | Lucide React |
 | Fonts | Inter, DM Serif Display, Dancing Script |
-| Deployment | Vercel |
+| Deployment | Netlify |
 
 ---
 
@@ -279,9 +279,9 @@ The `compositeStyle` field drives how `compositor.ts` renders the final strip PN
 
 ## Deployment
 
-**Vercel:** Connect the repository, set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in project settings, and deploy. Subsequent pushes to `main` deploy automatically.
+**Netlify:** Connect the repository, set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in environment variables, and deploy. Subsequent pushes to `main` deploy automatically.
 
-Note: `vercel.json` sets `Permissions-Policy: camera=*` so the camera API works on the deployed domain.
+Note: `netlify.toml` sets `Permissions-Policy: camera=*` so the camera API works on the deployed domain.
 
 ```bash
 # Manual build

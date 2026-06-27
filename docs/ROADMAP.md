@@ -70,6 +70,19 @@
 
 ---
 
+## Shipped — SEO & Deployment (DONE)
+
+| # | Feature | What was built |
+|---|---|---|
+| — | SEO meta tags | OG tags, Twitter Cards, JSON-LD structured data, canonical URL, robots meta, apple mobile web app tags in `index.html` |
+| — | PWA manifest fix | Changed from "PhotoBooth Pro" dark theme → "ClickStudio" pink `#FDF5F7` |
+| — | Sitemap | `/sitemap.xml` with all routes and priorities |
+| — | robots.txt | `/robots.txt` with allow all and sitemap reference |
+| — | Google Search Console | Property verified via HTML meta tag; sitemap submitted |
+| — | Migrated Vercel → Netlify | Fixed static file serving (Vercel SPA override); `_redirects` rules in Netlify handle robots.txt, sitemap.xml, and Google verification correctly |
+
+---
+
 ## Decisions Locked
 
 | Question | Decision |
@@ -102,5 +115,6 @@ Phase 2b — Branding   →  Logo, Contact, Copyright               ✅ SHIPPED
 Phase 3 — Share       →  S1, H1                                 ✅ SHIPPED
 Phase 4 — PDF Export  →  H6                                     ✅ SHIPPED
 Phase 5 — Creative    →  H3                                     ✅ SHIPPED
-Phase 6 — Accounts    →  H5                                     (HOLD)
+Phase 6 — SEO & Deploy →  OG tags, sitemap, robots.txt, GSC      ✅ SHIPPED
+Phase 7 — Accounts     →  H5                                     (HOLD)
 ```
