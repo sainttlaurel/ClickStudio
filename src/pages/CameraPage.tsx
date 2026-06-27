@@ -661,7 +661,7 @@ export default function CameraPage() {
 
       {/* ── Camera viewport ── */}
       <div className="flex-1 flex items-center justify-center p-4 min-h-0">
-        <div className="relative w-full max-w-3xl h-full max-h-[440px]">
+        <div className="relative w-full max-w-3xl h-full max-h-[55vh] lg:max-h-[440px]">
           <div className="camera-viewport w-full h-full shadow-card border-2 border-border rounded-2xl overflow-hidden">
             <video
               ref={videoRef}
@@ -738,7 +738,7 @@ export default function CameraPage() {
       </div>
 
       {/* ── Bottom panel ── */}
-      <div className="bg-white border-t border-border">
+      <div className="bg-white border-t border-border overflow-y-auto max-h-[45vh] lg:max-h-none">
         {/* Frame selector (now includes Polaroid — P2) */}
         <div className="flex items-center justify-center gap-1.5 px-4 py-2 border-b border-border/60 overflow-x-auto">
           <span className="text-[10px] font-semibold uppercase tracking-widest text-muted mr-1 flex-shrink-0">
@@ -853,7 +853,7 @@ export default function CameraPage() {
         )}
 
         {/* Capture controls */}
-        <div className="flex items-center justify-center gap-6 px-6 py-3 border-t border-border/60">
+        <div className="flex items-center justify-center gap-4 lg:gap-6 px-4 lg:px-6 py-2 lg:py-3 border-t border-border/60">
           {/* Left: burst progress or timer display */}
           <div className="w-24 flex justify-center">
             {burstInfo ? (
@@ -876,7 +876,7 @@ export default function CameraPage() {
             whileHover={{ scale: isStreaming && !isCapturing ? 1.07 : 1 }}
             whileTap={{ scale: isStreaming && !isCapturing ? 0.93 : 1 }}
             className={cn(
-              'relative h-16 w-16 rounded-full flex items-center justify-center',
+              'relative h-14 lg:h-16 w-14 lg:w-16 rounded-full flex items-center justify-center',
               'bg-primary transition-all animate-pulse-pink',
               'disabled:opacity-40 disabled:cursor-not-allowed'
             )}

@@ -498,7 +498,7 @@ export default function EditorPage() {
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+      <div className="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden">
         {/* Canvas Area */}
         <div
           ref={containerRef}
