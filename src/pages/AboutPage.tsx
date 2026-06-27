@@ -12,7 +12,7 @@ export default function AboutPage() {
             className="h-20 w-auto object-contain mx-auto mb-4"
           />
           <h1 className="font-display text-3xl text-text mb-2">ClickStudio</h1>
-          <p className="text-muted text-lg">Version 1.0.0</p>
+          <p className="text-muted text-lg">Version 1.7.0</p>
         </div>
 
         <div className="bg-white rounded-2xl p-8 border border-border shadow-card text-center">
@@ -36,14 +36,14 @@ export default function AboutPage() {
           <h3 className="font-display text-lg text-text mb-4">Built With</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              'React 19',
+              'React 18',
               'TypeScript',
               'Tailwind CSS',
               'Framer Motion',
               'Zustand',
               'Supabase',
               'Vite',
-              'Vercel',
+              'Netlify',
             ].map(tech => (
               <div key={tech} className="text-center p-3 bg-rose-50 rounded-lg">
                 <span className="text-sm font-medium text-text">{tech}</span>

@@ -1,3 +1,5 @@
+export type CameraError = null | 'denied' | 'unsupported' | 'error'
+
 export interface Photo {
   id: string
   url: string

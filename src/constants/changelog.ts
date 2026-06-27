@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.6.0'
+export const APP_VERSION = '1.7.0'
 
 const LS_KEY = `cs_changelog_v${APP_VERSION}`
 export const isChangelogSeen = (): boolean =>
@@ -20,6 +20,19 @@ export interface ChangelogVersion {
 }
 
 export const CHANGELOG: ChangelogVersion[] = [
+  {
+    version: '1.7.0',
+    date: 'June 27, 2026',
+    entries: [
+      { type: 'new',      text: 'Template Library — 28 templates across 15 categories with search, sort, and favorites' },
+      { type: 'new',      text: 'Template carousel — premium horizontal scroll with glassmorphism arrows and floating cards' },
+      { type: 'new',      text: 'Countdown sounds — Web Audio API beeps during countdown and capture' },
+      { type: 'fixed',    text: 'Camera now starts correctly after template selection' },
+      { type: 'fixed',    text: 'Editor layout — removed standalone quick filter bar that was overlapping the canvas' },
+      { type: 'improved', text: 'Frame Overlay tab replaces empty Crop tab' },
+      { type: 'improved', text: 'Canvas height increased for better editing experience' },
+    ],
+  },
   {
     version: '1.6.0',
     date: 'June 27, 2026',

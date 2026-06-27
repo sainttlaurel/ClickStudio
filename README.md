@@ -1,106 +1,45 @@
 # ClickStudio
 
-A modern, production-ready web photo booth application built with React 19, TypeScript, and Vite. Capture, filter, and share beautiful photo strips — entirely in the browser, no app required.
+A modern web photo booth — capture, edit, and share photo strips directly in the browser. No app download required.
+
+**Live:** [clickstudiodev.netlify.app](https://clickstudiodev.netlify.app)
 
 ---
 
 ## Features
 
-### Camera
-- **Live Camera** — HD webcam support with device switching, grid overlay, and flash
-- **Mirror toggle** — Flip the live feed horizontally; baked correctly into the captured photo
-- **Timer options** — Choose 3s, 5s, or 10s countdown before each shot
-- **Burst mode** — Auto-fires the full set of shots for your chosen template; opt-in
-- **Retake** — Thumbnail strip after each shot lets you delete and reshoot any photo
-- **Image upload** — Upload an existing JPG, PNG, or WEBP and run it through the same filter + frame pipeline
+### Capture
+- **Live Camera** — HD webcam with device switching, grid overlay, mirror toggle, and flash
+- **Timer & Burst** — 3s/5s/10s countdown; burst mode auto-fires all shots; countdown beeps included
+- **Image Upload** — Drop existing photos into the same filter + frame pipeline
+- **Retake** — Thumbnail strip after each shot; delete and reshoot any photo
 
-### Filters & Frames
-- **13 Film Filters** — Vintage, Smooth, 70s, 80s, 90s, B&W, Faded, Lomo, Cool, Warm, Film, Dreamy, Original — applied live and baked into every capture
-- **5 Frame Overlays** — Clean, Film strip, Blush vignette, Minimal border, Polaroid — applied per-photo at capture time
+### Edit (Preview Page)
+- **Filters** — 13 film presets (Vintage, B&W, Dreamy, etc.) applied per-photo with live preview thumbnails
+- **Frame Overlays** — Clean, Film, Blush, Minimal, Polaroid — applied per-photo at capture or in editor
+- **Stickers** — 10 themed packs (160+ emoji): Coquette, Y2K, Nature, Hearts, Food, Animals, etc.
+- **Text Overlays** — 6 font presets, 15 colors, adjustable size — drag to reposition
 
-### Templates & Composite Output
-- **Classic Layouts** — Single, Double Strip, Four Cuts, Photo Strip — plain grid arrangements with a clean white composite
-- **Frame Templates** — Pre-designed composite styles: Polaroid Memories, Film Roll, Blush Edit, Minimal Clean — each applies a unique visual treatment to the entire strip output
-- **Photo Strip Compositor** — All captured photos are composited into one final PNG (the "product") — the primary view in Preview
-- **Polaroid caption** — When using a Polaroid frame template, add a personal text note to the bottom strip before downloading
-
-### Preview & Export
-- **Composite preview** — Preview page shows the final composited strip as the main result; individual shots appear in a retake filmstrip on the side
-- **Download Strip** — One-click download of the full composite PNG with a ClickStudio watermark
-- **Print-Ready PDF** — Export as print-ready PDF (300 DPI) in 6 sizes: 2×6 strip, 4×6 print, A4, US Letter
-- **QR Code share** — Generate QR code to share your strip; public `/share/[sessionId]` page for anyone to view & download
-- **Share** — Web Share API on supported devices; falls back to download
-- **Save to cloud** — Session + photos synced to Supabase Storage
-
-### Editor
-- **Adjustments** — Brightness, contrast, saturation, exposure, shadows, highlights, temperature, tint per individual photo
-- **Stickers** — 10 themed packs (160+ emoji): Favorites, Coquette, Y2K, Nature, Fun, Faces, Hearts, Food & Drink, Animals, Accessories — tap to add, drag to reposition, resize/rotate
-- **Text overlays** — 6 font presets (Script, Serif, Sans, Mono, Cursive, Display), 15 colors, adjustable size — drag to reposition
-- **Filters** — 13 filters with live preview thumbnails + quick filter bar below the canvas for one-tap access
-- **Frame Overlays** — Change frame (Clean, Film, Blush, Minimal, Polaroid) after capturing; frame renders live on the canvas
+### Export & Share
+- **Composite Strip** — All photos composited into one PNG with a ClickStudio watermark
+- **Print-Ready PDF** — 300 DPI in 6 sizes: 2×6 strip, 4×6 print, A4, US Letter
+- **QR Code** — Generate a shareable link; public `/share/[sessionId]` page for anyone to view & download
+- **Web Share API** — Native share on supported devices; falls back to download
+- **Save to Cloud** — Session + photos synced to Supabase Storage
 
 ### App
-- **What's New modal** — Auto-shows once per app version with a versioned changelog; dismissed state in localStorage
-- **Session History** — Cloud-synced sessions with save, load, delete, and composite strip export
-- **Feedback wall** — Leave a message on the landing page; scrolling card wall of community feedback
+- **What's New** — Auto-shows once per version with a changelog; dismiss state in localStorage
+- **Feedback Wall** — Community messages displayed on the landing page
 - **PWA** — Installable as a native-like app
-- **Responsive** — Desktop and mobile ready
-- **Accessible** — WCAG AA compliant, keyboard navigable
+- **Responsive** — Desktop and mobile
 
 ---
 
 ## User Flow
 
-1. **Landing page** — click **Start the Studio**
-2. **Camera** — pick a template, then capture photos with timer, mirror, filters, and frame overlays (or upload existing photos) — auto-redirects to Preview when all shots are done
-3. **Preview** — see the final composited strip; edit individual photos with filters, stickers, and text; retake shots; add Polaroid captions; generate QR code; download as PNG or print-ready PDF; save to cloud
-
----
-
-## Filters
-
-| Name | Character |
-|---|---|
-| Original | No filter |
-| Vintage | Warm sepia, slightly faded |
-| Smooth | Soft, brightened, low contrast |
-| 70s | Warm orange-amber film look |
-| 80s | High contrast, saturated, retro-pop |
-| 90s | Subtle warm fade |
-| B & W | Crisp grayscale |
-| Faded | Lifted blacks, desaturated |
-| Lomo | Deep contrast, vivid |
-| Cool | Blue-toned |
-| Warm | Golden tones |
-| Film | Classic film tone |
-| Dreamy | Bright, soft, ethereal |
-
-The selected filter is applied live to the `<video>` element and baked into every capture via `canvas ctx.filter`. Filters can also be applied in the Editor with live preview thumbnails.
-
----
-
-## Frame Overlays (per-photo, applied at capture)
-
-| Name | Style |
-|---|---|
-| Clean | No border |
-| Film | Black sprocket-hole bars top and bottom |
-| Blush | Soft pink radial vignette |
-| Minimal | Thin white inner border |
-| Polaroid | White border, thick bottom strip with ClickStudio label |
-
----
-
-## Frame Templates (composite-level styles)
-
-| Name | Layout | Style |
-|---|---|---|
-| Polaroid Memories | 4 shots (2×2) | White polaroid cards, soft cream background, shadow |
-| Film Roll | 2 shots (vertical) | Dark background, sprocket holes, muted tones |
-| Blush Edit | 4 shots (2×2) | Pink gradient background, rounded photo corners |
-| Minimal Clean | 1 shot | White background, thin pink border |
-
-Frame Templates define how the final composited strip looks. Classic Layouts use the same grid arrangements with a plain white background.
+1. **Landing** — click **Start the Studio**
+2. **Camera** — pick a template, capture photos with timer/mirror/filters/frames, or upload — auto-redirects to Preview when done
+3. **Preview** — see the final composited strip; edit individual photos; retake shots; add Polaroid captions; generate QR code; download as PNG or PDF; save to cloud
 
 ---
 
@@ -108,7 +47,7 @@ Frame Templates define how the final composited strip looks. Classic Layouts use
 
 | Layer | Technology |
 |---|---|
-| Frontend | React 19, TypeScript, Vite |
+| Frontend | React 18, TypeScript, Vite |
 | Styling | Tailwind CSS, Framer Motion |
 | State | Zustand |
 | Backend | Supabase (Database, Storage) |
@@ -120,17 +59,12 @@ Frame Templates define how the final composited strip looks. Classic Layouts use
 
 ## Getting Started
 
-**Prerequisites:** Node.js 18+, a modern browser with WebRTC support, a Supabase project.
+**Prerequisites:** Node.js 18+, a modern browser with WebRTC, a Supabase project.
 
 ```bash
-# 1. Clone
 git clone https://github.com/sainttlaurel/ClickStudio.git
 cd ClickStudio
-
-# 2. Install
 npm install
-
-# 3. Configure environment
 cp .env.example .env
 ```
 
@@ -142,10 +76,9 @@ VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
 ```bash
-# 4. Run the database schema
-# Open supabase/schema.sql and run it in the Supabase SQL Editor
+# Run the database schema in the Supabase SQL Editor
+# Open supabase/schema.sql and run it
 
-# 5. Start dev server
 npm run dev
 ```
 
@@ -162,70 +95,53 @@ Run `supabase/schema.sql` once in the Supabase SQL Editor. It creates:
 
 ---
 
-## Design System
-
-Pink-forward, feminine aesthetic with a clean editorial structure.
-
-| Token | Value | Usage |
-|---|---|---|
-| `--background` | `#FDF5F7` | Page background |
-| `--surface` | `#FFFFFF` | Cards and panels |
-| `--border` | `#F5C5D8` | Borders and dividers |
-| `--primary` | `#E91E8C` | Buttons, active states |
-| `--secondary` | `#FF85A2` | Accents |
-| `--text` | `#1C0B1A` | Body text |
-| `--muted` | `#9B6B7B` | Secondary text |
-
-**Typography:** Inter (body), DM Serif Display (display headings), Dancing Script (script accents)
-
----
-
 ## Project Structure
 
 ```
-public/
-└── logo.png                   # Official ClickStudio logo
 src/
 ├── components/
-│   ├── ui/                   # Button, Input, Modal, Slider, Toaster, ChangelogModal
-│   └── layout/               # Header, Sidebar, Layout
-├── constants/                # Shared constants and types
-│   ├── filters.ts            # 13 film filter presets
-│   ├── frames.ts             # 5 frame overlay definitions
-│   ├── stickers.ts           # 10 sticker packs, text presets, colors
-│   ├── changelog.ts          # Versioned changelog entries + localStorage helpers
-│   ├── types.ts              # CameraError type
-│   └── index.ts              # Barrel export
-├── hooks/                    # Custom hooks (future)
+│   ├── ui/                 # Button, Input, Modal, Slider, Toaster, ChangelogModal
+│   ├── layout/             # Header, Sidebar, Layout
+│   └── templates/          # TemplateLibrary modal
+├── constants/
+│   ├── filters.ts          # 13 film filter presets
+│   ├── frames.ts           # 5 frame overlay definitions
+│   ├── stickers.ts         # 10 sticker packs, text presets, colors
+│   ├── changelog.ts        # Versioned changelog + localStorage helpers
+│   ├── templates.ts        # 28 template library items, 15 categories
+│   └── index.ts            # Barrel export
 ├── pages/
-│   ├── LandingPage.tsx       # Landing page with feedback wall
-│   ├── CameraPage.tsx        # Filters, frames, mirror, timer, burst, retake, upload
-│   ├── TemplatesPage.tsx     # (deprecated — template picker in CameraPage)
-│   ├── PreviewPage.tsx       # Composite result, retake, QR code, PDF export, download
-│   ├── EditorPage.tsx        # Adjustments, stickers, text overlays, filters, crop
-│   ├── GalleryPage.tsx
-│   ├── SessionHistoryPage.tsx
-│   ├── SettingsPage.tsx
-│   ├── HelpPage.tsx
-│   ├── AboutPage.tsx
-│   └── SharePage.tsx         # Public share page for /share/[sessionId]
+│   ├── LandingPage.tsx     # Landing with feedback wall
+│   ├── CameraPage.tsx      # Camera, template carousel, filters, frames, mirror, timer
+│   ├── PreviewPage.tsx     # Composite result, edit, retake, QR, PDF, download
+│   ├── EditorPage.tsx      # Adjustments, stickers, text, filters, frames
+│   ├── AboutPage.tsx       # About / tech stack
+│   ├── HelpPage.tsx        # Help / FAQ
+│   ├── SettingsPage.tsx    # Settings
+│   ├── SharePage.tsx       # Public share page /share/[sessionId]
+│   ├── GalleryPage.tsx     # Placeholder (planned)
+│   └── SessionHistoryPage.tsx  # Placeholder (planned)
 ├── store/
-│   ├── usePhotoStore.ts      # Session, photo, and camera state + Supabase sync
-│   └── useUIStore.ts
+│   ├── usePhotoStore.ts    # Session, photo, camera state + Supabase sync
+│   └── useUIStore.ts       # Toast + modal state
 ├── lib/
-│   └── supabase.ts           # Typed client, upload and delete helpers
+│   └── supabase.ts         # Typed client, upload/delete helpers
 ├── types/
-│   └── index.ts              # Photo, Template, CompositeStyle, and all shared types
+│   └── index.ts            # Photo, Template, CompositeStyle, all shared types
 └── utils/
-    ├── camera.ts             # CameraManager — capture, upload processing, filter + frame baking
-    ├── compositor.ts         # composeStrip — composites photos into a single strip PNG
-    ├── pdf.ts                # generatePrintPDF — print-ready PDF export at 300 DPI
-    └── cn.ts
+    ├── camera.ts           # CameraManager — capture, upload, filter + frame baking
+    ├── compositor.ts       # composeStrip — composites photos into a strip PNG
+    ├── frameOverlay.ts     # Shared frame drawing logic
+    ├── pdf.ts              # Print-ready PDF export at 300 DPI
+    ├── sounds.ts           # Countdown/capture beep sounds
+    └── cn.ts               # Class name utility
 supabase/
-└── schema.sql                # Full database schema and storage setup
+└── schema.sql              # Database schema and storage setup
 docs/
-├── BRAINSTORM.md             # Full feature brainstorm with notes
-└── ROADMAP.md                # Active roadmap — what's shipped, building, and parked
+├── BRAINSTORM.md           # Feature brainstorm
+├── ROADMAP.md              # Active roadmap
+├── CHANGESLOG.md           # Version history
+└── UIREVIEW.md             # Design review & feedback
 ```
 
 ---
@@ -237,65 +153,58 @@ npm run dev          # Development server
 npm run build        # Production build
 npm run preview      # Preview production build
 npm run lint         # ESLint
+npm run type-check   # TypeScript check
 npm run format       # Prettier
 ```
 
 ---
 
-## Adding a Custom Filter
+## Customization
 
-Append an entry to the `FILTERS` array in `src/constants/filters.ts`:
+### Adding a Filter
+
+Append to `FILTERS` in `src/constants/filters.ts`:
 
 ```typescript
 { id: 'myfilter', name: 'My Filter', css: 'sepia(30%) contrast(1.1) brightness(1.05)' }
 ```
 
-The CSS string is applied live to the `<video>` element and baked into every capture (and upload) via `ctx.filter`.
+### Adding a Frame
 
----
+Append to `FRAMES` in `src/constants/frames.ts`:
 
-## Adding a Custom Frame Template
+```typescript
+{ id: 'myframe', name: 'My Frame', icon: '🖼', style: { /* CSS properties */ } }
+```
 
-Add an entry to the `frameTemplates` array in `src/pages/CameraPage.tsx`:
+### Adding a Template
+
+Add to the `templates` array in `src/constants/templates.ts`:
 
 ```typescript
 {
-  id: 'frame-my-style',
-  name: 'My Style',
-  preview: '',
-  layout: 'quad',           // single | double | quad | six
+  id: 'my-template',
+  name: 'My Template',
+  category: 'Custom',
+  layout: 'quad',
   aspectRatio: '1:1',
-  compositeStyle: 'blush',  // clean | polaroid | film | blush | minimal
+  compositeStyle: 'blush',
   description: '4 shots · my custom style',
+  preview: '',
 }
 ```
-
-The `compositeStyle` field drives how `compositor.ts` renders the final strip PNG.
 
 ---
 
 ## Deployment
 
-**Netlify:** Connect the repository, set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in environment variables, and deploy. Subsequent pushes to `main` deploy automatically.
+**Netlify** (current):
 
-Note: `netlify.toml` sets `Permissions-Policy: camera=*` so the camera API works on the deployed domain.
+1. Connect the GitHub repo in Netlify Dashboard
+2. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in environment variables
+3. Pushes to `main` deploy automatically
 
-```bash
-# Manual build
-npm run build
-# Output → dist/
-```
-
----
-
-## Contributing
-
-```bash
-git checkout -b feature/your-feature
-git commit -m 'Add your feature'
-git push origin feature/your-feature
-# Open a pull request
-```
+`netlify.toml` + `public/_redirects` handle SPA routing. `Permissions-Policy: camera=*` is set for camera API access.
 
 ---
 
@@ -310,9 +219,3 @@ git push origin feature/your-feature
 ## License
 
 MIT — see [LICENSE](LICENSE).
-
----
-
-## Acknowledgments
-
-Design language inspired by Y2K photo booth aesthetics, Polaroid culture, and modern editorial UI patterns. Icons by [Lucide](https://lucide.dev/). Typefaces via [Google Fonts](https://fonts.google.com/).

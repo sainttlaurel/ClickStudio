@@ -24,8 +24,8 @@ import { useToast } from '@/store/useUIStore'
 import { cameraManager } from '@/utils/camera'
 import { cn } from '@/utils/cn'
 import { FILTERS, FRAMES } from '@/constants'
-import type { FilterId, FrameId, CameraError } from '@/constants'
-import type { Template } from '@/types'
+import type { FilterId, FrameId } from '@/constants'
+import type { Template, CameraError } from '@/types'
 import TemplateLibrary from '@/components/templates/TemplateLibrary'
 import { playCountdownTick, playCaptureSound } from '@/utils/sounds'
 
@@ -398,13 +398,33 @@ export default function CameraPage() {
       setCameraError('unsupported')
       return
     }
-    startCameraStream(cancelled)
+    if (hasTemplate) {
+      startCameraStream(cancelled)
+    }
     return () => {
       cancelled.value = true
       cameraManager.stopCamera()
       setIsStreaming(false)
     }
   }, [])
+
+  /* ── Start camera when template is selected (after initial mount) ── */
+  useEffect(() => {
+    if (!hasTemplate || isStreaming || cameraError) return
+    const cancelled = { value: false }
+    if (!cameraManager.isSupported()) {
+      setCameraError('unsupported')
+      return
+    }
+    // Small delay so the video element is in the DOM
+    const t = setTimeout(() => {
+      if (!cancelled.value) startCameraStream(cancelled)
+    }, 100)
+    return () => {
+      cancelled.value = true
+      clearTimeout(t)
+    }
+  }, [hasTemplate])
 
   /* ── Auto-redirect to Preview when all shots captured ── */
   useEffect(() => {
