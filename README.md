@@ -33,10 +33,10 @@ A modern, production-ready web photo booth application built with React 19, Type
 - **Save to cloud** — Session + photos synced to Supabase Storage
 
 ### Editor
-- **Adjustments** — Brightness, contrast, saturation, temperature, shadows, highlights, tint per individual photo
-- **Stickers** — 6 themed packs (48 emoji): Favorites, Coquette, Y2K, Nature, Fun, Faces — tap to add, drag to reposition, resize/rotate
-- **Text overlays** — 4 font presets (Script, Serif, Sans, Mono), 10 colors, adjustable size — drag to reposition
-- **Filters** — Original, B&W, Vintage, Vibrant, Cool, Warm
+- **Adjustments** — Brightness, contrast, saturation, exposure, shadows, highlights, temperature, tint per individual photo
+- **Stickers** — 10 themed packs (160+ emoji): Favorites, Coquette, Y2K, Nature, Fun, Faces, Hearts, Food & Drink, Animals, Accessories — tap to add, drag to reposition, resize/rotate
+- **Text overlays** — 6 font presets (Script, Serif, Sans, Mono, Cursive, Display), 15 colors, adjustable size — drag to reposition
+- **Filters** — 13 filters with live preview thumbnails: Original, Vintage, Smooth, 70s, 80s, 90s, B&W, Faded, Lomo, Cool, Warm, Film, Dreamy
 - **Crop & Rotate** — Aspect ratio presets and rotation
 
 ### App
@@ -55,7 +55,7 @@ A modern, production-ready web photo booth application built with React 19, Type
 2. **Templates** — pick a Classic Layout or a Frame Template
 3. **Camera** — choose timer, mirror, filter, and per-photo frame overlay; capture (or use burst mode); or upload existing photos
 4. **Preview** — see the final composited strip; retake individual shots from the filmstrip sidebar; add a Polaroid caption if applicable; generate QR code to share; download as PNG or print-ready PDF
-5. **Editor** — fine-tune brightness, contrast, saturation; add stickers and text overlays
+5. **Editor** — fine-tune brightness, contrast, saturation; apply filters with live preview thumbnails; add stickers and text overlays
 6. **Download** the strip, share it, or save the session to the cloud
 
 ---
@@ -78,7 +78,7 @@ A modern, production-ready web photo booth application built with React 19, Type
 | Film | Classic film tone |
 | Dreamy | Bright, soft, ethereal |
 
-The selected filter is applied live to the `<video>` element and baked into every capture via `canvas ctx.filter`.
+The selected filter is applied live to the `<video>` element and baked into every capture via `canvas ctx.filter`. Filters can also be applied in the Editor with live preview thumbnails.
 
 ---
 
@@ -195,7 +195,7 @@ src/
 ├── constants/                # Shared constants and types
 │   ├── filters.ts            # 13 film filter presets
 │   ├── frames.ts             # 5 frame overlay definitions
-│   ├── stickers.ts           # 6 sticker packs, text presets, colors
+│   ├── stickers.ts           # 10 sticker packs, text presets, colors
 │   ├── changelog.ts          # Versioned changelog entries + localStorage helpers
 │   ├── types.ts              # CameraError type
 │   └── index.ts              # Barrel export
