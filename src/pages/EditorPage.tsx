@@ -217,7 +217,8 @@ export default function EditorPage() {
       })
 
       setHasChanges(false)
-      success('Photo saved', 'Your edits have been applied to the photo')
+      success('Photo saved', 'Taking you back to preview…')
+      setTimeout(() => navigate('/preview'), 800)
     } catch {
       error('Save failed', 'Could not save photo edits')
     }

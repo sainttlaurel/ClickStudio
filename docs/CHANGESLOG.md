@@ -4,21 +4,9 @@
 
 ---
 
-## v1.6.0 — Simplified Flow
-
-**June 27, 2026**
-
-### Flow
-- **Templates in Camera** — Template selection is now the first step on CameraPage (no more separate Templates page)
-- **Auto-redirect to Preview** — CameraPage redirects to Preview (not Editor) when all shots are captured
-- **Editor accessible from Preview** — "Edit Photo" button in Preview navigates to Editor
-- **Simplified navigation** — Removed standalone Templates route; LandingPage goes directly to Camera
-
----
-
 ## v1.5.0 — Editor Improvements
 
-**June 27, 2026**
+June 27, 2026
 
 ### Editor
 - **Click-to-place stickers** — Select a sticker in the panel, then click anywhere on the photo to place it at that exact position
@@ -37,7 +25,7 @@
 
 ## v1.4.0 — Stickers & Text Overlays
 
-**June 26, 2026**
+June 26, 2026
 
 ### Editor
 - **Stickers tab** — 6 themed packs (48 emoji): Favorites, Coquette, Y2K, Nature, Fun, Faces
@@ -51,7 +39,7 @@
 
 ## v1.3.0 — Print-Ready PDF Export
 
-**June 26, 2026**
+June 26, 2026
 
 ### Preview & Export
 - **Print-Ready PDF** — Export as print-ready PDF at 300 DPI via jsPDF
@@ -62,7 +50,7 @@
 
 ## v1.2.0 — QR Code Share & Feedback Wall
 
-**June 26, 2026**
+June 26, 2026
 
 ### Share
 - **QR Code share** — Generate QR code client-side via `qrcode` package
@@ -82,7 +70,7 @@
 
 ## v1.1.1 — Branding & Polish
 
-**June 26, 2026**
+June 26, 2026
 
 ### Branding
 - **Official logo** — `public/logo.png` integrated into Header, Sidebar, About page, and Landing page footer
@@ -93,7 +81,7 @@
 
 ## v1.1.0 — Output & Composite
 
-**June 25, 2026**
+June 25, 2026
 
 ### Composite Output
 - **Photo Strip Compositor** — All photos composited into one final PNG per layout and composite style
@@ -118,7 +106,7 @@
 
 ## v1.0.0 — Initial Release
 
-**June 25, 2026**
+June 25, 2026
 
 ### Camera
 - **Live Camera** — HD webcam support with device switching, grid overlay, and flash
@@ -165,117 +153,6 @@ ClickStudio v{VERSION} — {TITLE}
 Try it now → https://clickstudio.app
 ```
 
-### Example Posts
-
-**v1.5.0**
-```
-ClickStudio v1.5.0 — Editor Improvements
-
-🎨 Editor
-• Click-to-place stickers — select, then click anywhere on your photo
-• Touch drag — move stickers & text with your finger on mobile
-• 13 filters with live preview thumbnails
-• 10 sticker packs (160+ emoji) — Coquette, Y2K, Nature & more
-• 6 text fonts, 15 colors
-
-⚡ Preview
-• Edit Photo button added to sidebar
-
-Update live now → https://clickstudio.app
-```
-
-**v1.4.0**
-```
-ClickStudio v1.4.0 — Stickers & Text Overlays
-
-🎀 Stickers
-• 6 themed packs — Favorites, Coquette, Y2K, Nature, Fun, Faces
-• Tap to add, drag to reposition, resize & rotate
-• Composited on save
-
-✏️ Text Overlays
-• 4 font presets — Script, Serif, Sans, Mono
-• 10 colors, adjustable size
-• Drag anywhere on the photo
-
-Try it now → https://clickstudio.app
-```
-
-**v1.3.0**
-```
-ClickStudio v1.3.0 — Print-Ready PDF
-
-🖨️ Print / PDF
-• Export at 300 DPI — print shop ready
-• 6 sizes: 2×6 strip, 4×6, A4, US Letter
-• Size picker modal in Preview
-
-Perfect for events & weddings 💕
-
-Try it now → https://clickstudio.app
-```
-
-**v1.2.0**
-```
-ClickStudio v1.2.0 — Share & Feedback
-
-📱 QR Code Share
-• Generate QR code — scan to view & download
-• Public share page for anyone
-• Copy link button
-
-💬 Feedback Wall
-• Leave a message on the landing page
-• Scrolling community card wall
-
-Try it now → https://clickstudio.app
-```
-
-**v1.1.1**
-```
-ClickStudio v1.1.1 — Branding
-
-✨ What's New
-• Official ClickStudio logo
-• Email + Discord contact on About page
-• Copyright updated to 2026
-
-Small polish, big difference 💕
-```
-
-**v1.1.0**
-```
-ClickStudio v1.1.0 — Composite Output
-
-📸 Photo Strip Compositor
-• All shots combined into one PNG
-• 4 Frame Templates — Polaroid, Film, Blush, Minimal
-• Polaroid caption text
-• Image upload support
-
-The photo booth experience is complete 🎉
-
-Try it now → https://clickstudio.app
-```
-
-**v1.0.0**
-```
-ClickStudio v1.0.0 is LIVE! 🎉
-
-📸 Camera
-• HD webcam, mirror toggle, timer, burst mode
-• 13 film filters + 5 frame overlays
-
-🎨 Editor
-• Brightness, contrast, saturation & more
-• Crop & rotate
-
-📱 App
-• PWA installable, responsive, accessible
-
-The free web photo booth is here → https://clickstudio.app
-```
-
 ---
 
 ## Version Numbering
@@ -292,7 +169,7 @@ All versions are deployed automatically to Netlify on push to `main`.
 
 | Version | Date | Commit |
 |---|---|---|
-| v1.6.0 | June 27, 2026 | `current` |
+| v1.6.0 | June 27, 2026 | `c3b87cd` |
 | v1.5.0 | June 27, 2026 | `57597fd` |
 | v1.4.0 | June 26, 2026 | `d1acb55` |
 | v1.3.0 | June 26, 2026 | — |

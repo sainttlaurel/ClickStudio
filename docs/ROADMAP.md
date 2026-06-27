@@ -79,6 +79,9 @@
 | — | Auto-redirect to Preview | CameraPage auto-redirects to Preview (not Editor) when all shots are captured |
 | — | Editor accessible from Preview | "Edit Photo" button in Preview navigates to /editor for per-photo editing |
 | — | Removed standalone /templates route | No separate Templates page; LandingPage navigates directly to /camera |
+| — | Frame tab in Editor | Crop tab replaced with Frame Overlay tab — select Clean, Film, Blush, Minimal, Polaroid after capturing; renders live on canvas |
+| — | Quick filter bar in Editor | Horizontal scrollable filter strip below the canvas — one-tap filter switching without opening the Filters tab |
+| — | Shared frameOverlay util | `bakeFrameOverlay` extracted from `camera.ts` into `src/utils/frameOverlay.ts` for consistent rendering across Camera and Editor |
 
 ---
 

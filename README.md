@@ -36,8 +36,8 @@ A modern, production-ready web photo booth application built with React 19, Type
 - **Adjustments** — Brightness, contrast, saturation, exposure, shadows, highlights, temperature, tint per individual photo
 - **Stickers** — 10 themed packs (160+ emoji): Favorites, Coquette, Y2K, Nature, Fun, Faces, Hearts, Food & Drink, Animals, Accessories — tap to add, drag to reposition, resize/rotate
 - **Text overlays** — 6 font presets (Script, Serif, Sans, Mono, Cursive, Display), 15 colors, adjustable size — drag to reposition
-- **Filters** — 13 filters with live preview thumbnails: Original, Vintage, Smooth, 70s, 80s, 90s, B&W, Faded, Lomo, Cool, Warm, Film, Dreamy
-- **Crop & Rotate** — Aspect ratio presets and rotation
+- **Filters** — 13 filters with live preview thumbnails + quick filter bar below the canvas for one-tap access
+- **Frame Overlays** — Change frame (Clean, Film, Blush, Minimal, Polaroid) after capturing; frame renders live on the canvas
 
 ### App
 - **What's New modal** — Auto-shows once per app version with a versioned changelog; dismissed state in localStorage

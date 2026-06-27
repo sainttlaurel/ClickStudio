@@ -28,6 +28,9 @@ export const CHANGELOG: ChangelogVersion[] = [
       { type: 'new',      text: 'Auto-redirect to Preview when all shots are captured — edit photos from Preview' },
       { type: 'new',      text: 'Landing page now goes directly to Camera' },
       { type: 'improved', text: 'Fewer pages, smoother experience — Templates → Camera → Preview → Editor' },
+      { type: 'new',      text: 'Frame Overlay tab in Editor — change frame (Clean, Film, Blush, Minimal, Polaroid) after capturing' },
+      { type: 'new',      text: 'Quick filter bar below the canvas — tap a filter to see the effect instantly, no tab switching needed' },
+      { type: 'improved', text: 'Frame overlay rendering extracted to a shared utility — consistent across Camera and Editor' },
     ],
   },
   {
