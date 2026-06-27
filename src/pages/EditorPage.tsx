@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
@@ -92,15 +92,17 @@ export default function EditorPage() {
   const [textSize, setTextSize] = useState(32)
   const [draggingText, setDraggingText] = useState<string | null>(null)
 
-  useEffect(() => {
-    if (!currentPhoto) {
-      navigate('/preview')
-      return
-    }
-    drawImage()
-  }, [currentPhoto, adjustments, placedStickers, placedTexts])
+  // ── Store latest values in refs for drawImage ──────────────────────────
+  const adjustmentsRef = useRef(adjustments)
+  const stickersRef = useRef(placedStickers)
+  const textsRef = useRef(placedTexts)
 
-  const drawImage = useCallback(() => {
+  useEffect(() => { adjustmentsRef.current = adjustments }, [adjustments])
+  useEffect(() => { stickersRef.current = placedStickers }, [placedStickers])
+  useEffect(() => { textsRef.current = placedTexts }, [placedTexts])
+
+  // ── Draw image (reads from refs to avoid re-render loops) ──────────────
+  const drawImage = () => {
     if (!currentPhoto || !canvasRef.current) return
 
     const canvas = canvasRef.current
@@ -113,18 +115,18 @@ export default function EditorPage() {
       canvas.height = img.height
 
       // Apply adjustments
+      const adj = adjustmentsRef.current
       ctx.filter = `
-        brightness(${100 + adjustments.brightness}%)
-        contrast(${100 + adjustments.contrast}%)
-        saturate(${100 + adjustments.saturation}%)
-        hue-rotate(${adjustments.temperature}deg)
+        brightness(${100 + adj.brightness}%)
+        contrast(${100 + adj.contrast}%)
+        saturate(${100 + adj.saturation}%)
+        hue-rotate(${adj.temperature}deg)
       `
-
       ctx.drawImage(img, 0, 0)
       ctx.filter = 'none'
 
       // Draw stickers
-      for (const sticker of placedStickers) {
+      for (const sticker of stickersRef.current) {
         ctx.save()
         ctx.translate(sticker.x, sticker.y)
         ctx.rotate((sticker.rotation * Math.PI) / 180)
@@ -136,7 +138,7 @@ export default function EditorPage() {
       }
 
       // Draw texts
-      for (const t of placedTexts) {
+      for (const t of textsRef.current) {
         ctx.save()
         ctx.font = `${t.style} ${t.size}px "${t.font}"`
         ctx.fillStyle = t.color
@@ -149,7 +151,20 @@ export default function EditorPage() {
       }
     }
     img.src = currentPhoto.url
-  }, [currentPhoto, adjustments, placedStickers, placedTexts])
+  }
+
+  useEffect(() => {
+    if (!currentPhoto) {
+      navigate('/preview')
+      return
+    }
+    drawImage()
+  }, [currentPhoto]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Redraw when adjustments, stickers, or texts change
+  useEffect(() => {
+    drawImage()
+  }, [adjustments, placedStickers, placedTexts]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleAdjustmentChange = (
     key: keyof PhotoAdjustments,
@@ -212,10 +227,10 @@ export default function EditorPage() {
   const handleStickerMouseDown = (e: React.MouseEvent, stickerId: string) => {
     e.stopPropagation()
     const sticker = placedStickers.find(s => s.id === stickerId)
-    if (!sticker || !containerRef.current) return
+    if (!sticker || !containerRef.current || !canvasRef.current) return
 
     const rect = containerRef.current.getBoundingClientRect()
-    const canvas = canvasRef.current!
+    const canvas = canvasRef.current
     const scaleX = canvas.width / rect.width
     const scaleY = canvas.height / rect.height
 
@@ -228,20 +243,29 @@ export default function EditorPage() {
   }
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!draggingSticker || !containerRef.current) return
+    if ((!draggingSticker && !draggingText) || !containerRef.current || !canvasRef.current) return
     const rect = containerRef.current.getBoundingClientRect()
-    const canvas = canvasRef.current!
+    const canvas = canvasRef.current
     const scaleX = canvas.width / rect.width
     const scaleY = canvas.height / rect.height
 
     const newX = (e.clientX - rect.left) * scaleX - dragOffset.x
     const newY = (e.clientY - rect.top) * scaleY - dragOffset.y
 
-    setPlacedStickers(prev =>
-      prev.map(s =>
-        s.id === draggingSticker ? { ...s, x: newX, y: newY } : s
+    if (draggingSticker) {
+      setPlacedStickers(prev =>
+        prev.map(s =>
+          s.id === draggingSticker ? { ...s, x: newX, y: newY } : s
+        )
       )
-    )
+    }
+    if (draggingText) {
+      setPlacedTexts(prev =>
+        prev.map(t =>
+          t.id === draggingText ? { ...t, x: newX, y: newY } : t
+        )
+      )
+    }
   }
 
   const handleMouseUp = () => {
@@ -296,10 +320,10 @@ export default function EditorPage() {
   const handleTextMouseDown = (e: React.MouseEvent, textId: string) => {
     e.stopPropagation()
     const t = placedTexts.find(txt => txt.id === textId)
-    if (!t || !containerRef.current) return
+    if (!t || !containerRef.current || !canvasRef.current) return
 
     const rect = containerRef.current.getBoundingClientRect()
-    const canvas = canvasRef.current!
+    const canvas = canvasRef.current
     const scaleX = canvas.width / rect.width
     const scaleY = canvas.height / rect.height
 
@@ -389,15 +413,15 @@ export default function EditorPage() {
             />
 
             {/* Draggable sticker overlays */}
-            {containerRef.current && placedStickers.map(sticker => {
+            {containerRef.current && canvasRef.current && placedStickers.map(sticker => {
               const rect = containerRef.current?.getBoundingClientRect()
-              if (!rect) return null
-              const canvas = canvasRef.current!
+              const canvas = canvasRef.current
+              if (!rect || !canvas) return null
               const displayScaleX = rect.width / canvas.width
               const displayScaleY = rect.height / canvas.height
               const displayX = sticker.x * displayScaleX
               const displayY = sticker.y * displayScaleY
-              const displaySize = sticker.size * displayScaleX
+              const displaySize = Math.max(20, sticker.size * displayScaleX)
 
               return (
                 <div
@@ -415,40 +439,27 @@ export default function EditorPage() {
                   onMouseDown={e => handleStickerMouseDown(e, sticker.id)}
                 >
                   <span className="pointer-events-none">{sticker.emoji}</span>
-                  {/* Controls on hover */}
                   <div className="absolute -top-8 left-1/2 -translate-x-1/2 hidden group-hover:flex gap-1">
                     <button
-                      onClick={e => {
-                        e.stopPropagation()
-                        handleSizeSticker(sticker.id, -8)
-                      }}
+                      onClick={e => { e.stopPropagation(); handleSizeSticker(sticker.id, -8) }}
                       className="bg-white/90 hover:bg-white rounded-md p-0.5 shadow-sm text-xs"
                     >
                       −
                     </button>
                     <button
-                      onClick={e => {
-                        e.stopPropagation()
-                        handleRotateSticker(sticker.id)
-                      }}
+                      onClick={e => { e.stopPropagation(); handleRotateSticker(sticker.id) }}
                       className="bg-white/90 hover:bg-white rounded-md p-0.5 shadow-sm text-xs"
                     >
                       <RotateCcw className="h-3 w-3" />
                     </button>
                     <button
-                      onClick={e => {
-                        e.stopPropagation()
-                        handleSizeSticker(sticker.id, 8)
-                      }}
+                      onClick={e => { e.stopPropagation(); handleSizeSticker(sticker.id, 8) }}
                       className="bg-white/90 hover:bg-white rounded-md p-0.5 shadow-sm text-xs"
                     >
                       +
                     </button>
                     <button
-                      onClick={e => {
-                        e.stopPropagation()
-                        handleDeleteSticker(sticker.id)
-                      }}
+                      onClick={e => { e.stopPropagation(); handleDeleteSticker(sticker.id) }}
                       className="bg-white/90 hover:bg-white rounded-md p-0.5 shadow-sm text-xs text-red-500"
                     >
                       <Trash2 className="h-3 w-3" />
@@ -459,15 +470,15 @@ export default function EditorPage() {
             })}
 
             {/* Draggable text overlays */}
-            {containerRef.current && placedTexts.map(t => {
+            {containerRef.current && canvasRef.current && placedTexts.map(t => {
               const rect = containerRef.current?.getBoundingClientRect()
-              if (!rect) return null
-              const canvas = canvasRef.current!
+              const canvas = canvasRef.current
+              if (!rect || !canvas) return null
               const displayScaleX = rect.width / canvas.width
               const displayScaleY = rect.height / canvas.height
               const displayX = t.x * displayScaleX
               const displayY = t.y * displayScaleY
-              const displaySize = t.size * displayScaleX
+              const displaySize = Math.max(12, t.size * displayScaleX)
 
               return (
                 <div
@@ -490,10 +501,7 @@ export default function EditorPage() {
                 >
                   <span className="pointer-events-none">{t.text}</span>
                   <button
-                    onClick={e => {
-                      e.stopPropagation()
-                      handleDeleteText(t.id)
-                    }}
+                    onClick={e => { e.stopPropagation(); handleDeleteText(t.id) }}
                     className="absolute -top-6 left-1/2 -translate-x-1/2 hidden group-hover:block bg-white/90 hover:bg-white rounded-md p-0.5 shadow-sm text-xs text-red-500"
                   >
                     <Trash2 className="h-3 w-3" />
@@ -506,7 +514,6 @@ export default function EditorPage() {
 
         {/* Controls Panel */}
         <div className="w-80 border-l border-border bg-white flex flex-col">
-          {/* Tabs */}
           <div className="flex bg-white border-b border-border flex-shrink-0">
             {[
               { key: 'adjust' as const, label: 'Adjust', icon: Sliders },
@@ -532,7 +539,6 @@ export default function EditorPage() {
             ))}
           </div>
 
-          {/* Tab Content */}
           <div className="flex-1 overflow-auto p-5">
             {activeTab === 'adjust' && (
               <div className="space-y-5">
@@ -566,8 +572,6 @@ export default function EditorPage() {
             {activeTab === 'stickers' && (
               <div className="space-y-5">
                 <h3 className="font-semibold text-text">Stickers</h3>
-
-                {/* Pack selector */}
                 <div className="flex flex-wrap gap-2">
                   {STICKER_PACKS.map((pack, i) => (
                     <button
@@ -584,8 +588,6 @@ export default function EditorPage() {
                     </button>
                   ))}
                 </div>
-
-                {/* Sticker grid */}
                 <div className="grid grid-cols-4 gap-2">
                   {STICKER_PACKS[selectedStickerPack].stickers.map(
                     (emoji, i) => (
@@ -606,12 +608,9 @@ export default function EditorPage() {
                     )
                   )}
                 </div>
-
                 <p className="text-xs text-muted text-center">
                   Tap a sticker to add it. Drag to reposition.
                 </p>
-
-                {/* Placed stickers list */}
                 {placedStickers.length > 0 && (
                   <div className="space-y-2">
                     <h4 className="text-sm font-medium text-text">
@@ -641,8 +640,6 @@ export default function EditorPage() {
             {activeTab === 'text' && (
               <div className="space-y-5">
                 <h3 className="font-semibold text-text">Text Overlay</h3>
-
-                {/* Text input */}
                 <div>
                   <input
                     type="text"
@@ -659,8 +656,6 @@ export default function EditorPage() {
                     {textInput.length}/40
                   </p>
                 </div>
-
-                {/* Font preset */}
                 <div>
                   <label className="block text-xs text-muted mb-2">Font</label>
                   <div className="grid grid-cols-2 gap-2">
@@ -684,12 +679,8 @@ export default function EditorPage() {
                     ))}
                   </div>
                 </div>
-
-                {/* Color picker */}
                 <div>
-                  <label className="block text-xs text-muted mb-2">
-                    Color
-                  </label>
+                  <label className="block text-xs text-muted mb-2">Color</label>
                   <div className="flex flex-wrap gap-2">
                     {TEXT_COLORS.map(color => (
                       <button
@@ -706,8 +697,6 @@ export default function EditorPage() {
                     ))}
                   </div>
                 </div>
-
-                {/* Size slider */}
                 <div>
                   <label className="block text-xs text-muted mb-2">
                     Size: {textSize}px
@@ -721,8 +710,6 @@ export default function EditorPage() {
                     className="w-full accent-primary"
                   />
                 </div>
-
-                {/* Add button */}
                 <Button
                   onClick={handleAddText}
                   disabled={!textInput.trim()}
@@ -731,8 +718,6 @@ export default function EditorPage() {
                 >
                   Add Text
                 </Button>
-
-                {/* Placed texts list */}
                 {placedTexts.length > 0 && (
                   <div className="space-y-2">
                     <h4 className="text-sm font-medium text-text">
@@ -771,23 +756,18 @@ export default function EditorPage() {
               <div className="space-y-5">
                 <h3 className="font-semibold text-text">Filters</h3>
                 <div className="grid grid-cols-2 gap-3">
-                  {[
-                    'Original',
-                    'B&W',
-                    'Vintage',
-                    'Vibrant',
-                    'Cool',
-                    'Warm',
-                  ].map(filter => (
-                    <motion.button
-                      key={filter}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="aspect-square rounded-xl border-2 border-border hover:border-primary/30 bg-white hover:bg-rose-50 flex items-center justify-center text-sm font-medium transition-all"
-                    >
-                      {filter}
-                    </motion.button>
-                  ))}
+                  {['Original', 'B&W', 'Vintage', 'Vibrant', 'Cool', 'Warm'].map(
+                    filter => (
+                      <motion.button
+                        key={filter}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="aspect-square rounded-xl border-2 border-border hover:border-primary/30 bg-white hover:bg-rose-50 flex items-center justify-center text-sm font-medium transition-all"
+                      >
+                        {filter}
+                      </motion.button>
+                    )
+                  )}
                 </div>
               </div>
             )}
@@ -831,20 +811,17 @@ export default function EditorPage() {
       <div className="border-t border-border p-4">
         <div className="flex items-center justify-between text-sm">
           <div className="text-muted">
-            Size: {currentPhoto.metadata?.width}×
-            {currentPhoto.metadata?.height}
+            Size: {currentPhoto.metadata?.width}×{currentPhoto.metadata?.height}
           </div>
           <div className="flex items-center gap-4">
             {placedStickers.length > 0 && (
               <span className="text-muted">
-                {placedStickers.length} sticker
-                {placedStickers.length !== 1 ? 's' : ''}
+                {placedStickers.length} sticker{placedStickers.length !== 1 ? 's' : ''}
               </span>
             )}
             {placedTexts.length > 0 && (
               <span className="text-muted">
-                {placedTexts.length} text
-                {placedTexts.length !== 1 ? 's' : ''}
+                {placedTexts.length} text{placedTexts.length !== 1 ? 's' : ''}
               </span>
             )}
             {hasChanges && <div className="text-warning">Unsaved changes</div>}

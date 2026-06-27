@@ -66,7 +66,6 @@
 | # | Feature | What was built |
 |---|---|---|
 | H3 | Stickers & Text Overlays | `src/constants/stickers.ts` — 6 sticker packs (48 emoji); Stickers tab in EditorPage with pack selector, tap-to-add, drag-to-reposition, resize/rotate/delete controls; Text tab with 4 font presets, 10 colors, size slider, drag-to-reposition; stickers and text composited onto canvas on save |
-| H4 | Aesthetic Preset Packs | — |
 
 ---
 

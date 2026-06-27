@@ -27,13 +27,22 @@ A modern, production-ready web photo booth application built with React 19, Type
 ### Preview & Export
 - **Composite preview** — Preview page shows the final composited strip as the main result; individual shots appear in a retake filmstrip on the side
 - **Download Strip** — One-click download of the full composite PNG with a ClickStudio watermark
+- **Print-Ready PDF** — Export as print-ready PDF (300 DPI) in 6 sizes: 2×6 strip, 4×6 print, A4, US Letter
+- **QR Code share** — Generate QR code to share your strip; public `/share/[sessionId]` page for anyone to view & download
 - **Share** — Web Share API on supported devices; falls back to download
 - **Save to cloud** — Session + photos synced to Supabase Storage
+
+### Editor
+- **Adjustments** — Brightness, contrast, saturation, temperature, shadows, highlights, tint per individual photo
+- **Stickers** — 6 themed packs (48 emoji): Favorites, Coquette, Y2K, Nature, Fun, Faces — tap to add, drag to reposition, resize/rotate
+- **Text overlays** — 4 font presets (Script, Serif, Sans, Mono), 10 colors, adjustable size — drag to reposition
+- **Filters** — Original, B&W, Vintage, Vibrant, Cool, Warm
+- **Crop & Rotate** — Aspect ratio presets and rotation
 
 ### App
 - **What's New modal** — Auto-shows once per app version with a versioned changelog; dismissed state in localStorage
 - **Session History** — Cloud-synced sessions with save, load, delete, and composite strip export
-- **Photo Editor** — Brightness, contrast, saturation, temperature adjustments per individual photo
+- **Feedback wall** — Leave a message on the landing page; scrolling card wall of community feedback
 - **PWA** — Installable as a native-like app
 - **Responsive** — Desktop and mobile ready
 - **Accessible** — WCAG AA compliant, keyboard navigable
@@ -45,8 +54,8 @@ A modern, production-ready web photo booth application built with React 19, Type
 1. **Landing page** — click **Start the Studio**
 2. **Templates** — pick a Classic Layout or a Frame Template
 3. **Camera** — choose timer, mirror, filter, and per-photo frame overlay; capture (or use burst mode); or upload existing photos
-4. **Preview** — see the final composited strip; retake individual shots from the filmstrip sidebar; add a Polaroid caption if applicable
-5. **Editor** — fine-tune brightness, contrast, saturation, and temperature on any individual shot
+4. **Preview** — see the final composited strip; retake individual shots from the filmstrip sidebar; add a Polaroid caption if applicable; generate QR code to share; download as PNG or print-ready PDF
+5. **Editor** — fine-tune brightness, contrast, saturation; add stickers and text overlays
 6. **Download** the strip, share it, or save the session to the cloud
 
 ---
@@ -186,21 +195,23 @@ src/
 ├── constants/                # Shared constants and types
 │   ├── filters.ts            # 13 film filter presets
 │   ├── frames.ts             # 5 frame overlay definitions
+│   ├── stickers.ts           # 6 sticker packs, text presets, colors
 │   ├── changelog.ts          # Versioned changelog entries + localStorage helpers
 │   ├── types.ts              # CameraError type
 │   └── index.ts              # Barrel export
 ├── hooks/                    # Custom hooks (future)
 ├── pages/
-│   ├── LandingPage.tsx
+│   ├── LandingPage.tsx       # Landing page with feedback wall
 │   ├── CameraPage.tsx        # Filters, frames, mirror, timer, burst, retake, upload
 │   ├── TemplatesPage.tsx     # Classic Layouts + Frame Templates tabs
-│   ├── PreviewPage.tsx       # Composite result, retake filmstrip, Polaroid caption, download
-│   ├── EditorPage.tsx
+│   ├── PreviewPage.tsx       # Composite result, retake, QR code, PDF export, download
+│   ├── EditorPage.tsx        # Adjustments, stickers, text overlays, filters, crop
 │   ├── GalleryPage.tsx
 │   ├── SessionHistoryPage.tsx
 │   ├── SettingsPage.tsx
 │   ├── HelpPage.tsx
-│   └── AboutPage.tsx
+│   ├── AboutPage.tsx
+│   └── SharePage.tsx         # Public share page for /share/[sessionId]
 ├── store/
 │   ├── usePhotoStore.ts      # Session, photo, and camera state + Supabase sync
 │   └── useUIStore.ts
@@ -211,6 +222,7 @@ src/
 └── utils/
     ├── camera.ts             # CameraManager — capture, upload processing, filter + frame baking
     ├── compositor.ts         # composeStrip — composites photos into a single strip PNG
+    ├── pdf.ts                # generatePrintPDF — print-ready PDF export at 300 DPI
     └── cn.ts
 supabase/
 └── schema.sql                # Full database schema and storage setup
