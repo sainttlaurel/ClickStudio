@@ -661,7 +661,7 @@ export default function CameraPage() {
 
       {/* ── Camera viewport ── */}
       <div className="flex-1 flex items-center justify-center p-4 min-h-0">
-        <div className="relative w-full max-w-3xl h-full lg:max-h-[440px]">
+        <div className="relative w-full max-w-3xl h-full max-h-[60vh] lg:max-h-[440px]">
           <div className="camera-viewport w-full h-full shadow-card border-2 border-border rounded-2xl overflow-hidden">
             <video
               ref={videoRef}

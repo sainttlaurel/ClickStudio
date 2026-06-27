@@ -4,8 +4,6 @@ import { motion } from 'framer-motion'
 import {
   Save,
   Undo,
-  RotateCw,
-  Crop,
   Palette,
   Sliders,
   ArrowLeft,
@@ -14,6 +12,7 @@ import {
   Trash2,
   RotateCcw,
   Plus,
+  Layout,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
@@ -26,6 +25,8 @@ import {
   TEXT_COLORS,
 } from '@/constants/stickers'
 import { FILTERS } from '@/constants/filters'
+import { FRAMES } from '@/constants/frames'
+import { bakeFrameOverlay } from '@/utils/frameOverlay'
 import type { PhotoAdjustments } from '@/types'
 
 const defaultAdjustments: PhotoAdjustments = {
@@ -75,10 +76,11 @@ export default function EditorPage() {
     currentPhoto?.metadata?.adjustments || defaultAdjustments
   )
   const [activeTab, setActiveTab] = useState<
-    'adjust' | 'filters' | 'crop' | 'stickers' | 'text'
+    'adjust' | 'filters' | 'stickers' | 'text' | 'frame'
   >('adjust')
   const [hasChanges, setHasChanges] = useState(false)
   const [activeFilter, setActiveFilter] = useState('none')
+  const [activeFrame, setActiveFrame] = useState('none')
 
   // ── Sticker state ──────────────────────────────────────────────────────
   const [placedStickers, setPlacedStickers] = useState<PlacedSticker[]>([])
@@ -100,11 +102,13 @@ export default function EditorPage() {
   const stickersRef = useRef(placedStickers)
   const textsRef = useRef(placedTexts)
   const filterRef = useRef(activeFilter)
+  const frameRef = useRef(activeFrame)
 
   useEffect(() => { adjustmentsRef.current = adjustments }, [adjustments])
   useEffect(() => { stickersRef.current = placedStickers }, [placedStickers])
   useEffect(() => { textsRef.current = placedTexts }, [placedTexts])
   useEffect(() => { filterRef.current = activeFilter }, [activeFilter])
+  useEffect(() => { frameRef.current = activeFrame }, [activeFrame])
 
   // ── Draw image (reads from refs to avoid re-render loops) ──────────────
   const drawImage = useCallback(() => {
@@ -165,6 +169,9 @@ export default function EditorPage() {
         ctx.fillText(t.text, t.x, t.y)
         ctx.restore()
       }
+
+      // Draw frame overlay
+      bakeFrameOverlay(ctx, img.width, img.height, frameRef.current)
     }
     img.src = currentPhoto.url
   }, [currentPhoto])
@@ -177,10 +184,10 @@ export default function EditorPage() {
     drawImage()
   }, [currentPhoto, drawImage])
 
-  // Redraw when adjustments, stickers, texts, or filter change
+  // Redraw when adjustments, stickers, texts, filter, or frame change
   useEffect(() => {
     drawImage()
-  }, [adjustments, placedStickers, placedTexts, activeFilter, drawImage])
+  }, [adjustments, placedStickers, placedTexts, activeFilter, activeFrame, drawImage])
 
   const handleAdjustmentChange = (
     key: keyof PhotoAdjustments,
@@ -219,6 +226,7 @@ export default function EditorPage() {
   const handleReset = () => {
     setAdjustments(defaultAdjustments)
     setActiveFilter('none')
+    setActiveFrame('none')
     setPlacedStickers([])
     setPlacedTexts([])
     setHasChanges(true)
@@ -626,6 +634,24 @@ export default function EditorPage() {
               )
             })}
           </div>
+
+          {/* ── Quick filter bar ── */}
+          <div className="flex items-center gap-1.5 px-4 lg:px-6 pb-4 overflow-x-auto max-w-full">
+            {FILTERS.map(filter => (
+              <button
+                key={filter.id}
+                onClick={() => { setActiveFilter(filter.id); setHasChanges(true) }}
+                className={cn(
+                  'flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium border transition-all whitespace-nowrap',
+                  activeFilter === filter.id
+                    ? 'bg-primary text-white border-primary shadow-sm'
+                    : 'bg-white text-muted border-border hover:border-primary/40 hover:text-primary'
+                )}
+              >
+                {filter.id === 'none' ? 'Original' : filter.name}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Controls Panel */}
@@ -636,7 +662,7 @@ export default function EditorPage() {
               { key: 'filters' as const, label: 'Filters', icon: Palette },
               { key: 'stickers' as const, label: 'Stickers', icon: Sticker },
               { key: 'text' as const, label: 'Text', icon: Type },
-              { key: 'crop' as const, label: 'Crop', icon: Crop },
+              { key: 'frame' as const, label: 'Frame', icon: Layout },
             ].map(tab => (
               <button
                 key={tab.key}
@@ -934,35 +960,41 @@ export default function EditorPage() {
               </div>
             )}
 
-            {activeTab === 'crop' && (
-              <div className="space-y-5">
-                <h3 className="font-semibold text-text">Crop & Rotate</h3>
-                <div className="space-y-4">
+            {activeTab === 'frame' && (
+              <div className="space-y-4">
+                <h3 className="font-semibold text-text">Frame Overlay</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  {FRAMES.map(frame => (
+                    <button
+                      key={frame.id}
+                      onClick={() => { setActiveFrame(frame.id); setHasChanges(true) }}
+                      className={cn(
+                        'flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all',
+                        activeFrame === frame.id
+                          ? 'border-primary bg-primary/5 ring-2 ring-primary/20'
+                          : 'border-border hover:border-primary/40 bg-white hover:bg-rose-50'
+                      )}
+                    >
+                      <span className="text-2xl">{frame.emoji}</span>
+                      <span className={cn(
+                        'text-xs font-medium',
+                        activeFrame === frame.id ? 'text-primary' : 'text-muted'
+                      )}>
+                        {frame.name}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+                {activeFrame !== 'none' && (
                   <Button
                     variant="outline"
-                    className="w-full justify-start"
-                    icon={<RotateCw className="h-4 w-4" />}
+                    onClick={() => { setActiveFrame('none'); setHasChanges(true) }}
+                    className="w-full"
+                    icon={<Undo className="h-4 w-4" />}
                   >
-                    Rotate 90°
+                    Remove Frame
                   </Button>
-                  <div>
-                    <label className="block text-sm font-medium text-text mb-2">
-                      Aspect Ratio
-                    </label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {['Free', '1:1', '4:3', '16:9'].map(ratio => (
-                        <Button
-                          key={ratio}
-                          variant="outline"
-                          size="sm"
-                          className="justify-center"
-                        >
-                          {ratio}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                )}
               </div>
             )}
           </div>
@@ -979,6 +1011,11 @@ export default function EditorPage() {
             {activeFilter !== 'none' && (
               <span className="text-primary text-xs font-medium">
                 Filter: {FILTERS.find(f => f.id === activeFilter)?.name}
+              </span>
+            )}
+            {activeFrame !== 'none' && (
+              <span className="text-primary text-xs font-medium">
+                Frame: {FRAMES.find(f => f.id === activeFrame)?.name}
               </span>
             )}
             {placedStickers.length > 0 && (
