@@ -2,31 +2,11 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
-import { Camera, Star, Send, Loader2, Sparkles, Image, Share2, ArrowRight } from 'lucide-react'
+import { Camera, Star, Send, Loader2, Sparkles, Image, Share2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { submitFeedback, fetchApprovedFeedback, type DbFeedback } from '@/lib/supabase'
 import { useToast } from '@/store/useUIStore'
 import { cn } from '@/utils/cn'
-
-/* ─── Template showcase data ─────────────────────────────── */
-const showcaseTemplates = [
-  { name: 'Polaroid Grid', layout: '2×2', emoji: '📷', style: 'bg-amber-50', badge: 'Popular' },
-  { name: 'Film Strip', layout: '2 shots', emoji: '🎞️', style: 'bg-gray-800', badge: 'Trending' },
-  { name: 'Blush Edit', layout: '2×2', emoji: '🌸', style: 'bg-rose-100', badge: 'New' },
-  { name: 'Photo Strip', layout: '3×2', emoji: '📠', style: 'bg-rose-50', badge: '' },
-  { name: 'Minimal', layout: '1 shot', emoji: '✧', style: 'bg-white', badge: '' },
-  { name: 'Valentine B&W', layout: '1 shot', emoji: '🤍', style: 'bg-stone-50', badge: 'Popular' },
-]
-
-/* ─── Testimonial data ─────────────────────────────────── */
-const testimonials = [
-  { name: 'Mia C.', text: 'Used this for my birthday party — guests loved it! The polaroid templates are gorgeous.', emoji: '🎂', rating: 5 },
-  { name: 'Sarah L.', text: 'Finally a photo booth that works in the browser. No app, no fuss. Just beautiful strips.', emoji: '✨', rating: 5 },
-  { name: 'Jade K.', text: 'The film filters are *chef\'s kiss*. Makes every photo look like it\'s from a movie.', emoji: '🎬', rating: 5 },
-  { name: 'Rina P.', text: 'Shared the QR code at our wedding and everyone got their strips instantly. So good!', emoji: '💍', rating: 5 },
-  { name: 'Alex T.', text: 'The sticker packs are adorable. Coquette theme is everything.', emoji: '🎀', rating: 5 },
-  { name: 'Emi W.', text: 'Better than most paid photo booth apps. And it\'s free?!', emoji: '🔥', rating: 5 },
-]
 
 /* ─── Feature cards ─────────────────────────────────────── */
 const features = [
@@ -171,7 +151,6 @@ export default function LandingPage() {
           <div className="hidden md:flex items-center gap-6 text-sm text-muted font-medium">
             <a href="#how-it-works" className="hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40 focus:ring-offset-2 rounded-lg px-1">How it works</a>
             <a href="#features" className="hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40 focus:ring-offset-2 rounded-lg px-1">Features</a>
-            <a href="#templates" className="hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40 focus:ring-offset-2 rounded-lg px-1">Templates</a>
           </div>
           <button
             onClick={handleGetStarted}
@@ -313,69 +292,6 @@ export default function LandingPage() {
         </div>
       </Section>
 
-      {/* ── Template Showcase ── */}
-      <Section id="templates" className="py-16 px-4 sm:px-6">
-        <div className="max-w-5xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <p className="font-script text-primary text-lg mb-2">37 templates</p>
-            <h2 className="font-display text-4xl md:text-5xl text-text">
-              Find your <em className="font-script not-italic text-primary">vibe.</em>
-            </h2>
-            <p className="text-muted mt-4 max-w-md mx-auto">From classic layouts to designer frames — there's a template for every mood.</p>
-          </motion.div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-            {showcaseTemplates.map((t, i) => (
-              <motion.div
-                key={t.name}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.06 }}
-                className="group cursor-pointer"
-                onClick={handleGetStarted}
-              >
-                <div className={cn(
-                  'relative rounded-2xl border border-border/50 overflow-hidden transition-all duration-300',
-                  'hover:shadow-[0_12px_30px_-8px_rgba(233,30,140,0.12)] hover:border-primary/40 hover:-translate-y-1'
-                )}>
-                  {t.badge && (
-                    <div className="absolute top-2 left-2 z-10 px-1.5 py-0.5 rounded-full text-[8px] font-bold uppercase tracking-wider bg-primary/90 text-white">
-                      {t.badge}
-                    </div>
-                  )}
-                  <div className={cn('h-24 flex items-center justify-center', t.style)}>
-                    <span className="text-2xl opacity-30 group-hover:opacity-50 transition-opacity">{t.emoji}</span>
-                  </div>
-                  <div className="bg-white p-2.5">
-                    <p className="font-display text-[11px] text-text truncate">{t.name}</p>
-                    <p className="text-[9px] text-muted/60">{t.layout}</p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: 0.4 }}
-            className="flex justify-center mt-8"
-          >
-            <Button pill onClick={handleGetStarted} className="gap-2">
-              Browse all templates <ArrowRight className="h-4 w-4" />
-            </Button>
-          </motion.div>
-        </div>
-      </Section>
-
       {/* ── Features ── */}
       <Section id="features" className="py-16 px-4 sm:px-6" bg="bg-rose-50/50">
         <div className="max-w-5xl mx-auto">
@@ -407,48 +323,6 @@ export default function LandingPage() {
                 </div>
                 <h3 className="font-semibold text-text mb-1.5">{f.title}</h3>
                 <p className="text-muted text-sm leading-relaxed">{f.description}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </Section>
-
-      {/* ── Testimonials ── */}
-      <Section className="py-16 px-4 sm:px-6">
-        <div className="max-w-5xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <p className="font-script text-primary text-lg mb-2">Love letters</p>
-            <h2 className="font-display text-4xl md:text-5xl text-text">
-              What people <em className="font-script not-italic text-primary">say.</em>
-            </h2>
-          </motion.div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {testimonials.map((t, i) => (
-              <motion.div
-                key={t.name}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.06 }}
-                className="bg-white rounded-2xl p-5 border border-border shadow-card hover:shadow-polaroid transition-all duration-300"
-              >
-                <div className="flex items-center gap-1 mb-2">
-                  {Array.from({ length: t.rating }).map((_, j) => (
-                    <Star key={j} className="h-3.5 w-3.5 text-primary fill-primary" />
-                  ))}
-                </div>
-                <p className="text-text text-sm leading-relaxed mb-3">"{t.text}"</p>
-                <div className="flex items-center gap-2">
-                  <span className="text-lg" aria-hidden="true">{t.emoji}</span>
-                  <span className="text-xs text-muted font-medium">{t.name}</span>
-                </div>
               </motion.div>
             ))}
           </div>
@@ -575,7 +449,6 @@ export default function LandingPage() {
             <div className="flex items-center gap-6 text-sm text-muted">
               <a href="#how-it-works" className="hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40 rounded">How it works</a>
               <a href="#features" className="hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40 rounded">Features</a>
-              <a href="#templates" className="hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40 rounded">Templates</a>
               <button onClick={handleGetStarted} className="hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40 rounded">Open Studio</button>
             </div>
             <p className="text-muted text-sm">© 2026 ClickStudio — Made with <span className="text-primary" aria-hidden="true">♡</span></p>

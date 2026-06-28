@@ -126,10 +126,10 @@ This no longer looks like "student photo editor." It now looks like "a real edit
 - **Hover quick actions** — Preview, Use Template, Save appear on card hover
 - **Featured section** — "Featured This Week" row with larger cards at top of library
 
-### Remaining Issues (from Round 1, all resolved in v1.7.3)
-- ~~Replace emoji placeholders with real photo strip examples~~ → Template Showcase section added
-- ~~Add template showcase section to landing page~~ → Done
-- ~~Add testimonials/social proof~~ → Testimonials section added
+### Remaining Issues (from Round 1)
+- Replace emoji placeholders with real photo strip examples
+- Add template showcase section to landing page
+- Add testimonials/social proof
 - ~~Improve accessibility (contrast, focus rings, labels)~~ → Pass completed
 - ~~Vary section backgrounds across pages~~ → Alternating backgrounds added
 

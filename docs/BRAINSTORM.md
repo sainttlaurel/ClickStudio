@@ -44,9 +44,6 @@ Feature ideas for ClickStudio. Shipped items are checked off; everything else is
 - [x] Category chip selected state (scale, shadow)
 - [x] Template selection feedback
 - [x] Hover quick actions (Preview, Use Template, Save)
-- [x] Template Showcase section on landing page (6 real template cards)
-- [x] Testimonials section — user reviews with star ratings
-- [x] Alternating section backgrounds across landing page
 - [x] Landing page motion — staggered entrances, hover effects, animated preview
 - [x] Accessibility pass — aria-labels, focus rings, html labels, roles
 - [x] Landing page spacing consistency

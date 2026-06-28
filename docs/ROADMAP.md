@@ -70,8 +70,6 @@ Active development phases for ClickStudio.
 **Status:** In Progress
 
 ### Shipped in v1.7.3
-- [x] Template Showcase section on landing page
-- [x] Testimonials section — user reviews with star ratings
 - [x] Alternating section backgrounds across landing page
 - [x] Landing page motion — staggered entrances, hover effects, animated preview
 - [x] Accessibility pass — aria-labels, focus rings, labels, roles
@@ -108,7 +106,8 @@ Active development phases for ClickStudio.
 - [ ] Session History page (functional)
 - [ ] Gallery page (community showcase)
 - [ ] Replace placeholder graphics with real photo strips (camera, editor pages)
-- [ ] Add testimonials/social proof — more sources beyond landing page
+- [ ] Add template showcase section to landing page
+- [ ] Add testimonials/social proof section
 - [ ] Improve accessibility — contrast audit, remaining focus rings
 
 ## Phase 6 — Future (HOLD)
