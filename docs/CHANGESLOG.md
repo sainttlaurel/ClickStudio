@@ -16,6 +16,7 @@ All notable changes to ClickStudio are documented here.
 * Accessibility pass — aria-labels, focus rings, html labels, role attributes on nav/footer
 * Landing page spacing — consistent py-16 sections, mb-12 headers, gap-5 card grids
 * Removed Template Showcase and Testimonials sections from landing page
+* Button component upgraded — gradient backgrounds, deeper shadows, smoother hover/tap animations
 
 ---
 

@@ -14,21 +14,21 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const buttonVariants = {
   primary:
-    'bg-primary text-white hover:bg-rose-600 shadow-md shadow-primary/30 active:scale-95',
+    'bg-gradient-to-b from-primary to-rose-600 text-white hover:from-rose-500 hover:to-rose-700 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 border border-primary/20',
   secondary:
-    'bg-secondary text-white hover:bg-rose-400 shadow-md shadow-secondary/25',
+    'bg-gradient-to-b from-secondary to-rose-400 text-white hover:from-rose-400 hover:to-rose-500 shadow-lg shadow-secondary/25 border border-secondary/20',
   outline:
-    'border-2 border-border bg-transparent hover:bg-rose-50 text-text hover:border-primary/40',
+    'border-2 border-border bg-white/80 hover:bg-rose-50 text-text hover:border-primary/40 hover:shadow-md hover:shadow-primary/5',
   ghost: 'bg-transparent hover:bg-rose-50 text-text hover:text-primary',
-  danger: 'bg-error text-white hover:bg-red-600 shadow-md shadow-error/25',
-  dark: 'bg-text text-white hover:bg-text/90 shadow-md shadow-text/20',
+  danger: 'bg-gradient-to-b from-error to-red-600 text-white hover:from-red-500 hover:to-red-700 shadow-lg shadow-error/25 border border-error/20',
+  dark: 'bg-gradient-to-b from-gray-800 to-gray-900 text-white hover:from-gray-700 hover:to-gray-800 shadow-lg shadow-text/20 border border-gray-700/50',
 }
 
 const buttonSizes = {
   sm: 'h-8 px-3 text-xs gap-1.5',
   md: 'h-10 px-4 text-sm gap-2',
-  lg: 'h-12 px-6 text-base gap-2',
-  xl: 'h-14 px-8 text-base gap-2',
+  lg: 'h-12 px-6 text-base gap-2.5',
+  xl: 'h-14 px-8 text-lg gap-3',
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps & MotionProps>(
@@ -48,8 +48,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps & MotionProps>(
     ref
   ) => {
     const baseClasses = cn(
-      'inline-flex items-center justify-center font-medium',
-      'transition-all duration-200 focus-visible:outline-none focus-visible:ring-2',
+      'inline-flex items-center justify-center font-semibold',
+      'transition-all duration-300 focus-visible:outline-none focus-visible:ring-2',
       'focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background',
       'disabled:pointer-events-none disabled:opacity-50',
       'touch-target',
@@ -73,9 +73,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps & MotionProps>(
           ref={ref}
           className={baseClasses}
           disabled={disabled || loading}
-          whileHover={{ scale: disabled || loading ? 1 : 1.03 }}
-          whileTap={{ scale: disabled || loading ? 1 : 0.97 }}
-          transition={{ duration: 0.12, ease: 'easeOut' }}
+          whileHover={{ scale: disabled || loading ? 1 : 1.02 }}
+          whileTap={{ scale: disabled || loading ? 1 : 0.98 }}
+          transition={{ duration: 0.15, ease: 'easeOut' }}
           {...props}
         >
           {content}
