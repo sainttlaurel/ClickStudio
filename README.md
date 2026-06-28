@@ -14,6 +14,12 @@ A modern web photo booth — capture, edit, and share photo strips directly in t
 - **Image Upload** — Drop existing photos into the same filter + frame pipeline
 - **Retake** — Thumbnail strip after each shot; delete and reshoot any photo
 
+### Templates
+- **37 Templates** across 15 categories: Birthday, Wedding, Graduation, Couple, Friends, Family, Holiday, K-Pop, Vintage, Minimal, Aesthetic, Seasonal, Corporate, Custom — including 9 PNG frame templates (Anniversary, Valentine, Family, Christmas, etc.)
+- **Template Carousel** — Centered horizontal scroll with snap, glassmorphism arrows, floating cards with badges (New/Popular/Trending)
+- **Template Library Modal** — Search, sort (Popular/Newest/A–Z), favorites, responsive grid, snap-scrolling category chips
+- **Classic & Frame Styles** — Toggle between plain layouts and decorative frame templates
+
 ### Edit (Preview Page)
 - **Filters** — 13 film presets (Vintage, B&W, Dreamy, etc.) applied per-photo with live preview thumbnails
 - **Frame Overlays** — Clean, Film, Blush, Minimal, Polaroid — applied per-photo at capture or in editor
@@ -38,7 +44,7 @@ A modern web photo booth — capture, edit, and share photo strips directly in t
 ## User Flow
 
 1. **Landing** — click **Start the Studio**
-2. **Camera** — pick a template, capture photos with timer/mirror/filters/frames, or upload — auto-redirects to Preview when done
+2. **Camera** — pick a template (carousel or library), capture photos with timer/mirror/filters/frames, or upload — auto-redirects to Preview when done
 3. **Preview** — see the final composited strip; edit individual photos; retake shots; add Polaroid captions; generate QR code; download as PNG or PDF; save to cloud
 
 ---
@@ -109,12 +115,12 @@ src/
 │   ├── stickers.ts         # 10 sticker packs, text presets, colors
 │   ├── changelog.ts        # Versioned changelog + localStorage helpers
 │   ├── templates.ts        # 28 template library items, 15 categories
-│   └── index.ts            # Barrel export
+│   └── index.ts            # Barrel export (filters, frames)
 ├── pages/
 │   ├── LandingPage.tsx     # Landing with feedback wall
 │   ├── CameraPage.tsx      # Camera, template carousel, filters, frames, mirror, timer
 │   ├── PreviewPage.tsx     # Composite result, edit, retake, QR, PDF, download
-│   ├── EditorPage.tsx      # Adjustments, stickers, text, filters, frames
+│   ├── EditorPage.tsx      # Adjustments, stickers, text, filters, frames (compact layout)
 │   ├── AboutPage.tsx       # About / tech stack
 │   ├── HelpPage.tsx        # Help / FAQ
 │   ├── SettingsPage.tsx    # Settings
@@ -127,14 +133,14 @@ src/
 ├── lib/
 │   └── supabase.ts         # Typed client, upload/delete helpers
 ├── types/
-│   └── index.ts            # Photo, Template, CompositeStyle, all shared types
+│   └── index.ts            # Photo, Template, CompositeStyle, CameraError, all shared types
 └── utils/
     ├── camera.ts           # CameraManager — capture, upload, filter + frame baking
     ├── compositor.ts       # composeStrip — composites photos into a strip PNG
     ├── frameOverlay.ts     # Shared frame drawing logic
     ├── pdf.ts              # Print-ready PDF export at 300 DPI
     ├── sounds.ts           # Countdown/capture beep sounds
-    └── cn.ts               # Class name utility
+    └── cn.ts               # Class name utility (clsx + tailwind-merge)
 supabase/
 └── schema.sql              # Database schema and storage setup
 docs/
@@ -150,7 +156,7 @@ docs/
 
 ```bash
 npm run dev          # Development server
-npm run build        # Production build
+npm run build        # Production build (tsc + vite)
 npm run preview      # Preview production build
 npm run lint         # ESLint
 npm run type-check   # TypeScript check
@@ -179,18 +185,19 @@ Append to `FRAMES` in `src/constants/frames.ts`:
 
 ### Adding a Template
 
-Add to the `templates` array in `src/constants/templates.ts`:
+Add to the `TEMPLATE_LIBRARY` array in `src/constants/templates.ts`:
 
 ```typescript
 {
   id: 'my-template',
   name: 'My Template',
-  category: 'Custom',
+  description: '4 shots · my custom style',
   layout: 'quad',
   aspectRatio: '1:1',
   compositeStyle: 'blush',
-  description: '4 shots · my custom style',
   preview: '',
+  previewEmoji: '🌸',
+  categories: ['all', 'custom'],
 }
 ```
 

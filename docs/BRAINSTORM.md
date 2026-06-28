@@ -13,7 +13,7 @@ Feature ideas for ClickStudio. Shipped items are checked off; everything else is
 - [x] 5 frame overlays (Clean, Film, Blush, Minimal, Polaroid) — per-photo
 - [x] Template system — 28 templates across 15 categories
 - [x] Classic layouts (single, double, quad, photo strip)
-- [x] Frame templates (Polaroid Memories, Film Roll, Blush Edit, Minimal Clean)
+- [x] Frame templates (Polaroid, Film Roll, Blush, Minimal, Clean)
 - [x] Photo strip compositor — composites into single PNG
 - [x] Composite preview with retake filmstrip
 - [x] Download strip with watermark
@@ -29,9 +29,21 @@ Feature ideas for ClickStudio. Shipped items are checked off; everything else is
 - [x] PWA (installable)
 - [x] Responsive design (desktop + mobile)
 - [x] Camera floating toolbar redesign (vertical desktop, chips mobile)
-- [x] Template carousel — premium horizontal scroll with glassmorphism arrows
+- [x] Template carousel — centered, snap scrolling, glassmorphism arrows, badges
 - [x] Template Library modal — search, categories, favorites, sort
 - [x] Frame Overlay tab (replaced Crop tab)
+- [x] Vercel deployment with SPA rewrites + security headers
+- [x] SEO (OG tags, Twitter Cards, JSON-LD, canonical URL, sitemap, robots.txt)
+- [x] Editor compactness pass — reduced canvas/panel heights, tighter grids
+- [x] Centered UI — templates, filters, frames all center-aligned
+- [x] 9 PNG frame templates (Anniversary, Valentine, Family, Christmas, etc.)
+- [x] Frame composite style — compositor renders PNG backgrounds with photo overlay
+- [x] "Coming Soon" badge on Custom Layout card
+- [x] Card hover interactions (translateY, shadow, scale, glow)
+- [x] Search bar improvements (48px, focus ring, white bg)
+- [x] Category chip selected state (scale, shadow)
+- [x] Template selection feedback
+- [x] Hover quick actions (Preview, Use Template, Save)
 
 ---
 
@@ -41,7 +53,6 @@ Feature ideas for ClickStudio. Shipped items are checked off; everything else is
 - **Polaroid caption input in Editor** — Currently only in Preview; should be editable per-photo in the Editor too
 - **Photo reordering** — Drag-and-drop reorder shots before compositing
 - **Improved composite quality** — Higher resolution composites for print
-- **Vercel migration** — Switch back to Vercel for bandwidth
 
 ### Medium Priority
 - **Session History page** — Browse past sessions with thumbnails and composite previews

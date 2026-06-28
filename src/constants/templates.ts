@@ -4,9 +4,10 @@ export interface TemplateLibraryItem {
   description: string
   layout: 'single' | 'double' | 'quad' | 'six'
   aspectRatio: '1:1' | '3:4' | '4:3' | '16:9' | '2:3'
-  compositeStyle: 'clean' | 'polaroid' | 'film' | 'blush' | 'minimal'
+  compositeStyle: 'clean' | 'polaroid' | 'film' | 'blush' | 'minimal' | 'frame'
   preview: string
   previewEmoji?: string
+  frameImage?: string
   badge?: { label: string; variant: 'new' | 'popular' | 'trending' | 'collab' }
   categories: string[]
   popular?: boolean
@@ -57,6 +58,16 @@ export const TEMPLATE_LIBRARY: TemplateLibraryItem[] = [
   { id: 'six-graduation', name: 'Grad Strip', description: 'Celebration strip', layout: 'six', aspectRatio: '4:3', compositeStyle: 'clean', preview: '', previewEmoji: '🎓', categories: ['all', 'graduation', 'friends', 'family'] },
   { id: 'six-holiday', name: 'Holiday Strip', description: 'Festive photo strip', layout: 'six', aspectRatio: '4:3', compositeStyle: 'polaroid', preview: '', previewEmoji: '🎄', categories: ['all', 'holiday', 'family', 'friends'] },
   { id: 'six-couple', name: 'Love Strip', description: 'Romantic 6-shot', layout: 'six', aspectRatio: '4:3', compositeStyle: 'blush', preview: '', previewEmoji: '💕', categories: ['all', 'couple', 'wedding', 'aesthetic'] },
+  // ── Frame Templates (PNG backgrounds) ──────────────────────────────────────
+  { id: 'frame-anniversary', name: 'Anniversary Frame', description: 'Beige anniversary collage', layout: 'single', aspectRatio: '3:4', compositeStyle: 'frame', preview: '', previewEmoji: '🎉', frameImage: '/frame-templates/Beige Minimalist Happy Anniversary Photo Collage Frame Instagram Story.png', badge: { label: 'New', variant: 'new' }, categories: ['all', 'wedding', 'couple', 'seasonal'] },
+  { id: 'frame-polaroid', name: 'Polaroid Moments', description: 'Beige moments collage', layout: 'single', aspectRatio: '3:4', compositeStyle: 'frame', preview: '', previewEmoji: '📷', frameImage: '/frame-templates/Beige Minimalist Moments Photo Collage Your Story.png', categories: ['all', 'vintage', 'aesthetic', 'friends'] },
+  { id: 'frame-mono-polaroid', name: 'Mono Polaroid', description: 'Black & gray polaroid style', layout: 'single', aspectRatio: '3:4', compositeStyle: 'frame', preview: '', previewEmoji: '🖤', frameImage: '/frame-templates/Black and Gray Monochrome Polaroid Photo Collage Love Phone Wallpaper.png', categories: ['all', 'vintage', 'minimal', 'couple'] },
+  { id: 'frame-valentine-bw', name: 'Valentine B&W', description: 'Minimalist Valentine\'s Day', layout: 'single', aspectRatio: '3:4', compositeStyle: 'frame', preview: '', previewEmoji: '🤍', frameImage: '/frame-templates/Black and White Minimalist Valentine\'s Day Your Story.png', badge: { label: 'Popular', variant: 'popular' }, categories: ['all', 'couple', 'wedding', 'seasonal'] },
+  { id: 'frame-family', name: 'Family Collage', description: 'Grey & red family design', layout: 'quad', aspectRatio: '3:4', compositeStyle: 'frame', preview: '', previewEmoji: '👨‍👩‍👧‍👦', frameImage: '/frame-templates/Grey and Red Modern Family Photo Collage Instagram Story.png', categories: ['all', 'family', 'friends'] },
+  { id: 'frame-aesthetic', name: 'Aesthetic Frame', description: 'Grey minimalist aesthetic', layout: 'single', aspectRatio: '3:4', compositeStyle: 'frame', preview: '', previewEmoji: '◻️', frameImage: '/frame-templates/Grey Minimalist Aesthetic Photo Collage Instagram Story.png', categories: ['all', 'minimal', 'aesthetic', 'corporate'] },
+  { id: 'frame-cat', name: 'Cat Valentine', description: 'Pet polaroid style', layout: 'single', aspectRatio: '3:4', compositeStyle: 'frame', preview: '', previewEmoji: '🐱', frameImage: '/frame-templates/Pet Cat Valentine\'s Day Poster in Black and White in Polaroid Style.png', categories: ['all', 'aesthetic', 'seasonal'] },
+  { id: 'frame-strip', name: 'Photo Strip', description: 'Pink & green playful strip', layout: 'six', aspectRatio: '3:4', compositeStyle: 'frame', preview: '', previewEmoji: '🎞️', badge: { label: 'Trending', variant: 'trending' }, frameImage: '/frame-templates/Pink and Green Playful Photo Strip Design.png', categories: ['all', 'friends', 'birthday', 'graduation'] },
+  { id: 'frame-christmas', name: 'Christmas Frame', description: 'Vintage Christmas portrait', layout: 'single', aspectRatio: '3:4', compositeStyle: 'frame', preview: '', previewEmoji: '🎄', frameImage: '/frame-templates/Vintage Aesthetic Christmas Portrait Photo Collage.png', badge: { label: 'New', variant: 'new' }, categories: ['all', 'holiday', 'seasonal', 'family'] },
 ]
 
 export const photoCounts: Record<string, number> = { single: 1, double: 2, quad: 4, six: 6 }

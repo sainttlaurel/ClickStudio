@@ -126,6 +126,11 @@ export async function composeStrip(
       ctx.fillRect(0, 0, canvasW, canvasH)
       break
     }
+    case 'frame': {
+      ctx.fillStyle = '#FFFFFF'
+      ctx.fillRect(0, 0, canvasW, canvasH)
+      break
+    }
     default: {
       ctx.fillStyle = '#FFFFFF'
       ctx.fillRect(0, 0, canvasW, canvasH)
@@ -146,6 +151,24 @@ export async function composeStrip(
         ctx.fill()
         hy += holeSpacing
       }
+    }
+  }
+
+  // ── Frame: load and draw PNG background ──────────────────────────────────
+  let frameImg: HTMLImageElement | null = null
+  if (style === 'frame' && template.frameImage) {
+    try {
+      frameImg = await loadImage(template.frameImage)
+      const fw = canvasW
+      const fh = canvasH - FOOTER_H
+      const imgScale = Math.max(fw / frameImg.naturalWidth, fh / frameImg.naturalHeight)
+      const sw = fw / imgScale
+      const sh = fh / imgScale
+      const sx = (frameImg.naturalWidth - sw) / 2
+      const sy = (frameImg.naturalHeight - sh) / 2
+      ctx.drawImage(frameImg, sx, sy, sw, sh, 0, 0, fw, fh)
+    } catch {
+      // Frame image failed to load, continue with white background
     }
   }
 
@@ -195,7 +218,7 @@ export async function composeStrip(
       // ── Photo image or placeholder ──
       if (img) {
         ctx.save()
-        if (style === 'blush') {
+        if (style === 'blush' || style === 'frame') {
           roundRectPath(ctx, imgX, imgY, imgW, imgH, 6)
         } else {
           ctx.beginPath()
@@ -204,6 +227,19 @@ export async function composeStrip(
         ctx.clip()
         drawCoverCrop(ctx, img, imgX, imgY, imgW, imgH)
         ctx.restore()
+
+        // ── Frame: subtle shadow on photos ──
+        if (style === 'frame') {
+          ctx.save()
+          ctx.shadowColor = 'rgba(0,0,0,0.25)'
+          ctx.shadowBlur = 12
+          ctx.shadowOffsetY = 4
+          ctx.strokeStyle = 'rgba(255,255,255,0.9)'
+          ctx.lineWidth = 2
+          roundRectPath(ctx, imgX, imgY, imgW, imgH, 6)
+          ctx.stroke()
+          ctx.restore()
+        }
       } else {
         // Empty slot placeholder
         if (style === 'polaroid') {
@@ -216,13 +252,17 @@ export async function composeStrip(
           ctx.fillStyle = '#F9D5E5'
           roundRectPath(ctx, imgX, imgY, imgW, imgH, 6)
           ctx.fill()
+        } else if (style === 'frame') {
+          ctx.fillStyle = 'rgba(255,255,255,0.85)'
+          roundRectPath(ctx, imgX, imgY, imgW, imgH, 6)
+          ctx.fill()
         } else {
           ctx.fillStyle = '#F5E8ED'
           ctx.fillRect(imgX, imgY, imgW, imgH)
         }
         // Dashed border on placeholder
         ctx.save()
-        ctx.strokeStyle = style === 'film' ? '#3A3A3A' : 'rgba(245,197,216,0.8)'
+        ctx.strokeStyle = style === 'film' ? '#3A3A3A' : style === 'frame' ? 'rgba(200,180,190,0.6)' : 'rgba(245,197,216,0.8)'
         ctx.lineWidth = 1.5
         ctx.setLineDash([5, 5])
         ctx.strokeRect(imgX + 6, imgY + 6, imgW - 12, imgH - 12)
@@ -269,6 +309,8 @@ export async function composeStrip(
     ctx.fillStyle = '#F0E4EA'
   } else if (style === 'blush') {
     ctx.fillStyle = 'rgba(255,224,238,0.7)'
+  } else if (style === 'frame') {
+    ctx.fillStyle = 'rgba(255,255,255,0.85)'
   } else {
     ctx.fillStyle = '#FFF0F5'
   }
@@ -277,7 +319,9 @@ export async function composeStrip(
   ctx.fillStyle =
     style === 'film'
       ? 'rgba(255,255,255,0.35)'
-      : 'rgba(155, 107, 123, 0.55)'
+      : style === 'frame'
+        ? 'rgba(155, 107, 123, 0.45)'
+        : 'rgba(155, 107, 123, 0.55)'
   ctx.font         = `italic ${Math.round(FOOTER_H * 0.48)}px cursive`
   ctx.textAlign    = 'center'
   ctx.textBaseline = 'middle'

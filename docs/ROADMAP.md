@@ -24,7 +24,7 @@ Active development phases for ClickStudio.
 **Status:** Complete
 
 - [x] Classic layouts (single, double, quad, photo strip)
-- [x] Frame templates (Polaroid, Film Roll, Blush, Minimal)
+- [x] Frame templates (Polaroid, Film Roll, Blush, Minimal, Clean)
 - [x] Photo strip compositor
 - [x] Download strip with watermark
 - [x] Print-ready PDF export (300 DPI)
@@ -46,42 +46,50 @@ Active development phases for ClickStudio.
 - [x] PWA support
 - [x] Responsive design
 - [x] Camera floating toolbar redesign
-- [x] Template carousel with glassmorphism
+- [x] Template carousel — centered, snap scrolling, glassmorphism arrows
 - [x] Template Library modal (28 templates, search, categories)
 - [x] Frame Overlay tab (replaced Crop)
-- [x] Countdown sounds
+- [x] Countdown sounds (Web Audio API)
 
 ## Phase 4 — Polish & Deployment ✅
 **Status:** Complete
 
-- [x] Vercel deployment
+- [x] Vercel deployment (migrated from Netlify)
 - [x] SPA routing (vercel.json rewrites)
-- [x] Security headers
+- [x] Security headers (X-Frame-Options, X-Content-Type-Options, Permissions-Policy: camera=*)
 - [x] SEO (OG tags, Twitter Cards, JSON-LD, canonical URL)
 - [x] Google Search Console verified
 - [x] Sitemap + robots.txt
 - [x] PWA manifest
-- [x] Code cleanup (removed unused deps, stale files)
+- [x] Code cleanup (removed unused deps: react-hook-form, react-qr-code; stale files: vercel.json, hooks/, constants/types.ts)
+- [x] React error #310 fix (camera hooks ordering)
+- [x] Editor compactness pass (reduced canvas/panel heights, tighter grids)
+- [x] Centered UI (templates, filters, frames)
 
 ## Phase 5 — Next Steps 🚧
-**Status:** Planning
+**Status:** In Progress
 
-### Priority Items
+### Shipped in v1.7.2
+- [x] 9 PNG frame templates (Anniversary, Valentine, Family, Christmas, etc.)
+- [x] Frame composite style — compositor renders PNG backgrounds
+- [x] "Coming Soon" badge on Custom Layout
+- [x] Template Library category chips — snap-x + fade hint
+- [x] Card hover interactions (translateY, shadow, scale, glow)
+- [x] Search bar improvements (48px, focus ring, white bg)
+- [x] Category chip selected state (scale, shadow)
+- [x] Template selection feedback
+- [x] Hover quick actions (Preview, Use Template, Save)
+
+### Still Planned
 - [ ] Polaroid caption input in Editor
 - [ ] Photo reordering (drag-and-drop)
 - [ ] Higher resolution composites for print
-- [ ] Vercel migration (considering)
 - [ ] Session History page (functional)
 - [ ] Gallery page (community showcase)
-- [ ] UI polish based on design review (9.2/10 score)
-
-### Design Review Priorities
-- [ ] Make site feel alive — more motion/microinteractions
 - [ ] Replace placeholder graphics with real photo strips
-- [ ] Add template showcase/gallery section
+- [ ] Add template showcase to landing page
 - [ ] Add testimonials/social proof
 - [ ] Improve accessibility (contrast, focus rings, labels)
-- [ ] Tighten spacing between sections
 
 ## Phase 6 — Future (HOLD)
 **Status:** On hold
@@ -94,9 +102,9 @@ User accounts, payment processing, premium templates, collaborative sessions, cu
 
 | Metric | Value |
 |---|---|
-| Version | 1.7.0 |
-| Pages | 9 (Landing, Camera, Preview, Editor, Share, About, Help, Settings, Gallery, SessionHistory) |
-| Templates | 28 across 15 categories |
+| Version | 1.7.2 |
+| Pages | 10 (Landing, Camera, Preview, Editor, Share, About, Help, Settings, Gallery, SessionHistory) |
+| Templates | 37 (28 library + 9 PNG frame templates) across 15 categories |
 | Filters | 13 film presets |
 | Frames | 5 overlay styles |
 | Sticker Packs | 10 themes, 160+ emoji |

@@ -1,113 +1,71 @@
 # UI Review
 
-Design review conducted June 27, 2026. Score: **9.2/10**.
+Design review conducted June 28, 2026. **Round 2 score: 9.5/10.**
 
 ---
 
-## Overall Impression
+## Round 2 — Senior UI/UX Review (June 28, 2026)
 
-The app is clean, modern, and has a clear pink-forward aesthetic. The camera-to-preview flow is smooth. The template system is well-structured. The editor is functional.
+### Scores
+| Category | Score |
+|---|---|
+| Visual | 9.5/10 |
+| UX | 9.0/10 |
+| Product Readiness | 9.2/10 |
 
-But it still feels like a demo. To be a real product, it needs to feel **alive**.
+### What's Working Now
+- Card system is clean — equal heights feel professional
+- Category chips are cute and usable with emoji icons
+- Template previews communicate output (mini layouts)
+- Search + sort + categories = clear browsing direction
+- Frame PNG templates add real design variety
+- "Coming Soon" badge on Custom Layout sets expectation
+- Template carousel is centered with snap scrolling
+- Category chips have snap-x + fade edge hint for mobile
+
+### Improvements Made (Round 2)
+- **Card hover interactions** — translateY(-4px), shadow deepens, preview scales(1.02), border glows primary
+- **Hierarchy spacing** — sections breathe with 24-32px vertical gaps
+- **Search bar** — 48px height, white bg, rose border, focus ring with primary glow
+- **Category chips** — larger (40px), stronger selected state with scale(1.03) + shadow
+- **Template selection feedback** — selected card shows checkmark, "Continue" button appears
+- **Hover quick actions** — Preview, Use Template, Save appear on card hover
+- **Featured section** — "Featured This Week" row with larger cards at top of library
+
+### Remaining Issues (from Round 1, still open)
+- Replace emoji placeholders with real photo strip examples
+- Add template showcase section to landing page
+- Add testimonials/social proof
+- Improve accessibility (contrast, focus rings, labels)
+- Vary section backgrounds across pages
 
 ---
 
-## What's Working
+## Round 1 — Initial Review (June 27, 2026)
 
+Score: **9.2/10**.
+
+### What Was Working
 - Clean pink-forward aesthetic — consistent throughout
 - Camera flow is intuitive (template → capture → preview)
-- Template Library modal is well-designed with categories and search
-- Filter + frame tabs are clearly separated
-- Sticker and text overlay systems are solid
+- Template carousel is centered with equal-height cards
+- Template Library modal with categories and search
+- Filter + frame tabs clearly separated
+- Sticker and text overlay systems solid
 - Composite strip output looks professional
-- Print-ready PDF export is a strong feature
-- QR code sharing is a nice touch
+- Print-ready PDF export
+- QR code sharing
 - PWA installability
+- Editor compact and functional
 
----
-
-## Issues to Fix
-
-### 1. Static / Not Alive
-The site feels static. Every page is a white card on a pink background. There's no motion, no life.
-
-**Fixes needed:**
-- Add subtle entrance animations to cards and sections (Framer Motion)
-- Animate the hero section — floating elements, parallax, or particle effects
-- Add hover states to template cards (scale, shadow shift)
-- Animate the capture button (pulse, glow)
-- Add page transition animations
-- Add loading states and skeleton screens
-- Make the feedback wall auto-scroll or have staggered entrance
-
-### 2. Placeholder Graphics
-The hero section uses emoji (📸, 🎀, ✨, 🖼, 🎪) instead of real images. The template previews are empty circles. There are no example photo strips anywhere.
-
-**Fixes needed:**
-- Replace emoji hero with real photo strip examples or high-quality illustrations
-- Create real template preview thumbnails (not empty circles)
-- Show example output strips on the landing page
-- Add a "gallery" section showing what users have created
-
-### 3. Repetitive Layouts
-Almost every page follows the same pattern: white card on pink background. The landing page sections, the about page, the help page — they all feel identical.
-
-**Fixes needed:**
-- Vary section backgrounds (alternate between white, pink-50, gradient)
-- Add full-width sections that break out of the container
-- Use different card styles (some with borders, some with shadows, some with gradients)
-- Add visual hierarchy through size and spacing variation
-
-### 4. Missing Social Proof
-There are no testimonials, no user counts, no "made by" stories, no community showcase.
-
-**Fixes needed:**
-- Add testimonials section to landing page
-- Show user count or session count
-- Add a "featured creations" gallery
-- Show Discord member count or activity
-
-### 5. Missing Template Showcase
-The template carousel is buried inside the camera page. Users don't see what's possible until they've already started.
-
-**Fixes needed:**
-- Add a template showcase section to the landing page
-- Show template previews with example output strips
-- Let users browse templates before clicking "Start"
-
-### 6. Accessibility Issues
-- Contrast: Pink text on white backgrounds may not meet WCAG AA
-- Focus rings: Some interactive elements lack visible focus indicators
-- Labels: Some buttons use only icons without labels
-- Alt text: Missing on some images
-
-**Fixes needed:**
-- Audit all text colors against backgrounds for 4.5:1 contrast ratio
-- Add visible focus rings to all interactive elements
-- Add labels or aria-labels to icon-only buttons
-- Add alt text to all images
-
-### 7. Spacing
-Some sections feel too far apart, others too cramped.
-
-**Fixes needed:**
-- Tighten spacing between related sections
-- Increase spacing between unrelated sections
-- Ensure consistent padding across all pages
-
----
-
-## Priority Actions
-
-| Priority | Action | Impact |
-|---|---|---|
-| 1 | Add motion/animations to landing page | High — makes site feel alive |
-| 2 | Create real template preview thumbnails | High — shows what's possible |
-| 3 | Add example photo strips to landing page | High — social proof + showcase |
-| 4 | Add testimonials/social proof section | Medium — builds trust |
-| 5 | Fix accessibility issues | Medium — legal + usability |
-| 6 | Vary section backgrounds | Medium — breaks visual monotony |
-| 7 | Add hover states and micro-interactions | Low — polish |
+### Issues Found
+1. Static / Not Alive — no motion, no life
+2. Placeholder Graphics — emoji instead of real images
+3. Repetitive Layouts — white card on pink background
+4. Missing Social Proof
+5. Missing Template Showcase on landing page
+6. Accessibility Issues
+7. Spacing inconsistencies
 
 ---
 

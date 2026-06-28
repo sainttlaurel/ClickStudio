@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.7.0'
+export const APP_VERSION = '1.7.2'
 
 const LS_KEY = `cs_changelog_v${APP_VERSION}`
 export const isChangelogSeen = (): boolean =>
@@ -20,6 +20,32 @@ export interface ChangelogVersion {
 }
 
 export const CHANGELOG: ChangelogVersion[] = [
+  {
+    version: '1.7.2',
+    date: 'June 28, 2026',
+    entries: [
+      { type: 'new',      text: '9 PNG frame templates — Anniversary, Valentine, Family, Christmas, and more' },
+      { type: 'new',      text: 'Frame composite style — compositor renders PNG backgrounds with photo overlay' },
+      { type: 'new',      text: '"Coming Soon" badge on Custom Layout card' },
+      { type: 'improved', text: 'Card hover interactions — translateY, shadow, scale, border glow' },
+      { type: 'improved', text: 'Search bar — taller (48px), white bg, focus ring with primary glow' },
+      { type: 'improved', text: 'Category chips — larger, stronger selected state with scale + shadow' },
+      { type: 'improved', text: 'Template selection feedback — selected card shows checkmark' },
+      { type: 'improved', text: 'Hover quick actions — Preview, Use Template, Save on card hover' },
+    ],
+  },
+  {
+    version: '1.7.1',
+    date: 'June 28, 2026',
+    entries: [
+      { type: 'fixed',    text: 'Camera blank page — fixed React hooks ordering error (error #310)' },
+      { type: 'fixed',    text: 'Template carousel — cards now center-aligned with equal heights' },
+      { type: 'fixed',    text: 'Camera filters and frames — bottom panel content centered' },
+      { type: 'improved', text: 'Editor is more compact — smaller canvas, tighter grids, centered controls' },
+      { type: 'improved', text: 'Migrated from Netlify to Vercel — better bandwidth and SPA routing' },
+      { type: 'improved', text: 'Removed unused dependencies (react-hook-form, react-qr-code) and stale files' },
+    ],
+  },
   {
     version: '1.7.0',
     date: 'June 27, 2026',

@@ -47,6 +47,12 @@ const frameTemplates: TemplateCard[] = [
   { id: 'frame-film-double', name: 'Film Roll', preview: '', layout: 'double', aspectRatio: '2:3', compositeStyle: 'film', description: '2 shots · film strip look', previewEmoji: '🎥' },
   { id: 'frame-blush-quad', name: 'Blush Edit', preview: '', layout: 'quad', aspectRatio: '1:1', compositeStyle: 'blush', description: '4 shots · pink gradient', previewEmoji: '🌸', badge: { label: 'New', variant: 'new' } },
   { id: 'frame-minimal-single', name: 'Minimal', preview: '', layout: 'single', aspectRatio: '1:1', compositeStyle: 'minimal', description: '1 shot · thin border', previewEmoji: '✧' },
+  // ── PNG Frame Templates ──
+  { id: 'frame-anniversary', name: 'Anniversary', preview: '', layout: 'single', aspectRatio: '3:4', compositeStyle: 'frame', description: '1 shot · anniversary collage', previewEmoji: '🎉', frameImage: '/frame-templates/Beige Minimalist Happy Anniversary Photo Collage Frame Instagram Story.png', badge: { label: 'New', variant: 'new' } },
+  { id: 'frame-strip', name: 'Photo Strip', preview: '', layout: 'single', aspectRatio: '3:4', compositeStyle: 'frame', description: '1 shot · playful strip', previewEmoji: '🎞️', frameImage: '/frame-templates/Pink and Green Playful Photo Strip Design.png', badge: { label: 'Trending', variant: 'trending' } },
+  { id: 'frame-valentine-bw', name: 'Valentine B&W', preview: '', layout: 'single', aspectRatio: '3:4', compositeStyle: 'frame', description: '1 shot · minimalist valentine', previewEmoji: '🤍', frameImage: "/frame-templates/Black and White Minimalist Valentine's Day Your Story.png", badge: { label: 'Popular', variant: 'popular' } },
+  { id: 'frame-family', name: 'Family Collage', preview: '', layout: 'quad', aspectRatio: '3:4', compositeStyle: 'frame', description: '4 shots · family design', previewEmoji: '👨‍👩‍👧‍👦', frameImage: '/frame-templates/Grey and Red Modern Family Photo Collage Instagram Story.png' },
+  { id: 'frame-christmas', name: 'Christmas', preview: '', layout: 'single', aspectRatio: '3:4', compositeStyle: 'frame', description: '1 shot · vintage christmas', previewEmoji: '🎄', frameImage: '/frame-templates/Vintage Aesthetic Christmas Portrait Photo Collage.png', badge: { label: 'New', variant: 'new' } },
 ]
 
 const photoCounts: Record<string, number> = { single: 1, double: 2, quad: 4, six: 6 }
@@ -57,6 +63,7 @@ const styleConfig: Record<string, { bg: string; cardBg: string; emoji: string }>
   film: { bg: 'bg-gray-800', cardBg: 'bg-gray-900/10', emoji: '🎞️' },
   blush: { bg: 'bg-rose-100', cardBg: 'bg-rose-50/60', emoji: '🌸' },
   minimal: { bg: 'bg-white', cardBg: 'bg-gray-50', emoji: '◻️' },
+  frame: { bg: 'bg-stone-50', cardBg: 'bg-stone-50/60', emoji: '🖼️' },
 }
 
 const badgeStyles: Record<string, string> = {
@@ -613,12 +620,12 @@ export default function CameraPage() {
       <>
         <div className="h-full flex flex-col bg-[#faf8f6] overflow-auto">
           {/* ── Header ── */}
-          <div className="flex-shrink-0 text-center pt-10 pb-2 px-6">
+          <div className="flex-shrink-0 text-center pt-10 pb-4 px-6">
             <p className="font-script text-primary text-lg mb-1">Pick your template</p>
             <h1 className="font-display text-3xl md:text-4xl text-text leading-tight">
               Choose a <em className="font-script not-italic text-primary">look.</em>
             </h1>
-            <p className="text-muted/70 mt-2 text-sm">Select a layout, then start capturing.</p>
+            <p className="text-muted/70 mt-2.5 text-sm">Select a layout, then start capturing.</p>
           </div>
 
           {/* ── Category tabs ── */}
@@ -626,10 +633,10 @@ export default function CameraPage() {
             <button
               onClick={() => setTemplateTab('classic')}
               className={cn(
-                'px-5 py-2 rounded-full text-sm font-medium transition-all border',
+                'px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 border',
                 templateTab === 'classic'
-                  ? 'bg-primary text-white border-primary shadow-md shadow-primary/20'
-                  : 'bg-white/80 text-muted border-border/60 hover:border-primary/40 hover:text-primary backdrop-blur-sm'
+                  ? 'bg-primary text-white border-primary shadow-[0_4px_16px_-2px_rgba(233,30,140,0.35)] scale-[1.03]'
+                  : 'bg-white/80 text-muted border-border/60 hover:border-primary/40 hover:text-primary hover:shadow-sm backdrop-blur-sm'
               )}
             >
               Classic
@@ -637,10 +644,10 @@ export default function CameraPage() {
             <button
               onClick={() => setTemplateTab('frame')}
               className={cn(
-                'px-5 py-2 rounded-full text-sm font-medium transition-all border',
+                'px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 border',
                 templateTab === 'frame'
-                  ? 'bg-primary text-white border-primary shadow-md shadow-primary/20'
-                  : 'bg-white/80 text-muted border-border/60 hover:border-primary/40 hover:text-primary backdrop-blur-sm'
+                  ? 'bg-primary text-white border-primary shadow-[0_4px_16px_-2px_rgba(233,30,140,0.35)] scale-[1.03]'
+                  : 'bg-white/80 text-muted border-border/60 hover:border-primary/40 hover:text-primary hover:shadow-sm backdrop-blur-sm'
               )}
             >
               Frame Styles
@@ -678,7 +685,8 @@ export default function CameraPage() {
                       onClick={() => setPreviewTemplate(template)}
                       className={cn(
                         'group relative bg-white rounded-2xl border border-border/50 overflow-hidden h-full flex flex-col',
-                        'shadow-[0_4px_24px_-6px_rgba(0,0,0,0.08)] hover:shadow-[0_12px_40px_-8px_rgba(233,30,140,0.15)]',
+                        'shadow-[0_4px_24px_-6px_rgba(0,0,0,0.08)]',
+                        'hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.1)] hover:border-primary/40',
                         'transition-all duration-300 ease-out cursor-pointer hover:-translate-y-1'
                       )}
                     >
@@ -698,7 +706,7 @@ export default function CameraPage() {
                       </div>
 
                       {/* Preview area */}
-                      <div className={cn('h-36 flex items-center justify-center', cfg.bg)}>
+                      <div className={cn('h-36 flex items-center justify-center transition-transform duration-300 group-hover:scale-[1.02]', cfg.bg)}>
                         <div className="relative">
                           <div className="absolute inset-0 flex items-center justify-center">
                             <span className="text-4xl opacity-30">{template.previewEmoji || '📸'}</span>
@@ -738,7 +746,8 @@ export default function CameraPage() {
                             {template.compositeStyle === 'clean' ? 'Clean' :
                              template.compositeStyle === 'polaroid' ? 'Polaroid' :
                              template.compositeStyle === 'film' ? 'Film' :
-                             template.compositeStyle === 'blush' ? 'Blush' : 'Minimal'}
+                             template.compositeStyle === 'blush' ? 'Blush' :
+                             template.compositeStyle === 'frame' ? 'Frame' : 'Minimal'}
                           </div>
                         </div>
                       </div>
@@ -754,7 +763,10 @@ export default function CameraPage() {
                 transition={{ delay: templates.length * 0.08, duration: 0.4 }}
                 className="snap-start flex-shrink-0 w-[220px] md:w-[240px]"
               >
-                <div className="h-full bg-white/50 border-2 border-dashed border-border/50 rounded-2xl flex flex-col items-center justify-center gap-3 p-6 text-center hover:border-primary/40 hover:bg-rose-50/30 transition-all cursor-pointer">
+                <div className="relative h-full bg-white/50 border-2 border-dashed border-border/50 rounded-2xl flex flex-col items-center justify-center gap-3 p-6 text-center hover:border-primary/40 hover:bg-rose-50/30 transition-all cursor-pointer">
+                  <div className="absolute top-3 left-3 z-10 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-muted/60 text-white">
+                    Coming Soon
+                  </div>
                   <div className="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center">
                     <Plus className="h-6 w-6 text-primary" />
                   </div>
@@ -848,7 +860,8 @@ export default function CameraPage() {
                     {previewTemplate.compositeStyle === 'clean' ? 'Clean finish' :
                      previewTemplate.compositeStyle === 'polaroid' ? 'Polaroid borders' :
                      previewTemplate.compositeStyle === 'film' ? 'Film strip' :
-                     previewTemplate.compositeStyle === 'blush' ? 'Blush tone' : 'Minimal frame'}
+                     previewTemplate.compositeStyle === 'blush' ? 'Blush tone' :
+                     previewTemplate.compositeStyle === 'frame' ? 'Frame design' : 'Minimal frame'}
                   </div>
                 </div>
 

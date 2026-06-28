@@ -12,7 +12,7 @@ export default function AboutPage() {
             className="h-20 w-auto object-contain mx-auto mb-4"
           />
           <h1 className="font-display text-3xl text-text mb-2">ClickStudio</h1>
-          <p className="text-muted text-lg">Version 1.7.0</p>
+          <p className="text-muted text-lg">Version 1.7.2</p>
         </div>
 
         <div className="bg-white rounded-2xl p-8 border border-border shadow-card text-center">

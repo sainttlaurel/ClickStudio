@@ -1,123 +1,154 @@
-# Changelog
+# ClickStudio Changelog
 
-All notable changes to ClickStudio are documented here. Auto-shows in the What's New modal via `changelog.ts`.
+All notable changes to ClickStudio are documented here.
 
 ---
 
-## v1.7.0 — June 27, 2026
+## v1.7.2 (June 28, 2026)
 
 ### Added
-- **Template Library** — 28 templates across 15 categories (Birthday, Wedding, Graduation, Couple, Friends, Family, Holiday, K-Pop, Vintage, Minimal, Aesthetic, Seasonal, Corporate, Custom)
-- **Template Library modal** — Accessible via "Browse All Templates" button in carousel; includes search, sort (Popular/Newest/A–Z), favorites, responsive grid
-- **Template carousel** — Premium horizontally scrollable carousel with snap scrolling, glassmorphism navigation arrows, floating cards with badges (New/Popular/Trending)
-- **Countdown sounds** — Web Audio API beeps: tick on countdown, dual-tone on capture
+* 9 PNG frame templates — Anniversary, Polaroid Moments, Mono Polaroid, Valentine B&W, Family Collage, Aesthetic Frame, Cat Valentine, Photo Strip, Christmas
+* Frame composite style — PNG backgrounds with photo overlay in compositor
+* "Coming Soon" badge on Custom Layout card in template carousel
+* Template Library category chips — snap-x scrolling with fade edge hint for mobile
+
+### Changed
+* Template Library visual hierarchy — improved spacing, larger search bar (48px), stronger category selected states
+* Card hover interactions — translateY, shadow deepens, preview scales, border glows
+* Template selection feedback — selected card shows checkmark indicator
+* Hover quick actions — Preview, Use Template, Save appear on card hover
+
+---
+
+## v1.7.1 (June 28, 2026)
 
 ### Fixed
-- **Camera not starting** — Added `useEffect` watching `hasTemplate` so camera attaches after template selection (previously tried to attach to null video element on mount)
-- **Editor layout overlap** — Removed standalone quick filter bar that was overlapping the canvas; filters now only accessible via Filters tab
-- **Canvas height** — Increased to `max-h-[60vh] lg:max-h-[75vh]` for better editing experience
+* Camera blank page — fixed React hooks ordering error (error #310)
+* Template carousel — cards now center-aligned with equal heights
+* Camera filters and frames — bottom panel content centered
 
 ### Changed
-- **Quick filter bar removed** — Consolidated into Filters tab only; cleaner editor layout
-- **Frame Overlay tab** — Replaces Crop tab (which was empty); provides photo overlay options
-- **Tab content panel** — New max height `max-h-[45vh] lg:max-h-[38vh]` for better scrolling
+* Editor is more compact — smaller canvas, tighter grids, centered controls
+* Migrated from Netlify to Vercel — better bandwidth and SPA routing
+* Removed unused dependencies (react-hook-form, react-qr-code) and stale files
+* Package renamed from photobooth-app to clickstudio
 
 ---
 
-## v1.6.0 — June 26, 2026
+## v1.7.0 (June 27, 2026)
 
 ### Added
-- **Countdown beeps** — Audio feedback during countdown and capture
-- **Filter preview thumbnails** — Live preview of all 13 filters in the Filters tab
-- **Sticker text labels** — Names shown on hover/selection for better discoverability
-- **Quick filter bar** — One-tap filter access below the canvas (later removed in v1.7.0)
+* Template Library — 28 templates across 15 categories with search, sort, and favorites
+* Template carousel — premium horizontal scroll with glassmorphism arrows and floating cards
+* Countdown sounds — Web Audio API beeps during countdown and capture
 
 ### Fixed
-- **Composite compositeStyle** — Frame templates now correctly use their defined composite style
-- **Retake filmstrip layout** — Improved spacing and thumbnail quality
-
----
-
-## v1.5.0 — June 25, 2026
-
-### Added
-- **Template system** — 28 templates across 15 categories
-- **Template carousel** — Horizontal scroll with snap, glassmorphism arrows, floating cards
-- **Template picker in CameraPage** — Select template before starting camera
-- **Auto-redirect to Preview** — After all shots complete, auto-navigate to Preview (was Editor)
+* Camera now starts correctly after template selection
+* Editor layout — removed standalone quick filter bar that was overlapping the canvas
 
 ### Changed
-- **User flow simplified** — 5 pages → 3 (Landing → Camera → Preview)
-- **Standalone TemplatesPage removed** — Template selection built into CameraPage
+* Frame Overlay tab replaces empty Crop tab
+* Canvas height increased for better editing experience
 
 ---
 
-## v1.4.0 — June 24, 2026
+## v1.6.0 (June 27, 2026)
 
 ### Added
-- **Camera floating toolbar** — Vertical toolbar on desktop, tool chips on mobile
-- **Gradient capture button** — Redesigned with gradient and pulse animation
-- **Tab-based filter/frame panel** — Cleaner panel layout
-- **Compact timer/burst controls** — Improved camera UI density
-- **Shot tray with thumbnails** — Visual feedback after each capture
+* Simplified flow — template picker is now built into CameraPage (no separate Templates page)
+* Auto-redirect to Preview when all shots are captured
+* Frame Overlay tab in Editor — change frame after capturing
+* Quick filter bar below the canvas
 
 ### Changed
-- **Camera UI redesign** — From flat grid to floating toolbar + compact panels
-- **Mobile responsive v3** — Camera viewport `max-h-[60vh]`, bottom panel `max-h-[35vh]`
+* Fewer pages, smoother experience — Templates → Camera → Preview → Editor
+* Frame overlay rendering extracted to a shared utility
 
 ---
 
-## v1.3.0 — June 23, 2026
+## v1.5.0 (June 27, 2026)
 
 ### Added
-- **Editor adjustments** — Brightness, contrast, saturation, exposure, shadows, highlights, temperature, tint
-- **Sticker packs** — 10 themes, 160+ emoji with drag/resize/rotate
-- **Text overlays** — 6 font presets, 15 colors, adjustable size, drag to reposition
-- **Frame Overlay tab** — Apply frames per-photo in the editor
+* Click-to-place stickers (select a sticker, then click anywhere on the photo)
+* Touch drag support for stickers and text on mobile
+* 13 filters with live preview thumbnails in the Editor
+* 10 sticker packs (160+ emoji)
+* 6 text font presets — Script, Serif, Sans, Mono, Cursive, Display
+* 15 text colors for overlays
+* "Edit Photo" button in PreviewPage Actions sidebar
+
+### Fixed
+* Sticker and text positioning — overlays now track correctly with the canvas
+
+---
+
+## v1.4.0 (June 26, 2026)
+
+### Added
+* Stickers tab — 6 themed packs with tap-to-add, drag, resize, rotate, delete
+* Text overlay tab — 4 font presets, 10 colors, adjustable size
+* Stickers and text composited onto canvas on save
+
+---
+
+## v1.3.0 (June 26, 2026)
+
+### Added
+* Print-Ready PDF — export at 300 DPI in 6 sizes: 2×6, 4×6, A4, US Letter
+* Print/PDF button with size picker modal
+
+---
+
+## v1.2.0 (June 26, 2026)
+
+### Added
+* QR Code share — generate a QR code to share your strip
+* Public share page — anyone can view and download your strip
+* Feedback wall — leave a message on the landing page
+* Copy Link button for easy sharing
+
+---
+
+## v1.1.1 (June 26, 2026)
+
+### Added
+* Official ClickStudio logo on Header, Sidebar, About page, and Landing page
+* Contact info — email and Discord on the About page
+
+### Fixed
+* Copyright updated to 2026
+
+---
+
+## v1.1.0 (June 25, 2026)
+
+### Added
+* Photo strip compositor — all shots combined into one beautiful result
+* Frame Templates with Polaroid, Film, Blush, and Minimal composite styles
+* Classic Layouts tab — plain grid arrangements without decorative framing
+* Polaroid caption — add a personal note to the bottom strip before downloading
+* Image upload — add existing photos through the same filter + frame pipeline
+* "What's New" modal — versioned changelog, auto-shows once per version
+* Session history export — generates and downloads the full composite strip
 
 ### Changed
-- **Frame tab replaces Crop** — Crop was empty; Frame provides actual functionality
+* Preview page now shows the final composite as the primary result
+* Retake a shot from the Preview page — removes the photo and sends you back to camera
 
 ---
 
-## v1.2.0 — June 22, 2026
-
-### Added
-- **QR code generation** — Generate shareable links with QR codes
-- **Public share page** — `/share/[sessionId]` for anyone to view and download
-- **Print-ready PDF export** — 300 DPI in 6 sizes (2×6, 4×6, A4, US Letter)
-- **Composite strip compositor** — All photos composited into one PNG
-- **Download with watermark** — ClickStudio branding on exports
-
-### Changed
-- **Preview page redesigned** — Composite strip is the main result; retake filmstrip on the side
-
----
-
-## v1.1.0 — June 21, 2026
-
-### Added
-- **Supabase cloud sync** — Sessions and photos synced to cloud storage
-- **Session history** — Browse and load past sessions
-- **PWA support** — Installable as a native-like app
-- **What's New modal** — Versioned changelog, auto-shows once per version
-
-### Security
-- **Security headers** — X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy
-- **SPA routing** — Vercel `vercel.json` rewrites
-
----
-
-## v1.0.0 — June 20, 2026
+## v1.0.0 (June 25, 2026)
 
 ### Initial Release
-- **Live camera** with device switching, grid overlay, mirror toggle, flash
-- **Timer** (3s/5s/10s) and burst mode
-- **13 film filters** — live preview, baked into captures
-- **5 frame overlays** — Clean, Film, Blush, Minimal, Polaroid
-- **Image upload** — Drop existing photos into the pipeline
-- **Retake** — Delete and reshoot individual photos
-- **Classic layouts** — Single, Double, Quad, Photo Strip
-- **Frame templates** — Polaroid Memories, Film Roll, Blush Edit, Minimal Clean
-- **Responsive design** — Desktop and mobile
-- **Feedback wall** — Community messages on landing page
+* Live camera with device switching, grid overlay, mirror toggle, flash
+* Timer (3s/5s/10s) and burst mode
+* 13 film filters — live preview, baked into captures
+* 5 frame overlays — Clean, Film, Blush, Minimal, Polaroid
+* Image upload — drop existing photos into the pipeline
+* Retake — delete and reshoot individual photos
+* Classic layouts — Single, Double, Quad, Photo Strip
+* Frame templates — Polaroid Memories, Film Roll, Blush Edit, Minimal Clean
+* Responsive design — desktop and mobile
+* PWA support — installable as a native-like app
+* Feedback wall — community messages on landing page
+* Supabase cloud sync — sessions and photos synced to storage
