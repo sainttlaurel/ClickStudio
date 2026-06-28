@@ -15,18 +15,32 @@ const features = [
     description: 'HD webcam with countdown, grid overlays and smooth capture.',
     visual: (
       <div className="w-full h-24 bg-gray-900 rounded-xl overflow-hidden relative">
+        {/* Grid overlay */}
+        <div className="absolute inset-0 grid grid-cols-3 grid-rows-3">
+          {Array.from({ length: 9 }).map((_, i) => (
+            <div key={i} className="border border-white/10" />
+          ))}
+        </div>
+        {/* Center crosshair */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-16 h-16 rounded-full border-2 border-white/30 flex items-center justify-center">
-            <div className="w-12 h-12 rounded-full bg-primary/80 flex items-center justify-center">
-              <Camera className="h-5 w-5 text-white" />
+          <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full border border-white/30 flex items-center justify-center">
+              <Camera className="h-4 w-4 text-white/60" />
             </div>
           </div>
         </div>
-        <div className="absolute top-2 left-2 flex gap-1">
-          <div className="w-1.5 h-1.5 rounded-full bg-red-400" />
-          <div className="w-1.5 h-1.5 rounded-full bg-yellow-400" />
+        {/* Top bar */}
+        <div className="absolute top-0 left-0 right-0 h-5 bg-black/40 flex items-center justify-between px-2">
+          <div className="flex gap-1">
+            <div className="w-1.5 h-1.5 rounded-full bg-red-400" />
+            <div className="w-1.5 h-1.5 rounded-full bg-yellow-400" />
+          </div>
+          <span className="text-[7px] text-white/70 font-mono">HD 1080p</span>
         </div>
-        <div className="absolute bottom-2 right-2 text-[8px] text-white/60 font-mono">3... 2... 1...</div>
+        {/* Bottom bar with timer */}
+        <div className="absolute bottom-0 left-0 right-0 h-6 bg-black/40 flex items-center justify-center">
+          <span className="text-[8px] text-white/80 font-mono tracking-wider">3... 2... 1...</span>
+        </div>
       </div>
     ),
   },
@@ -34,11 +48,29 @@ const features = [
     title: 'Vintage Filters',
     description: '13 film filters, adjustments and aesthetic frames per shot.',
     visual: (
-      <div className="w-full h-24 rounded-xl overflow-hidden grid grid-cols-4 gap-0.5">
-        <div className="bg-gradient-to-b from-rose-100 to-rose-200 flex items-center justify-center"><span className="text-[8px] text-rose-400 font-medium">Soft</span></div>
-        <div className="bg-gradient-to-b from-amber-100 to-amber-200 flex items-center justify-center"><span className="text-[8px] text-amber-600 font-medium">Warm</span></div>
-        <div className="bg-gradient-to-b from-gray-700 to-gray-900 flex items-center justify-center"><span className="text-[8px] text-gray-300 font-medium">B&W</span></div>
-        <div className="bg-gradient-to-b from-pink-100 to-rose-200 flex items-center justify-center"><span className="text-[8px] text-pink-500 font-medium">Blush</span></div>
+      <div className="w-full h-24 rounded-xl overflow-hidden relative">
+        {/* Photo strip with filter effects */}
+        <div className="absolute inset-0 flex gap-0.5">
+          <div className="flex-1 bg-gradient-to-b from-rose-200 to-rose-300 flex items-center justify-center">
+            <div className="w-6 h-8 bg-white/30 rounded-sm" />
+          </div>
+          <div className="flex-1 bg-gradient-to-b from-amber-100 to-amber-200 flex items-center justify-center">
+            <div className="w-6 h-8 bg-amber-300/30 rounded-sm" />
+          </div>
+          <div className="flex-1 bg-gradient-to-b from-gray-600 to-gray-800 flex items-center justify-center">
+            <div className="w-6 h-8 bg-white/20 rounded-sm" />
+          </div>
+          <div className="flex-1 bg-gradient-to-b from-pink-100 to-rose-200 flex items-center justify-center">
+            <div className="w-6 h-8 bg-pink-300/30 rounded-sm" />
+          </div>
+        </div>
+        {/* Filter labels overlay */}
+        <div className="absolute bottom-0 left-0 right-0 bg-black/50 flex justify-around py-1">
+          <span className="text-[6px] text-white/90 font-medium">Soft</span>
+          <span className="text-[6px] text-white/90 font-medium">Warm</span>
+          <span className="text-[6px] text-white/90 font-medium">B&W</span>
+          <span className="text-[6px] text-white/90 font-medium">Blush</span>
+        </div>
       </div>
     ),
   },
@@ -46,18 +78,27 @@ const features = [
     title: 'Instant Export',
     description: 'Download as PNG, share via QR, or print-ready PDF in seconds.',
     visual: (
-      <div className="w-full h-24 bg-white rounded-xl border border-border/50 p-2 flex gap-2">
-        <div className="flex-1 bg-rose-50 rounded-lg flex flex-col items-center justify-center gap-1">
-          <Image className="h-4 w-4 text-primary" />
-          <span className="text-[7px] text-muted">PNG</span>
+      <div className="w-full h-24 bg-white rounded-xl border border-border/50 p-2 flex flex-col gap-1.5">
+        {/* Mini photo strip preview */}
+        <div className="flex-1 bg-rose-50 rounded-lg flex items-center justify-center gap-1 px-2">
+          <div className="w-5 h-7 bg-rose-200 rounded-sm" />
+          <div className="w-5 h-7 bg-gray-200 rounded-sm" />
+          <div className="w-5 h-7 bg-rose-100 rounded-sm" />
         </div>
-        <div className="flex-1 bg-gray-50 rounded-lg flex flex-col items-center justify-center gap-1">
-          <Printer className="h-4 w-4 text-gray-500" />
-          <span className="text-[7px] text-muted">PDF</span>
-        </div>
-        <div className="flex-1 bg-rose-50 rounded-lg flex flex-col items-center justify-center gap-1">
-          <Share2 className="h-4 w-4 text-primary" />
-          <span className="text-[7px] text-muted">QR</span>
+        {/* Export buttons */}
+        <div className="flex gap-1">
+          <div className="flex-1 bg-primary rounded-md py-1 flex items-center justify-center gap-0.5">
+            <Image className="h-2.5 w-2.5 text-white" />
+            <span className="text-[6px] text-white font-medium">PNG</span>
+          </div>
+          <div className="flex-1 bg-gray-800 rounded-md py-1 flex items-center justify-center gap-0.5">
+            <Printer className="h-2.5 w-2.5 text-white" />
+            <span className="text-[6px] text-white font-medium">PDF</span>
+          </div>
+          <div className="flex-1 bg-primary rounded-md py-1 flex items-center justify-center gap-0.5">
+            <Share2 className="h-2.5 w-2.5 text-white" />
+            <span className="text-[6px] text-white font-medium">QR</span>
+          </div>
         </div>
       </div>
     ),
@@ -68,12 +109,31 @@ const features = [
     visual: (
       <div className="w-full h-24 bg-gradient-to-br from-rose-50 to-pink-50 rounded-xl flex items-center justify-center">
         <div className="bg-white rounded-xl shadow-md border border-border/30 px-3 py-2 flex items-center gap-2">
-          <div className="w-10 h-10 bg-gray-900 rounded-lg flex items-center justify-center">
-            <div className="grid grid-cols-3 gap-0.5">
-              {Array.from({ length: 9 }).map((_, i) => (
-                <div key={i} className={`w-1 h-1 ${i % 2 === 0 ? 'bg-white' : 'bg-gray-900'} rounded-sm`} />
-              ))}
-            </div>
+          {/* QR code mockup */}
+          <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center border border-gray-200">
+            <svg viewBox="0 0 36 36" className="w-8 h-8">
+              {/* Corner squares */}
+              <rect x="2" y="2" width="10" height="10" rx="1" fill="#1C0B1A" />
+              <rect x="4" y="4" width="6" height="6" rx="0.5" fill="white" />
+              <rect x="5.5" y="5.5" width="3" height="3" fill="#1C0B1A" />
+              <rect x="24" y="2" width="10" height="10" rx="1" fill="#1C0B1A" />
+              <rect x="26" y="4" width="6" height="6" rx="0.5" fill="white" />
+              <rect x="27.5" y="5.5" width="3" height="3" fill="#1C0B1A" />
+              <rect x="2" y="24" width="10" height="10" rx="1" fill="#1C0B1A" />
+              <rect x="4" y="26" width="6" height="6" rx="0.5" fill="white" />
+              <rect x="5.5" y="27.5" width="3" height="3" fill="#1C0B1A" />
+              {/* Center data pattern */}
+              <rect x="14" y="14" width="2" height="2" fill="#1C0B1A" />
+              <rect x="18" y="14" width="2" height="2" fill="#1C0B1A" />
+              <rect x="20" y="16" width="2" height="2" fill="#1C0B1A" />
+              <rect x="14" y="18" width="4" height="4" fill="#E91E8C" rx="0.5" />
+              <rect x="22" y="20" width="2" height="2" fill="#1C0B1A" />
+              <rect x="14" y="22" width="2" height="2" fill="#1C0B1A" />
+              <rect x="18" y="24" width="2" height="2" fill="#1C0B1A" />
+              <rect x="22" y="24" width="2" height="2" fill="#1C0B1A" />
+              <rect x="26" y="18" width="2" height="2" fill="#1C0B1A" />
+              <rect x="28" y="22" width="4" height="4" fill="#1C0B1A" />
+            </svg>
           </div>
           <div className="text-left">
             <p className="text-[8px] font-semibold text-text">Share your strip</p>
@@ -524,6 +584,143 @@ export default function LandingPage() {
           ) : (
             <p className="text-center text-muted text-sm py-4">No feedback yet — be the first to leave a note!</p>
           )}
+        </div>
+      </Section>
+
+      {/* ── Gallery Preview ── */}
+      <Section className="py-16 px-4 sm:px-6">
+        <div className="max-w-5xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <p className="font-script text-primary text-lg mb-2">See the magic</p>
+            <h2 className="font-display text-4xl md:text-5xl text-text">
+              Real <em className="font-script not-italic text-primary">results.</em>
+            </h2>
+            <p className="text-muted mt-4 max-w-md mx-auto">Every session produces unique, share-worthy photo strips.</p>
+          </motion.div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            {/* Strip 1 — Classic Film */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0 }}
+              className="bg-white rounded-2xl p-2 border border-border shadow-card hover:shadow-polaroid hover:-translate-y-1 transition-all duration-300"
+            >
+              <div className="bg-gray-900 rounded-xl overflow-hidden">
+                <div className="p-1 space-y-1">
+                  {['bg-rose-200', 'bg-amber-100', 'bg-rose-100', 'bg-gray-200'].map((c, i) => (
+                    <div key={i} className={`h-14 ${c} rounded-sm`} />
+                  ))}
+                </div>
+              </div>
+              <p className="text-[10px] text-muted text-center mt-1.5 font-medium">Classic Film</p>
+            </motion.div>
+
+            {/* Strip 2 — Polaroid */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.08 }}
+              className="bg-white rounded-2xl p-2 border border-border shadow-card hover:shadow-polaroid hover:-translate-y-1 transition-all duration-300"
+            >
+              <div className="bg-white rounded-xl overflow-hidden border border-gray-100">
+                <div className="p-1.5 space-y-1">
+                  <div className="h-12 bg-pink-100 rounded-sm" />
+                  <div className="h-12 bg-sky-100 rounded-sm" />
+                </div>
+                <div className="h-4 bg-white flex items-center justify-center">
+                  <div className="w-10 h-0.5 bg-gray-200 rounded-full" />
+                </div>
+              </div>
+              <p className="text-[10px] text-muted text-center mt-1.5 font-medium">Polaroid</p>
+            </motion.div>
+
+            {/* Strip 3 — Valentine */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.16 }}
+              className="bg-white rounded-2xl p-2 border border-border shadow-card hover:shadow-polaroid hover:-translate-y-1 transition-all duration-300"
+            >
+              <div className="bg-rose-50 rounded-xl overflow-hidden border border-rose-200">
+                <div className="p-1 space-y-1">
+                  <div className="h-14 bg-rose-200 rounded-sm flex items-center justify-center">
+                    <span className="text-rose-400 text-lg">♡</span>
+                  </div>
+                  <div className="h-14 bg-rose-300 rounded-sm flex items-center justify-center">
+                    <span className="text-white text-lg">♡</span>
+                  </div>
+                </div>
+              </div>
+              <p className="text-[10px] text-muted text-center mt-1.5 font-medium">Valentine</p>
+            </motion.div>
+
+            {/* Strip 4 — B&W */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.24 }}
+              className="bg-white rounded-2xl p-2 border border-border shadow-card hover:shadow-polaroid hover:-translate-y-1 transition-all duration-300"
+            >
+              <div className="bg-gray-900 rounded-xl overflow-hidden">
+                <div className="p-1 space-y-1">
+                  <div className="h-20 bg-gray-700 rounded-sm" />
+                  <div className="h-20 bg-gray-600 rounded-sm" />
+                </div>
+              </div>
+              <p className="text-[10px] text-muted text-center mt-1.5 font-medium">Mono</p>
+            </motion.div>
+
+            {/* Strip 5 — Film Roll */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.32 }}
+              className="bg-white rounded-2xl p-2 border border-border shadow-card hover:shadow-polaroid hover:-translate-y-1 transition-all duration-300"
+            >
+              <div className="bg-gray-800 rounded-xl overflow-hidden">
+                {/* Sprocket holes */}
+                <div className="flex justify-between px-0.5 py-0.5">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <div key={i} className="w-1 h-1 bg-gray-600 rounded-sm" />
+                  ))}
+                </div>
+                <div className="px-1.5 pb-1 space-y-0.5">
+                  <div className="h-8 bg-amber-100/80 rounded-sm" />
+                  <div className="h-8 bg-amber-200/80 rounded-sm" />
+                </div>
+                <div className="flex justify-between px-0.5 py-0.5">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <div key={i} className="w-1 h-1 bg-gray-600 rounded-sm" />
+                  ))}
+                </div>
+              </div>
+              <p className="text-[10px] text-muted text-center mt-1.5 font-medium">Film Roll</p>
+            </motion.div>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="text-center mt-8"
+          >
+            <Button variant="ghost" size="sm" onClick={handleGetStarted} className="text-muted hover:text-primary">
+              Try all templates →
+            </Button>
+          </motion.div>
         </div>
       </Section>
 

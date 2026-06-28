@@ -4,33 +4,15 @@ All notable changes to ClickStudio are documented here.
 
 ---
 
-## v1.7.3 (June 28, 2026)
+## v1.7.4 (June 28, 2026)
 
 ### Added
-* Feature card visuals — mini mockups replacing emoji icons (camera viewfinder, filter grid, export options, QR share)
-* Testimonials section — 4 user reviews with star ratings
+* Gallery preview section — 5 photo strip style mockups on landing page
+* Camera tooltip walkthrough — 4-step first-visit onboarding
 
 ### Changed
-* Landing page motion — staggered card entrances, hover lift effects, animated photo strip preview
-* Accessibility pass — aria-labels, focus rings, html labels, role attributes on nav/footer
-* Landing page spacing — consistent py-16 sections, mb-12 headers, gap-5 card grids
-* Button component upgraded — gradient backgrounds, deeper shadows, smoother hover/tap animations
-
----
-
-## v1.7.2 (June 28, 2026)
-
-### Added
-* 9 PNG frame templates — Anniversary, Polaroid Moments, Mono Polaroid, Valentine B&W, Family Collage, Aesthetic Frame, Cat Valentine, Photo Strip, Christmas
-* Frame composite style — PNG backgrounds with photo overlay in compositor
-* "Coming Soon" badge on Custom Layout card in template carousel
-* Template Library category chips — snap-x scrolling with fade edge hint for mobile
-
-### Changed
-* Template Library visual hierarchy — improved spacing, larger search bar (48px), stronger category selected states
-* Card hover interactions — translateY, shadow deepens, preview scales, border glows
-* Template selection feedback — selected card shows checkmark indicator
-* Hover quick actions — Preview, Use Template, Save appear on card hover
+* Feature card visuals — realistic mockups replacing emoji placeholders
+* Accessibility contrast audit — WCAG AA analysis for all design tokens
 
 ---
 

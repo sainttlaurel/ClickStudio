@@ -6,155 +6,258 @@ Development phases, status, and design review notes for ClickStudio.
 
 ## Current Status
 
-| Metric | Value |
-|---|---|
-| Version | 1.7.3 |
-| Pages | 10 (Landing, Camera, Preview, Editor, Share, About, Help, Settings, Gallery, SessionHistory) |
-| Templates | 37 (28 library + 9 PNG frame templates) across 15 categories |
-| Filters | 13 film presets |
-| Frames | 5 overlay styles |
-| Sticker Packs | 10 themes, 160+ emoji |
-| Deployment | Vercel |
-| URL | [clickstudio.vercel.app](https://clickstudio.vercel.app) |
+| Metric        | Value                             |
+| ------------- | --------------------------------- |
+| Version       | 1.7.3                             |
+| Pages         | 10                                |
+| Templates     | 37 (28 library + 9 PNG templates) |
+| Categories    | 15                                |
+| Filters       | 13 film presets                   |
+| Frames        | 5 overlay styles                  |
+| Sticker Packs | 10 themes · 160+ assets           |
+| Deployment    | Vercel                            |
+| Status        | Public Beta                       |
 
 ---
 
-## Phase 1 — Core Camera & Filters ✅
+## Phase 1 — Core Camera & Filters 
+
 **Status:** Complete
 
-- [x] Live camera with device switching
-- [x] HD quality support, grid overlay, flash, mirror toggle
-- [x] Timer (3s/5s/10s) and burst mode
-- [x] Retake individual photos
-- [x] 13 film filters + 5 frame overlays
-- [x] Image upload + filter/frame baking
+* [x] Live camera with device switching
+* [x] HD quality support, grid overlay, flash, mirror toggle
+* [x] Timer (3s / 5s / 10s)
+* [x] Burst mode
+* [x] Retake individual photos
+* [x] 13 film filters
+* [x] 5 frame overlays
+* [x] Image upload
+* [x] Filter + frame baking
 
-## Phase 2 — Composite & Export ✅
+---
+
+## Phase 2 — Composite & Export 
+
 **Status:** Complete
 
-- [x] Classic layouts (single, double, quad, photo strip)
-- [x] Frame templates (Polaroid, Film Roll, Blush, Minimal, Clean)
-- [x] Photo strip compositor with watermark
-- [x] Print-ready PDF export (300 DPI)
-- [x] QR code + public share page + Web Share API
-- [x] Supabase cloud sync
+* [x] Single / Double / Quad layouts
+* [x] Photo strip compositor
+* [x] Frame templates
+* [x] Watermarked exports
+* [x] Print-ready PDF export (300 DPI)
+* [x] QR sharing
+* [x] Public share page
+* [x] Web Share API
+* [x] Supabase sync
 
-## Phase 3 — Editor & UI ✅
+---
+
+## Phase 3 — Editor & Customization 
+
 **Status:** Complete
 
-- [x] Per-photo adjustments, stickers (160+ emoji), text overlays (6 fonts, 15 colors)
-- [x] Sticker/text drag/resize/rotate
-- [x] What's New changelog, feedback wall, PWA, responsive design
-- [x] Camera floating toolbar, template carousel, Template Library modal
-- [x] Frame Overlay tab, countdown sounds
+* [x] Per-photo adjustments
+* [x] Text overlays
+* [x] Sticker system (160+ assets)
+* [x] Drag / resize / rotate
+* [x] Frame overlay tab
+* [x] Countdown sounds
+* [x] Template carousel
+* [x] Template Library
+* [x] Responsive editor
+* [x] Feedback wall
+* [x] PWA support
 
-## Phase 4 — Polish & Deployment ✅
+---
+
+## Phase 4 — Production & Deployment 
+
 **Status:** Complete
 
-- [x] Vercel deployment, SPA routing, security headers, SEO
-- [x] Google Search Console, sitemap, robots.txt, PWA manifest
-- [x] Code cleanup, React error #310 fix
-- [x] Editor compactness pass, centered UI
+* [x] Vercel deployment
+* [x] SEO setup
+* [x] Security headers
+* [x] SPA routing
+* [x] Sitemap
+* [x] Robots.txt
+* [x] Search Console integration
+* [x] React #310 fix
+* [x] Editor compactness pass
+* [x] UI centering pass
 
-## Phase 5 — Current Work 🚧
+---
+
+## Phase 5 — Landing & UI Polish 🚧
+
 **Status:** In Progress
 
-### Shipped in v1.7.3
-- [x] Alternating section backgrounds across landing page
-- [x] Landing page motion — staggered entrances, hover effects
-- [x] Accessibility pass — aria-labels, focus rings, labels, roles
-- [x] Button component upgrade — gradient bg, deeper shadows, smoother hover
+### Completed
 
-### Shipped in v1.7.2
-- [x] 9 PNG frame templates (Anniversary, Valentine, Family, Christmas, etc.)
-- [x] Frame composite style — compositor renders PNG backgrounds
-- [x] Card hover interactions, search bar, category chips, selection feedback
-- [x] Hover quick actions (Preview, Use Template, Save)
+* [x] Feature cards upgraded
+* [x] Mini visual previews
+* [x] Testimonials section
+* [x] Landing motion
+* [x] Hover interactions
+* [x] Accessibility pass
+* [x] Improved buttons
+* [x] Alternating backgrounds
+* [x] PNG frame templates
+* [x] Search improvements
+* [x] Category chips
+* [x] Selection feedback
+* [x] Hover quick actions
 
-### Still Planned
-- [ ] **Editor UX overhaul (Round 3 review)**
-  - [ ] Reduce empty space — canvas 55vh, panel 45vh
-  - [ ] Compress bottom panel — max 240-320px, scrollable
-  - [ ] Add undo / redo buttons
-  - [ ] Group adjustment sliders (Light / Color / Details)
-  - [ ] Redesign sticker grid — compact sticker sheet
-  - [ ] Improve selected tab states — background fill, font-weight 600
-  - [ ] Add live frame preview on hover
-  - [ ] Add zoom controls (− / 100% + / Fit)
-  - [ ] Add tooltips to left sidebar icons
-  - [ ] Improve slider thickness (4px track, 16px thumb)
-  - [ ] Add filter names below thumbnails
-  - [ ] "+ Add Text" primary button for text panel
-- [ ] Polaroid caption input in Editor
-- [ ] Photo reordering (drag-and-drop)
-- [ ] Higher resolution composites for print
-- [ ] Session History page (functional)
-- [ ] Gallery page (community showcase)
-- [ ] Replace placeholder graphics with real photo strips
-- [ ] Add template showcase section to landing page
-- [ ] Add testimonials/social proof section
-- [ ] Improve accessibility — contrast audit, remaining focus rings
+### Remaining
 
-## Phase 6 — Future (HOLD)
-**Status:** On hold
+* [ ] Template showcase section
+* [x] Replace placeholder outputs (feature card visuals)
+* [x] Gallery preview section (SVG mockups)
+* [x] Camera page tooltip walkthrough (first-visit)
+* [x] Accessibility contrast audit
 
-User accounts, payment processing, premium templates, collaborative sessions, custom branding, multi-camera support, social media integration, print integration, admin dashboard, analytics.
+#### Contrast Audit Results (WCAG AA)
+
+| Color | Ratio | AA Normal | AA Large | AA UI |
+|---|---|---|---|---|
+| `text` on `background` | 17.61:1 | ✅ | ✅ | ✅ |
+| `text` on `surface` | 18.88:1 | ✅ | ✅ | ✅ |
+| `muted` on `background` | 4.09:1 | ❌ | ✅ | ✅ |
+| `muted` on `surface` | 4.39:1 | ❌ | ✅ | ✅ |
+| `primary` on `background` | 3.89:1 | ❌ | ✅ | ✅ |
+| `primary` on `surface` | 4.18:1 | ❌ | ✅ | ✅ |
+| `secondary` on `background` | 2.14:1 | ❌ | ❌ | ❌ |
+| `secondary` on `surface` | 2.30:1 | ❌ | ❌ | ❌ |
+| `white` on `primary` | 4.18:1 | ❌ | ✅ | ✅ |
+| `white` on `secondary` | 2.30:1 | ❌ | ❌ | ❌ |
+
+**Issues:** `muted` and `primary` need darkening for small text. `secondary` needs significant darkening for all uses. Consider using `primary` for interactive elements instead of `secondary`.
 
 ---
 
-## UI Review
+## Phase 6 — Editor UX Overhaul 🎨
 
-### Round 3 — Editor UX (June 28, 2026)
+**Status:** Planned
 
-| Category | Score |
-|---|---|
-| Visual | 9.3/10 |
-| UX | 7.9/10 |
-| Product Feel | 9.1/10 |
-| Editing Efficiency | 6.9/10 |
+### Layout
 
-**What's working:** Excellent editor architecture, canvas breathing room, tool grouping, cohesive aesthetic.
+* [ ] Reduce empty canvas space
+* [ ] Compress bottom panel
+* [ ] Collapsible controls
+* [ ] Resizable editor panel
+* [ ] Zoom controls
 
-**Major issues:** Too much empty space, bottom panel too tall, adjust sliders need grouping, sliders too aggressive, filters missing names, sticker panel wasted space, text panel unclear, frame panel disconnected, missing undo/redo, missing action hierarchy, missing zoom, sidebar icons mysterious, selection states too subtle.
+### Workflow
+
+* [ ] Undo / Redo
+* [ ] Better Save hierarchy
+* [ ] Live frame preview
+* [ ] Filter labels
+* [ ] Better preview feedback
+
+### Controls
+
+* [ ] Group sliders (Light / Color / Detail)
+* [ ] Compact sticker sheet
+* [ ] Improve selected states
+* [ ] Redesign text workflow
+* [ ] "+ Add Text" action
+* [ ] Sidebar tooltips
+* [ ] Softer sliders
+
+### Extra
+
+* [ ] Polaroid captions
+* [ ] Photo reordering
+* [ ] Higher resolution export
+* [ ] Functional Session History
+* [ ] Community Gallery
+
+(verdict)
 
 **Verdict:** "A real editor that needs one more UX pass." Next milestone: less scrolling, less distance, faster editing, more delight.
 
-### Round 2 — Template Library (June 28, 2026)
+---
 
-| Category | Score |
-|---|---|
-| Visual | 9.5/10 |
-| UX | 9.0/10 |
-| Product Readiness | 9.2/10 |
+## Phase 7 — Future Features ⏸️
 
-**Shipped:** Card hover interactions, hierarchy spacing, search bar, category chips, selection feedback, hover quick actions, featured section.
+**Status:** On Hold
 
-### Round 1 — Initial (June 27, 2026)
+* [ ] User accounts
+* [ ] Premium templates
+* [ ] Payment system
+* [ ] Collaboration
+* [ ] Analytics
+* [ ] Admin dashboard
+* [ ] Branding tools
+* [ ] Multi-camera support
+* [ ] Social integrations
 
-Score: **9.2/10**. Clean aesthetic, intuitive flow, solid features.
+---
 
-| Issue | Status |
-|---|---|
-| Static / Not Alive | ✅ Done — motion, hover effects on landing page |
-| Placeholder Graphics | ✅ Done — feature cards use mini visual mockups |
-| Repetitive Layouts | ✅ Done — alternating backgrounds |
-| Missing Social Proof | ✅ Done — testimonials section added |
-| Missing Template Showcase | ❌ Open — need showcase on landing page |
-| Accessibility | ✅ Done — pass completed |
-| Spacing | ✅ Done — consistent across landing page |
+## UI Review — Landing Page ✅
+
+**Status:** Reviewed
+
+* [x] Motion added
+
+* [x] Social proof added
+
+* [x] Better section hierarchy
+
+* [x] Accessibility improvements
+
+* [ ] Template showcase
+
+* [ ] Real output examples
+
+(verdict)
+
+**Verdict:** "Clean aesthetic and strong direction. Feels like a product now, not a concept."
+
+---
+
+## UI Review — Template Library ✅
+
+**Status:** Reviewed
+
+* [x] Better hierarchy
+
+* [x] Hover interactions
+
+* [x] Search improvements
+
+* [x] Category refinement
+
+* [x] Selection feedback
+
+* [x] Featured templates
+
+* [ ] Premium previews
+
+* [ ] Favorites
+
+* [ ] Seasonal packs
+
+(verdict)
+
+**Verdict:** "Production-ready browsing experience with room for stronger discovery."
 
 ---
 
 ## Design Tokens
 
-| Token | Value | Usage |
-|---|---|---|
-| `--background` | `#FDF5F7` | Page background |
-| `--surface` | `#FFFFFF` | Cards and panels |
-| `--border` | `#F5C5D8` | Borders and dividers |
-| `--primary` | `#E91E8C` | Buttons, active states |
-| `--secondary` | `#FF85A2` | Accents |
-| `--text` | `#1C0B1A` | Body text |
-| `--muted` | `#9B6B7B` | Secondary text |
+| Token      | Value   |
+| ---------- | ------- |
+| Background | #FDF5F7 |
+| Surface    | #FFFFFF |
+| Border     | #F5C5D8 |
+| Primary    | #E91E8C |
+| Secondary  | #FF85A2 |
+| Text       | #1C0B1A |
+| Muted      | #9B6B7B |
 
-**Typography:** Inter (body), DM Serif Display (headings), Dancing Script (accents)
+Typography:
+
+* Inter
+* DM Serif Display
+* Dancing Script

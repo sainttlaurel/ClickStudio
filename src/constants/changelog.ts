@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.7.3'
+export const APP_VERSION = '1.7.4'
 
 const LS_KEY = `cs_changelog_v${APP_VERSION}`
 export const isChangelogSeen = (): boolean =>
@@ -20,6 +20,16 @@ export interface ChangelogVersion {
 }
 
 export const CHANGELOG: ChangelogVersion[] = [
+  {
+    version: '1.7.4',
+    date: 'June 28, 2026',
+    entries: [
+      { type: 'new',      text: 'Gallery preview section — 5 photo strip style mockups on landing page' },
+      { type: 'new',      text: 'Camera tooltip walkthrough — 4-step first-visit onboarding' },
+      { type: 'improved', text: 'Feature card visuals — realistic mockups replacing emoji placeholders' },
+      { type: 'improved', text: 'Accessibility contrast audit — WCAG AA analysis for all design tokens' },
+    ],
+  },
   {
     version: '1.7.3',
     date: 'June 28, 2026',

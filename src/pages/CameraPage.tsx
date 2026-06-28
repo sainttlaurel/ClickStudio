@@ -275,6 +275,25 @@ export default function CameraPage() {
   const [templateTab, setTemplateTab] = useState<'classic' | 'frame'>('classic')
   const hasTemplate = currentSession?.template != null
 
+  // ── Tooltip walkthrough (first-visit onboarding) ──
+  const [showTour, setShowTour] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return !localStorage.getItem('clickstudio_camera_tour_done')
+  })
+  const [tourStep, setTourStep] = useState(0)
+
+  const tourSteps = [
+    { title: 'Pick a template', desc: 'Choose a layout or frame style to get started.', target: 'tour-template' },
+    { title: 'Apply filters', desc: 'Swipe through 13 vintage film presets.', target: 'tour-filters' },
+    { title: 'Set your timer', desc: 'Pick 3s, 5s or 10s countdown.', target: 'tour-timer' },
+    { title: 'Snap!', desc: 'Tap the shutter when ready.', target: 'tour-capture' },
+  ]
+
+  const finishTour = () => {
+    localStorage.setItem('clickstudio_camera_tour_done', '1')
+    setShowTour(false)
+  }
+
   const showSuccess = useCallback(
     (t: string, d: string) => success(t, d),
     [success]
@@ -904,6 +923,49 @@ export default function CameraPage() {
 
   return (
     <div className="h-full flex flex-col bg-[#faf8f6]">
+      {/* ── Tooltip Tour Overlay ── */}
+      <AnimatePresence>
+        {showTour && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-end sm:items-center justify-center p-4"
+          >
+            <motion.div
+              initial={{ y: 40, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 40, opacity: 0 }}
+              transition={{ delay: 0.1 }}
+              className="bg-white rounded-3xl shadow-2xl border border-border p-6 max-w-sm w-full"
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                  <span className="text-primary font-bold text-sm">{tourStep + 1}</span>
+                </div>
+                <p className="text-xs text-muted">Step {tourStep + 1} of {tourSteps.length}</p>
+              </div>
+              <h3 className="font-display text-xl text-text mb-1">{tourSteps[tourStep].title}</h3>
+              <p className="text-sm text-muted mb-5">{tourSteps[tourStep].desc}</p>
+              <div className="flex gap-2">
+                <button onClick={finishTour} className="flex-1 h-10 rounded-2xl text-sm font-medium text-muted border border-border hover:bg-rose-50 transition-all">
+                  Skip tour
+                </button>
+                <button
+                  onClick={() => {
+                    if (tourStep < tourSteps.length - 1) setTourStep(s => s + 1)
+                    else finishTour()
+                  }}
+                  className="flex-1 h-10 rounded-2xl text-sm font-medium text-white bg-primary hover:bg-primary/90 transition-all shadow-sm"
+                >
+                  {tourStep < tourSteps.length - 1 ? 'Next' : 'Got it'}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* ── Top bar ── */}
       <div className="flex items-center justify-between px-4 py-2.5 border-b border-border/50 bg-white/80 backdrop-blur-md flex-shrink-0">
         <div className="flex items-center gap-1.5">
