@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
+﻿import { useState, useRef, useEffect, useCallback } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
@@ -14,7 +14,6 @@ import {
   RotateCcw,
   Plus,
   Layout,
-  ChevronDown,
   ZoomIn,
   ZoomOut,
   Maximize,
@@ -88,14 +87,14 @@ export default function EditorPage() {
   const [activeFilter, setActiveFilter] = useState('none')
   const [activeFrame, setActiveFrame] = useState('none')
 
-  // ── Sticker state ──────────────────────────────────────────────────────
+  // â”€â”€ Sticker state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const [placedStickers, setPlacedStickers] = useState<PlacedSticker[]>([])
   const [selectedStickerPack, setSelectedStickerPack] = useState(0)
   const [selectedSticker, setSelectedSticker] = useState<string | null>(null)
   const [draggingSticker, setDraggingSticker] = useState<string | null>(null)
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
 
-  // ── Text state ─────────────────────────────────────────────────────────
+  // â”€â”€ Text state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const [placedTexts, setPlacedTexts] = useState<PlacedText[]>([])
   const [textInput, setTextInput] = useState('')
   const [textPreset, setTextPreset] = useState(0)
@@ -103,11 +102,11 @@ export default function EditorPage() {
   const [textSize, setTextSize] = useState(32)
   const [draggingText, setDraggingText] = useState<string | null>(null)
 
-  // ── Polaroid caption state ──
+  // â”€â”€ Polaroid caption state â”€â”€
   const [polaroidCaption, setPolaroidCaption] = useState('')
   const [polaroidCaptionFont, setPolaroidCaptionFont] = useState('Dancing Script')
 
-  // ── Undo / Redo history ──
+  // â”€â”€ Undo / Redo history â”€â”€
   const [history, setHistory] = useState<Array<{
     adjustments: PhotoAdjustments
     stickers: PlacedSticker[]
@@ -168,13 +167,13 @@ export default function EditorPage() {
     setHasChanges(true)
   }, [history, historyIndex])
 
-  // ── Zoom state ──
+  // â”€â”€ Zoom state â”€â”€
   const [zoom, setZoom] = useState(100)
 
-  // ── Collapsible panel state ──
-  const [panelCollapsed, setPanelCollapsed] = useState(false)
+  // â”€â”€ Collapsible panel state â”€â”€
+  const [, setPanelCollapsed] = useState(false)
 
-  // ── Store latest values in refs for drawImage ──────────────────────────
+  // â”€â”€ Store latest values in refs for drawImage â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const adjustmentsRef = useRef(adjustments)
   const stickersRef = useRef(placedStickers)
   const textsRef = useRef(placedTexts)
@@ -191,7 +190,7 @@ export default function EditorPage() {
   useEffect(() => { polaroidCaptionRef.current = polaroidCaption }, [polaroidCaption])
   useEffect(() => { polaroidCaptionFontRef.current = polaroidCaptionFont }, [polaroidCaptionFont])
 
-  // ── Draw image (reads from refs to avoid re-render loops) ──────────────
+  // â”€â”€ Draw image (reads from refs to avoid re-render loops) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const drawImage = useCallback(() => {
     if (!currentPhoto || !canvasRef.current) return
 
@@ -309,7 +308,7 @@ export default function EditorPage() {
       })
 
       setHasChanges(false)
-      success('Photo saved', 'Taking you back to preview…')
+      success('Photo saved', 'Taking you back to previewâ€¦')
       setTimeout(() => navigate('/preview'), 800)
     } catch {
       error('Save failed', 'Could not save photo edits')
@@ -325,7 +324,7 @@ export default function EditorPage() {
     setHasChanges(true)
   }
 
-  // ── Sticker handlers ────────────────────────────────────────────────────
+  // â”€â”€ Sticker handlers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const handleSelectSticker = (emoji: string) => {
     // Toggle: if same sticker clicked, deselect; otherwise select for placement
     setSelectedSticker(prev => prev === emoji ? null : emoji)
@@ -380,7 +379,7 @@ export default function EditorPage() {
     setDraggingText(null)
   }
 
-  // ── Touch handlers for mobile ──────────────────────────────────────────
+  // â”€â”€ Touch handlers for mobile â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const getTouchPos = (e: React.TouchEvent) => {
     if (!canvasWrapperRef.current || !canvasRef.current) return null
     const touch = e.touches[0] || e.changedTouches[0]
@@ -455,7 +454,7 @@ export default function EditorPage() {
     setDraggingText(null)
   }
 
-  // ── Canvas click to place sticker at position ──────────────────────────
+  // â”€â”€ Canvas click to place sticker at position â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const handleCanvasClick = (e: React.MouseEvent) => {
     if (!selectedSticker || !canvasWrapperRef.current || !canvasRef.current) return
     // Don't place if clicking on an overlay element
@@ -506,7 +505,7 @@ export default function EditorPage() {
     setHasChanges(true)
   }
 
-  // ── Text handlers ───────────────────────────────────────────────────────
+  // â”€â”€ Text handlers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const handleAddText = () => {
     if (!textInput.trim() || !canvasRef.current) return
     const canvas = canvasRef.current
@@ -554,19 +553,19 @@ export default function EditorPage() {
     {
       label: 'Light',
       controls: [
-        { key: 'brightness' as const, label: 'Brightness', min: -100, max: 100, icon: '☀️' },
-        { key: 'exposure' as const, label: 'Exposure', min: -100, max: 100, icon: '📷' },
-        { key: 'contrast' as const, label: 'Contrast', min: -100, max: 100, icon: '◐' },
-        { key: 'shadows' as const, label: 'Shadows', min: -100, max: 100, icon: '🌑' },
-        { key: 'highlights' as const, label: 'Highlights', min: -100, max: 100, icon: '🌕' },
+        { key: 'brightness' as const, label: 'Brightness', min: -100, max: 100, icon: 'â˜€ï¸' },
+        { key: 'exposure' as const, label: 'Exposure', min: -100, max: 100, icon: 'ðŸ“·' },
+        { key: 'contrast' as const, label: 'Contrast', min: -100, max: 100, icon: 'â—' },
+        { key: 'shadows' as const, label: 'Shadows', min: -100, max: 100, icon: 'ðŸŒ‘' },
+        { key: 'highlights' as const, label: 'Highlights', min: -100, max: 100, icon: 'ðŸŒ•' },
       ],
     },
     {
       label: 'Color',
       controls: [
-        { key: 'saturation' as const, label: 'Saturation', min: -100, max: 100, icon: '🎨' },
-        { key: 'temperature' as const, label: 'Temperature', min: -50, max: 50, icon: '🌡️' },
-        { key: 'tint' as const, label: 'Tint', min: -50, max: 50, icon: '💜' },
+        { key: 'saturation' as const, label: 'Saturation', min: -100, max: 100, icon: 'ðŸŽ¨' },
+        { key: 'temperature' as const, label: 'Temperature', min: -50, max: 50, icon: 'ðŸŒ¡ï¸' },
+        { key: 'tint' as const, label: 'Tint', min: -50, max: 50, icon: 'ðŸ’œ' },
       ],
     },
   ]
@@ -584,7 +583,7 @@ export default function EditorPage() {
           >
             Preview
           </Button>
-          <h1 className="font-display text-base text-text">Edit photo ✶</h1>
+          <h1 className="font-display text-base text-text">Edit photo âœ¶</h1>
         </div>
 
         <div className="flex items-center gap-1.5">
@@ -629,7 +628,7 @@ export default function EditorPage() {
         </div>
       </div>
 
-      {/* Canvas area — fills remaining space */}
+      {/* Canvas area â€” fills remaining space */}
       <div
         ref={containerRef}
         className="flex-1 flex items-center justify-center p-4 bg-white overflow-auto min-h-0 relative"
@@ -716,7 +715,7 @@ export default function EditorPage() {
                   <button
                     onClick={e => { e.stopPropagation(); handleSizeSticker(sticker.id, -8) }}
                     className="bg-white/90 hover:bg-white rounded-md p-0.5 shadow-sm text-xs"
-                  >−</button>
+                  >âˆ’</button>
                   <button
                     onClick={e => { e.stopPropagation(); handleRotateSticker(sticker.id) }}
                     className="bg-white/90 hover:bg-white rounded-md p-0.5 shadow-sm text-xs"
@@ -778,46 +777,38 @@ export default function EditorPage() {
         </div>
       </div>
 
-      {/* Tab bar */}
-      <div className="flex bg-white border-t border-border flex-shrink-0">
-        {[
-          { key: 'adjust' as const, label: 'Adjust', icon: Sliders },
-          { key: 'filters' as const, label: 'Filters', icon: Palette },
-          { key: 'stickers' as const, label: 'Stickers', icon: Sticker },
-          { key: 'text' as const, label: 'Text', icon: Type },
-          { key: 'frame' as const, label: 'Frame', icon: Layout },
-        ].map(tab => (
-          <button
-            key={tab.key}
-            onClick={() => {
-              if (activeTab === tab.key && !panelCollapsed) {
-                setPanelCollapsed(true)
-              } else {
+      {/* Tab content panel - side-by-side layout */}
+      <div className="flex-1 flex bg-white border-t border-border min-h-0">
+        <div className="w-64 border-r border-border bg-rose-50/50 overflow-y-auto flex-shrink-0">
+          {[
+            { key: 'adjust' as const, label: 'Adjust', icon: Sliders },
+            { key: 'filters' as const, label: 'Filters', icon: Palette },
+            { key: 'stickers' as const, label: 'Stickers', icon: Sticker },
+            { key: 'text' as const, label: 'Text', icon: Type },
+            { key: 'frame' as const, label: 'Frame', icon: Layout },
+          ].map(tab => (
+            <button
+              key={tab.key}
+              onClick={() => {
                 setActiveTab(tab.key)
                 setPanelCollapsed(false)
-              }
-            }}
-            className={cn(
-              'flex-1 flex items-center justify-center gap-1.5 py-2.5 text-[11px] font-medium',
-              'border-b-2 transition-all',
-              activeTab === tab.key && !panelCollapsed
-                ? 'border-primary text-primary bg-rose-50 font-semibold'
-                : 'border-transparent text-muted hover:text-text hover:bg-rose-50/50'
-            )}
-            title={tab.label}
-          >
-            <tab.icon className="h-3.5 w-3.5" />
-            <span>{tab.label}</span>
-            {activeTab === tab.key && !panelCollapsed && (
-              <ChevronDown className="h-3 w-3 ml-0.5" />
-            )}
-          </button>
-        ))}
-      </div>
+              }}
+              className={cn(
+                'w-full flex items-center gap-2 px-4 py-3 text-sm font-medium text-left',
+                'border-b border-border transition-all',
+                activeTab === tab.key
+                  ? 'bg-primary/10 text-primary border-primary'
+                  : 'text-muted hover:bg-rose-50/80 hover:text-text'
+              )}
+              title={tab.label}
+            >
+              <tab.icon className="h-4 w-4" />
+              <span>{tab.label}</span>
+            </button>
+          ))}
+        </div>
 
-      {/* Tab content panel */}
-      {activeTab && !panelCollapsed && (
-        <div className="border-t border-border bg-white overflow-y-auto max-h-[240px] lg:max-h-[320px] flex-shrink-0">
+        <div className="flex-1 overflow-y-auto max-h-[45vh] lg:max-h-[48vh]">
           <div className="p-4">
             {activeTab === 'adjust' && (
               <div className="space-y-3">
@@ -956,7 +947,7 @@ export default function EditorPage() {
                 </div>
                 <p className="text-[10px] text-muted text-center">
                   {selectedSticker
-                    ? 'Tap sticker selected — click on the photo to place'
+                    ? 'Tap sticker selected â€” click on the photo to place'
                     : 'Tap a sticker, then click on the photo to place'}
                 </p>
                 {placedStickers.length > 0 && (
@@ -1111,7 +1102,7 @@ export default function EditorPage() {
                     Remove Frame
                   </Button>
                 )}
-                
+
                 {/* Polaroid Caption */}
                 {(activeFrame === 'polaroid' || activeFrame === 'blush') && (
                   <div className="space-y-2 pt-2 border-t border-border">
@@ -1147,7 +1138,7 @@ export default function EditorPage() {
             )}
           </div>
         </div>
-      )}
+      </div>
     </div>
   )
 }
