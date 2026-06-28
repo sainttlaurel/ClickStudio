@@ -862,27 +862,26 @@ export default function EditorPage() {
             )}
 
             {activeTab === 'filters' && (
-              <div className="space-y-3">
-                <h3 className="font-semibold text-text text-sm">Filters</h3>
-                <div className="grid grid-cols-4 gap-1.5 justify-center">
+              <div className="space-y-2">
+                <div className="flex gap-1.5 overflow-x-auto pb-1 justify-center">
                   {FILTERS.map(filter => (
                     <motion.button
                       key={filter.id}
-                      whileHover={{ scale: 1.03 }}
-                      whileTap={{ scale: 0.97 }}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
                       onClick={() => {
                         setActiveFilter(filter.id)
                         setHasChanges(true)
                       }}
                       className={cn(
-                        'rounded-xl border-2 p-2 flex flex-col items-center gap-1.5 transition-all',
+                        'flex-shrink-0 w-14 rounded-lg border-2 p-1 flex flex-col items-center gap-0.5 transition-all',
                         activeFilter === filter.id
                           ? 'border-primary bg-primary/5 ring-2 ring-primary/20'
                           : 'border-border hover:border-primary/40 bg-white hover:bg-rose-50'
                       )}
                     >
                       <div
-                        className="w-full aspect-square rounded-lg overflow-hidden bg-gray-100"
+                        className="w-full aspect-square rounded overflow-hidden bg-gray-100"
                         style={{
                           filter: filter.id === 'none' ? 'none' : filter.css,
                         }}
@@ -894,7 +893,7 @@ export default function EditorPage() {
                         />
                       </div>
                       <span className={cn(
-                        'text-xs font-medium',
+                        'text-[8px] font-medium leading-tight',
                         activeFilter === filter.id ? 'text-primary' : 'text-muted'
                       )}>
                         {filter.name}
@@ -905,9 +904,10 @@ export default function EditorPage() {
                 {activeFilter !== 'none' && (
                   <Button
                     variant="outline"
+                    size="sm"
                     onClick={() => { setActiveFilter('none'); setHasChanges(true) }}
                     className="w-full"
-                    icon={<Undo className="h-4 w-4" />}
+                    icon={<Undo className="h-3 w-3" />}
                   >
                     Remove Filter
                   </Button>
