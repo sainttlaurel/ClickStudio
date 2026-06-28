@@ -103,6 +103,10 @@ export default function EditorPage() {
   const [textSize, setTextSize] = useState(32)
   const [draggingText, setDraggingText] = useState<string | null>(null)
 
+  // ── Polaroid caption state ──
+  const [polaroidCaption, setPolaroidCaption] = useState('')
+  const [polaroidCaptionFont, setPolaroidCaptionFont] = useState('Dancing Script')
+
   // ── Undo / Redo history ──
   const [history, setHistory] = useState<Array<{
     adjustments: PhotoAdjustments
@@ -176,12 +180,16 @@ export default function EditorPage() {
   const textsRef = useRef(placedTexts)
   const filterRef = useRef(activeFilter)
   const frameRef = useRef(activeFrame)
+  const polaroidCaptionRef = useRef(polaroidCaption)
+  const polaroidCaptionFontRef = useRef(polaroidCaptionFont)
 
   useEffect(() => { adjustmentsRef.current = adjustments }, [adjustments])
   useEffect(() => { stickersRef.current = placedStickers }, [placedStickers])
   useEffect(() => { textsRef.current = placedTexts }, [placedTexts])
   useEffect(() => { filterRef.current = activeFilter }, [activeFilter])
   useEffect(() => { frameRef.current = activeFrame }, [activeFrame])
+  useEffect(() => { polaroidCaptionRef.current = polaroidCaption }, [polaroidCaption])
+  useEffect(() => { polaroidCaptionFontRef.current = polaroidCaptionFont }, [polaroidCaptionFont])
 
   // ── Draw image (reads from refs to avoid re-render loops) ──────────────
   const drawImage = useCallback(() => {
@@ -245,6 +253,17 @@ export default function EditorPage() {
 
       // Draw frame overlay
       bakeFrameOverlay(ctx, img.width, img.height, frameRef.current)
+      
+      // Draw Polaroid caption
+      if (polaroidCaptionRef.current && (frameRef.current === 'polaroid' || frameRef.current === 'blush')) {
+        ctx.save()
+        ctx.font = `24px "${polaroidCaptionFontRef.current}"`
+        ctx.fillStyle = '#1C0B1A'
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'bottom'
+        ctx.fillText(polaroidCaptionRef.current, img.width / 2, img.height - 20)
+        ctx.restore()
+      }
     }
     img.src = currentPhoto.url
   }, [currentPhoto])
@@ -257,10 +276,10 @@ export default function EditorPage() {
     drawImage()
   }, [currentPhoto, drawImage])
 
-  // Redraw when adjustments, stickers, texts, filter, or frame change
+  // Redraw when adjustments, stickers, texts, filter, frame, or caption change
   useEffect(() => {
     drawImage()
-  }, [adjustments, placedStickers, placedTexts, activeFilter, activeFrame, drawImage])
+  }, [adjustments, placedStickers, placedTexts, activeFilter, activeFrame, polaroidCaption, polaroidCaptionFont, drawImage])
 
   const handleAdjustmentChange = (
     key: keyof PhotoAdjustments,
@@ -1091,6 +1110,38 @@ export default function EditorPage() {
                   <Button variant="outline" onClick={() => { setActiveFrame('none'); setHasChanges(true) }} className="w-full" icon={<Undo className="h-4 w-4" />}>
                     Remove Frame
                   </Button>
+                )}
+                
+                {/* Polaroid Caption */}
+                {(activeFrame === 'polaroid' || activeFrame === 'blush') && (
+                  <div className="space-y-2 pt-2 border-t border-border">
+                    <label className="text-xs text-muted font-medium">Polaroid Caption</label>
+                    <input
+                      type="text"
+                      value={polaroidCaption}
+                      onChange={e => { setPolaroidCaption(e.target.value); setHasChanges(true) }}
+                      placeholder="Add a caption..."
+                      maxLength={30}
+                      className="w-full rounded-xl border border-border bg-rose-50/50 px-3 py-2 text-sm text-text placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-primary/40"
+                    />
+                    <div className="flex gap-1">
+                      {['Dancing Script', 'Inter', 'DM Serif Display'].map(font => (
+                        <button
+                          key={font}
+                          onClick={() => { setPolaroidCaptionFont(font); setHasChanges(true) }}
+                          className={cn(
+                            'flex-1 py-1 rounded-lg border text-[10px] transition-all',
+                            polaroidCaptionFont === font
+                              ? 'border-primary bg-primary/10 text-primary font-semibold'
+                              : 'border-border text-muted hover:border-primary/40'
+                          )}
+                          style={{ fontFamily: `"${font}", serif` }}
+                        >
+                          {font.split(' ')[0]}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 )}
               </div>
             )}

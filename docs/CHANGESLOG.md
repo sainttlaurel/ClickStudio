@@ -4,6 +4,14 @@ All notable changes to ClickStudio are documented here.
 
 ---
 
+## v1.7.8 (June 28, 2026)
+
+### Added
+* Polaroid captions — add text below polaroid/blush frames
+* Polaroid caption font selector — 3 font options
+
+---
+
 ## v1.7.7 (June 28, 2026)
 
 ### Changed

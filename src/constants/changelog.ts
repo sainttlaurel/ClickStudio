@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.7.7'
+export const APP_VERSION = '1.7.8'
 
 const LS_KEY = `cs_changelog_v${APP_VERSION}`
 export const isChangelogSeen = (): boolean =>
@@ -20,6 +20,14 @@ export interface ChangelogVersion {
 }
 
 export const CHANGELOG: ChangelogVersion[] = [
+  {
+    version: '1.7.8',
+    date: 'June 28, 2026',
+    entries: [
+      { type: 'new',      text: 'Polaroid captions — add text below polaroid/blush frames' },
+      { type: 'improved', text: 'Polaroid caption font selector — 3 font options' },
+    ],
+  },
   {
     version: '1.7.7',
     date: 'June 28, 2026',

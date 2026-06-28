@@ -8,7 +8,7 @@ Development phases and status for ClickStudio.
 
 | Metric | Value |
 |---|---|
-| Version | 1.7.7 |
+| Version | 1.7.8 |
 | Pages | 10 (Landing, Camera, Preview, Editor, Share, About, Help, Settings, Gallery, SessionHistory) |
 | Templates | 37 (28 library + 9 PNG frame templates) across 15 categories |
 | Filters | 13 film presets |
@@ -115,7 +115,7 @@ Development phases and status for ClickStudio.
 
 ### Extra
 
-- [ ] Polaroid captions
+- [x] Polaroid captions
 - [ ] Photo reordering (drag-and-drop)
 - [ ] Higher resolution composites for print
 - [ ] Functional Session History page
