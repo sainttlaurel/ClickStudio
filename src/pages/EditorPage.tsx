@@ -670,7 +670,7 @@ export default function EditorPage() {
           <canvas
             ref={canvasRef}
             className={cn(
-              'max-w-full rounded-xl shadow-2xl block max-h-[55vh] lg:max-h-[65vh] transition-all duration-300',
+              'max-w-full rounded-xl shadow-2xl block max-h-[50vh] lg:max-h-[60vh] transition-all duration-300',
               hasChanges && 'ring-2 ring-primary/30'
             )}
             style={{
@@ -801,7 +801,7 @@ export default function EditorPage() {
               'flex-1 flex items-center justify-center gap-1.5 py-2.5 text-[11px] font-medium',
               'border-b-2 transition-all',
               activeTab === tab.key && !panelCollapsed
-                ? 'border-primary text-primary bg-primary/10 font-semibold'
+                ? 'border-primary text-primary bg-rose-50 font-semibold'
                 : 'border-transparent text-muted hover:text-text hover:bg-rose-50/50'
             )}
             title={tab.label}
@@ -817,7 +817,7 @@ export default function EditorPage() {
 
       {/* Tab content panel */}
       {activeTab && !panelCollapsed && (
-        <div className="border-t border-border bg-white overflow-y-auto max-h-[28vh] lg:max-h-[24vh] flex-shrink-0">
+        <div className="border-t border-border bg-white overflow-y-auto max-h-[240px] lg:max-h-[320px] flex-shrink-0">
           <div className="p-4">
             {activeTab === 'adjust' && (
               <div className="space-y-3">
@@ -934,18 +934,18 @@ export default function EditorPage() {
                     </button>
                   ))}
                 </div>
-                <div className="grid grid-cols-8 gap-1 justify-center">
+                <div className="grid grid-cols-10 gap-0.5 justify-center">
                   {STICKER_PACKS[selectedStickerPack].stickers.map(
                     (emoji, i) => (
                       <motion.button
                         key={`${emoji}-${i}`}
-                        whileHover={{ scale: 1.1 }}
+                        whileHover={{ scale: 1.2 }}
                         whileTap={{ scale: 0.9 }}
                         onClick={() => handleSelectSticker(emoji)}
                         className={cn(
                           'aspect-square rounded-lg border-2 text-lg flex items-center justify-center transition-all',
                           selectedSticker === emoji
-                            ? 'border-primary bg-primary/5 ring-2 ring-primary/30 scale-110'
+                            ? 'border-primary bg-primary/10 ring-2 ring-primary/30 scale-110'
                             : 'border-border hover:border-primary/40 bg-white hover:bg-rose-50'
                         )}
                       >

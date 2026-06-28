@@ -98,7 +98,7 @@ export function Slider({
         <div
           ref={trackRef}
           className={cn(
-            'relative h-1.5 w-full rounded-full bg-border/50 cursor-pointer',
+            'relative h-1 w-full rounded-full bg-border/50 cursor-pointer',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
             disabled && 'opacity-50 cursor-not-allowed'
           )}
@@ -113,7 +113,7 @@ export function Slider({
         >
           {/* Track fill */}
           <div
-            className="absolute top-0 left-0 h-full bg-primary/60 rounded-full transition-all duration-150"
+            className="absolute top-0 left-0 h-full bg-primary/40 rounded-full transition-all duration-150"
             style={{ width: `${percentage}%` }}
           />
           
