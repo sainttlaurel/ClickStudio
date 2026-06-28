@@ -49,7 +49,21 @@ Feature ideas for ClickStudio. Shipped items are checked off; everything else is
 
 ## Planned — Next Priorities
 
-### High Priority
+### High Priority (from Round 3 Editor UX Review)
+- **Reduce editor empty space** — Canvas 55vh, panel 45vh, compress vertical distance
+- **Compress bottom panel** — Max 240-320px, scrollable, not a giant wall
+- **Add undo/redo** — ↶ Undo / ↷ Redo before Save, top right
+- **Group adjustment sliders** — Light (Brightness, Contrast, Exposure), Color (Saturation, Temperature, Tint), Details (Shadows, Highlights)
+- **Improve slider design** — Track 4px, active 6px, thumb 16px, softer pink
+- **Redesign sticker grid** — Compact sticker sheet, not giant cards, hover zoom
+- **Add filter names** — Original, Soft, Film, Vintage, Blush, Warm, Moody, Dreamy with check on selected
+- **Improve text panel** — "+ Add Text" primary button, organized fields (Font, Weight, Color, Size, Opacity)
+- **Live frame preview on hover** — Frame selection previews ON canvas
+- **Add zoom controls** — − / 100% + / Fit, bottom right
+- **Tooltip sidebar icons** — Home, Templates, Gallery, Editor, History
+- **Improve selected tab states** — Background #FFF1F7, font-weight 600
+
+### High Priority (existing)
 - **Polaroid caption input in Editor** — Currently only in Preview; should be editable per-photo in the Editor too
 - **Photo reordering** — Drag-and-drop reorder shots before compositing
 - **Improved composite quality** — Higher resolution composites for print

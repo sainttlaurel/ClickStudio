@@ -81,6 +81,19 @@ Active development phases for ClickStudio.
 - [x] Hover quick actions (Preview, Use Template, Save)
 
 ### Still Planned
+- [ ] **Editor UX overhaul (Round 3 review)**
+  - [ ] Reduce empty space — canvas 55vh, panel 45vh
+  - [ ] Compress bottom panel — max 240-320px, scrollable
+  - [ ] Add undo / redo buttons
+  - [ ] Group adjustment sliders (Light / Color / Details)
+  - [ ] Redesign sticker grid — compact sticker sheet
+  - [ ] Improve selected tab states — background fill, font-weight 600
+  - [ ] Add live frame preview on hover
+  - [ ] Add zoom controls (− / 100% / + / Fit)
+  - [ ] Add tooltips to left sidebar icons
+  - [ ] Improve slider thickness (4px track, 16px thumb)
+  - [ ] Add filter names below thumbnails
+  - [ ] "+ Add Text" primary button for text panel
 - [ ] Polaroid caption input in Editor
 - [ ] Photo reordering (drag-and-drop)
 - [ ] Higher resolution composites for print
