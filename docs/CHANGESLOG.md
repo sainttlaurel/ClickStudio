@@ -4,6 +4,17 @@ All notable changes to ClickStudio are documented here.
 
 ---
 
+## v1.7.7 (June 28, 2026)
+
+### Changed
+* Selected states — background fill, font-weight 600
+* Text workflow — compact one-row layout with prominent Add button
+* Save button — glow effect when unsaved changes
+* Frame preview — live preview on hover
+* Preview feedback — ring glow on canvas with unsaved changes
+
+---
+
 ## v1.7.6 (June 28, 2026)
 
 ### Added

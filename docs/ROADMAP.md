@@ -8,7 +8,7 @@ Development phases and status for ClickStudio.
 
 | Metric | Value |
 |---|---|
-| Version | 1.7.6 |
+| Version | 1.7.7 |
 | Pages | 10 (Landing, Camera, Preview, Editor, Share, About, Help, Settings, Gallery, SessionHistory) |
 | Templates | 37 (28 library + 9 PNG frame templates) across 15 categories |
 | Filters | 13 film presets |
@@ -91,8 +91,8 @@ Development phases and status for ClickStudio.
 
 ---
 
-## Phase 6 — Editor UX Overhaul 🚧
-**Status:** In Progress
+## Phase 6 — Editor UX Overhaul ✅
+**Status:** Complete
 
 ### Completed
 
@@ -106,15 +106,12 @@ Development phases and status for ClickStudio.
 - [x] Collapsible controls (click tab to collapse)
 - [x] Zoom controls (50%–150% with fit button)
 - [x] Sidebar tooltips (title attributes on tabs)
-
-### Still Planned
-
-- [ ] Improve selected states — background fill, font-weight 600
-- [ ] Redesign text workflow
-- [ ] "+ Add Text" primary button for text panel
-- [ ] Better Save hierarchy
-- [ ] Live frame preview on hover
-- [ ] Better preview feedback
+- [x] Improve selected states — background fill, font-weight 600
+- [x] Redesign text workflow — compact one-row layout
+- [x] "+ Add Text" primary button — prominent Add button
+- [x] Better Save hierarchy — glow effect when unsaved
+- [x] Live frame preview on hover
+- [x] Better preview feedback — ring glow on unsaved changes
 
 ### Extra
 

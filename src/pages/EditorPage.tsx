@@ -598,11 +598,12 @@ export default function EditorPage() {
             Reset
           </Button>
           <Button
-            variant="primary"
+            variant={hasChanges ? 'primary' : 'outline'}
             size="sm"
             onClick={handleSave}
             disabled={!hasChanges}
             icon={<Save className="h-3.5 w-3.5" />}
+            className={hasChanges ? 'shadow-glow' : ''}
           >
             Save
           </Button>
@@ -649,7 +650,10 @@ export default function EditorPage() {
         <div ref={canvasWrapperRef} className="relative max-w-4xl w-full" style={{ transform: `scale(${zoom / 100})`, transformOrigin: 'center center' }}>
           <canvas
             ref={canvasRef}
-            className="max-w-full rounded-xl shadow-2xl block max-h-[55vh] lg:max-h-[65vh]"
+            className={cn(
+              'max-w-full rounded-xl shadow-2xl block max-h-[55vh] lg:max-h-[65vh] transition-all duration-300',
+              hasChanges && 'ring-2 ring-primary/30'
+            )}
             style={{
               width: 'auto',
               height: 'auto',
@@ -776,10 +780,10 @@ export default function EditorPage() {
             }}
             className={cn(
               'flex-1 flex items-center justify-center gap-1.5 py-2.5 text-[11px] font-medium',
-              'border-b-2 transition-colors',
+              'border-b-2 transition-all',
               activeTab === tab.key && !panelCollapsed
-                ? 'border-primary text-primary bg-primary/5'
-                : 'border-transparent text-muted hover:text-text'
+                ? 'border-primary text-primary bg-primary/10 font-semibold'
+                : 'border-transparent text-muted hover:text-text hover:bg-rose-50/50'
             )}
             title={tab.label}
           >
@@ -956,50 +960,76 @@ export default function EditorPage() {
 
             {activeTab === 'text' && (
               <div className="space-y-3">
-                <h3 className="font-semibold text-text text-sm">Text Overlay</h3>
-                <div>
+                {/* Text input */}
+                <div className="flex gap-2">
                   <input
                     type="text"
                     value={textInput}
                     onChange={e => setTextInput(e.target.value)}
                     placeholder="Type your text..."
                     maxLength={40}
-                    className="w-full rounded-xl border border-border bg-rose-50/50 px-3 py-2 text-sm text-text placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-primary/40"
+                    className="flex-1 rounded-xl border border-border bg-rose-50/50 px-3 py-2 text-sm text-text placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-primary/40"
                     onKeyDown={e => { if (e.key === 'Enter') handleAddText() }}
                   />
-                  <p className="text-xs text-muted text-right mt-1">{textInput.length}/40</p>
+                  <Button
+                    onClick={handleAddText}
+                    disabled={!textInput.trim()}
+                    size="sm"
+                    className="!px-4"
+                    icon={<Plus className="h-4 w-4" />}
+                  >
+                    Add
+                  </Button>
                 </div>
-                <div>
-                  <label className="block text-xs text-muted mb-1.5">Font</label>
-                  <div className="grid grid-cols-3 gap-1.5">
-                    {TEXT_PRESETS.map((preset, i) => (
-                      <button
-                        key={preset.name}
-                        onClick={() => setTextPreset(i)}
-                        className={cn(
-                          'px-2 py-1.5 rounded-lg border-2 text-xs transition-all',
-                          textPreset === i
-                            ? 'border-primary bg-primary/5 text-primary'
-                            : 'border-border text-muted hover:border-primary/40'
-                        )}
-                        style={{ fontFamily: `"${preset.font}", serif`, fontStyle: preset.style }}
-                      >
-                        {preset.name}
-                      </button>
-                    ))}
+
+                {/* Font + Color + Size in one row */}
+                <div className="flex gap-3">
+                  <div className="flex-1">
+                    <label className="block text-[10px] text-muted mb-1">Font</label>
+                    <div className="flex gap-1">
+                      {TEXT_PRESETS.map((preset, i) => (
+                        <button
+                          key={preset.name}
+                          onClick={() => setTextPreset(i)}
+                          className={cn(
+                            'flex-1 py-1 rounded-lg border text-[10px] transition-all',
+                            textPreset === i
+                              ? 'border-primary bg-primary/10 text-primary font-semibold'
+                              : 'border-border text-muted hover:border-primary/40'
+                          )}
+                          style={{ fontFamily: `"${preset.font}", serif`, fontStyle: preset.style }}
+                        >
+                          {preset.name}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-[10px] text-muted mb-1">Size</label>
+                    <input
+                      type="range"
+                      min={12}
+                      max={72}
+                      value={textSize}
+                      onChange={e => setTextSize(Number(e.target.value))}
+                      className="w-16 accent-primary"
+                    />
+                    <span className="text-[10px] text-muted text-center block">{textSize}px</span>
                   </div>
                 </div>
+
+                {/* Color swatches */}
                 <div>
-                  <label className="block text-xs text-muted mb-1.5">Color</label>
-                  <div className="flex flex-wrap gap-1.5">
+                  <label className="block text-[10px] text-muted mb-1">Color</label>
+                  <div className="flex flex-wrap gap-1">
                     {TEXT_COLORS.map(color => (
                       <button
                         key={color}
                         onClick={() => setTextColor(color)}
                         className={cn(
-                          'w-7 h-7 rounded-full border-2 transition-all',
+                          'w-6 h-6 rounded-full border-2 transition-all',
                           textColor === color
-                            ? 'border-primary scale-110'
+                            ? 'border-primary scale-110 ring-1 ring-primary/30'
                             : 'border-border hover:border-primary/40'
                         )}
                         style={{ backgroundColor: color }}
@@ -1007,31 +1037,14 @@ export default function EditorPage() {
                     ))}
                   </div>
                 </div>
-                <div>
-                  <label className="block text-xs text-muted mb-2">Size: {textSize}px</label>
-                  <input
-                    type="range"
-                    min={12}
-                    max={72}
-                    value={textSize}
-                    onChange={e => setTextSize(Number(e.target.value))}
-                    className="w-full accent-primary"
-                  />
-                </div>
-                <Button
-                  onClick={handleAddText}
-                  disabled={!textInput.trim()}
-                  className="w-full"
-                  icon={<Plus className="h-4 w-4" />}
-                >
-                  Add Text
-                </Button>
+
+                {/* Placed texts */}
                 {placedTexts.length > 0 && (
-                  <div className="space-y-2">
-                    <h4 className="text-sm font-medium text-text">Placed ({placedTexts.length})</h4>
+                  <div className="space-y-1">
+                    <h4 className="text-[10px] font-medium text-muted">Placed ({placedTexts.length})</h4>
                     <div className="space-y-1">
                       {placedTexts.map(t => (
-                        <div key={t.id} className="flex items-center justify-between bg-rose-50 rounded-lg px-3 py-2 text-sm">
+                        <div key={t.id} className="flex items-center justify-between bg-rose-50 rounded-lg px-2 py-1.5 text-xs">
                           <span style={{ fontFamily: `"${t.font}", serif`, fontStyle: t.style, color: t.color }}>{t.text}</span>
                           <button onClick={() => handleDeleteText(t.id)} className="text-red-400 hover:text-red-600">
                             <Trash2 className="h-3 w-3" />
@@ -1052,6 +1065,16 @@ export default function EditorPage() {
                     <button
                       key={frame.id}
                       onClick={() => { setActiveFrame(frame.id); setHasChanges(true) }}
+                      onMouseEnter={() => {
+                        if (frame.id !== 'none') {
+                          setActiveFrame(frame.id)
+                        }
+                      }}
+                      onMouseLeave={() => {
+                        if (frame.id !== 'none') {
+                          setActiveFrame('none')
+                        }
+                      }}
                       className={cn(
                         'flex flex-col items-center gap-1.5 p-2.5 rounded-xl border-2 transition-all',
                         activeFrame === frame.id

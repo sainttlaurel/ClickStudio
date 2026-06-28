@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.7.6'
+export const APP_VERSION = '1.7.7'
 
 const LS_KEY = `cs_changelog_v${APP_VERSION}`
 export const isChangelogSeen = (): boolean =>
@@ -20,6 +20,17 @@ export interface ChangelogVersion {
 }
 
 export const CHANGELOG: ChangelogVersion[] = [
+  {
+    version: '1.7.7',
+    date: 'June 28, 2026',
+    entries: [
+      { type: 'improved', text: 'Selected states — background fill, font-weight 600' },
+      { type: 'improved', text: 'Text workflow — compact one-row layout with prominent Add button' },
+      { type: 'improved', text: 'Save button — glow effect when unsaved changes' },
+      { type: 'improved', text: 'Frame preview — live preview on hover' },
+      { type: 'improved', text: 'Preview feedback — ring glow on canvas with unsaved changes' },
+    ],
+  },
   {
     version: '1.7.6',
     date: 'June 28, 2026',
