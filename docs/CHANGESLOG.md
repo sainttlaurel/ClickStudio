@@ -4,6 +4,17 @@ All notable changes to ClickStudio are documented here.
 
 ---
 
+## v1.7.6 (June 28, 2026)
+
+### Added
+* Zoom controls — 50%–150% with fit button
+* Collapsible panel — click active tab to collapse
+
+### Changed
+* Tab tooltips — hover for tab labels
+
+---
+
 ## v1.7.5 (June 28, 2026)
 
 ### Added

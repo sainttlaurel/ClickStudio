@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.7.5'
+export const APP_VERSION = '1.7.6'
 
 const LS_KEY = `cs_changelog_v${APP_VERSION}`
 export const isChangelogSeen = (): boolean =>
@@ -20,6 +20,15 @@ export interface ChangelogVersion {
 }
 
 export const CHANGELOG: ChangelogVersion[] = [
+  {
+    version: '1.7.6',
+    date: 'June 28, 2026',
+    entries: [
+      { type: 'new',      text: 'Zoom controls — 50%–150% with fit button' },
+      { type: 'new',      text: 'Collapsible panel — click active tab to collapse' },
+      { type: 'improved', text: 'Tab tooltips — hover for tab labels' },
+    ],
+  },
   {
     version: '1.7.5',
     date: 'June 28, 2026',

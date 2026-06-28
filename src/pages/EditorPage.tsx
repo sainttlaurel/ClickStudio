@@ -14,6 +14,10 @@ import {
   RotateCcw,
   Plus,
   Layout,
+  ChevronDown,
+  ZoomIn,
+  ZoomOut,
+  Maximize,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
@@ -159,6 +163,12 @@ export default function EditorPage() {
     setHistoryIndex(prev => prev + 1)
     setHasChanges(true)
   }, [history, historyIndex])
+
+  // ── Zoom state ──
+  const [zoom, setZoom] = useState(100)
+
+  // ── Collapsible panel state ──
+  const [panelCollapsed, setPanelCollapsed] = useState(false)
 
   // ── Store latest values in refs for drawImage ──────────────────────────
   const adjustmentsRef = useRef(adjustments)
@@ -602,14 +612,41 @@ export default function EditorPage() {
       {/* Canvas area — fills remaining space */}
       <div
         ref={containerRef}
-        className="flex-1 flex items-center justify-center p-4 bg-white overflow-auto min-h-0"
+        className="flex-1 flex items-center justify-center p-4 bg-white overflow-auto min-h-0 relative"
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        <div ref={canvasWrapperRef} className="relative max-w-4xl w-full">
+        {/* Zoom controls */}
+        <div className="absolute top-3 right-3 z-20 flex items-center gap-1 bg-white/90 backdrop-blur-sm rounded-xl border border-border shadow-sm px-2 py-1">
+          <button
+            onClick={() => setZoom(z => Math.max(50, z - 25))}
+            className="p-1 rounded-lg text-muted hover:text-primary hover:bg-rose-50 transition-colors"
+            title="Zoom out"
+          >
+            <ZoomOut className="h-3.5 w-3.5" />
+          </button>
+          <span className="text-[10px] font-medium text-text w-8 text-center">{zoom}%</span>
+          <button
+            onClick={() => setZoom(z => Math.min(150, z + 25))}
+            className="p-1 rounded-lg text-muted hover:text-primary hover:bg-rose-50 transition-colors"
+            title="Zoom in"
+          >
+            <ZoomIn className="h-3.5 w-3.5" />
+          </button>
+          <div className="w-px h-4 bg-border mx-0.5" />
+          <button
+            onClick={() => setZoom(100)}
+            className="p-1 rounded-lg text-muted hover:text-primary hover:bg-rose-50 transition-colors"
+            title="Reset zoom"
+          >
+            <Maximize className="h-3.5 w-3.5" />
+          </button>
+        </div>
+
+        <div ref={canvasWrapperRef} className="relative max-w-4xl w-full" style={{ transform: `scale(${zoom / 100})`, transformOrigin: 'center center' }}>
           <canvas
             ref={canvasRef}
             className="max-w-full rounded-xl shadow-2xl block max-h-[55vh] lg:max-h-[65vh]"
@@ -729,23 +766,34 @@ export default function EditorPage() {
         ].map(tab => (
           <button
             key={tab.key}
-            onClick={() => setActiveTab(tab.key)}
+            onClick={() => {
+              if (activeTab === tab.key && !panelCollapsed) {
+                setPanelCollapsed(true)
+              } else {
+                setActiveTab(tab.key)
+                setPanelCollapsed(false)
+              }
+            }}
             className={cn(
               'flex-1 flex items-center justify-center gap-1.5 py-2.5 text-[11px] font-medium',
               'border-b-2 transition-colors',
-              activeTab === tab.key
+              activeTab === tab.key && !panelCollapsed
                 ? 'border-primary text-primary bg-primary/5'
                 : 'border-transparent text-muted hover:text-text'
             )}
+            title={tab.label}
           >
             <tab.icon className="h-3.5 w-3.5" />
             <span>{tab.label}</span>
+            {activeTab === tab.key && !panelCollapsed && (
+              <ChevronDown className="h-3 w-3 ml-0.5" />
+            )}
           </button>
         ))}
       </div>
 
       {/* Tab content panel */}
-      {activeTab && (
+      {activeTab && !panelCollapsed && (
         <div className="border-t border-border bg-white overflow-y-auto max-h-[28vh] lg:max-h-[24vh] flex-shrink-0">
           <div className="p-4">
             {activeTab === 'adjust' && (

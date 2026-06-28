@@ -6,114 +6,71 @@ Development phases and status for ClickStudio.
 
 ## Current Status
 
-| Metric        | Value                             |
-| ------------- | --------------------------------- |
-| Version       | 1.7.5                             |
-| Pages         | 10                                |
-| Templates     | 37 (28 library + 9 PNG templates) |
-| Categories    | 15                                |
-| Filters       | 13 film presets                   |
-| Frames        | 5 overlay styles                  |
-| Sticker Packs | 10 themes · 160+ assets           |
-| Deployment    | Vercel                            |
-| Status        | Public Beta                       |
+| Metric | Value |
+|---|---|
+| Version | 1.7.6 |
+| Pages | 10 (Landing, Camera, Preview, Editor, Share, About, Help, Settings, Gallery, SessionHistory) |
+| Templates | 37 (28 library + 9 PNG frame templates) across 15 categories |
+| Filters | 13 film presets |
+| Frames | 5 overlay styles |
+| Sticker Packs | 10 themes, 160+ emoji |
+| Deployment | Vercel |
+| URL | [clickstudio.vercel.app](https://clickstudio.vercel.app) |
 
 ---
 
-## Phase 1 — Core Camera & Filters 
-
+## Phase 1 — Core Camera & Filters ✅
 **Status:** Complete
 
-* [x] Live camera with device switching
-* [x] HD quality support, grid overlay, flash, mirror toggle
-* [x] Timer (3s / 5s / 10s)
-* [x] Burst mode
-* [x] Retake individual photos
-* [x] 13 film filters
-* [x] 5 frame overlays
-* [x] Image upload
-* [x] Filter + frame baking
+- [x] Live camera with device switching
+- [x] HD quality support, grid overlay, flash, mirror toggle
+- [x] Timer (3s/5s/10s) and burst mode
+- [x] Retake individual photos
+- [x] 13 film filters + 5 frame overlays
+- [x] Image upload + filter/frame baking
 
----
-
-## Phase 2 — Composite & Export 
-
+## Phase 2 — Composite & Export ✅
 **Status:** Complete
 
-* [x] Single / Double / Quad layouts
-* [x] Photo strip compositor
-* [x] Frame templates
-* [x] Watermarked exports
-* [x] Print-ready PDF export (300 DPI)
-* [x] QR sharing
-* [x] Public share page
-* [x] Web Share API
-* [x] Supabase sync
+- [x] Classic layouts (single, double, quad, photo strip)
+- [x] Frame templates (Polaroid, Film Roll, Blush, Minimal, Clean)
+- [x] Photo strip compositor with watermark
+- [x] Print-ready PDF export (300 DPI)
+- [x] QR code + public share page + Web Share API
+- [x] Supabase cloud sync
 
----
-
-## Phase 3 — Editor & Customization 
-
+## Phase 3 — Editor & UI ✅
 **Status:** Complete
 
-* [x] Per-photo adjustments
-* [x] Text overlays
-* [x] Sticker system (160+ assets)
-* [x] Drag / resize / rotate
-* [x] Frame overlay tab
-* [x] Countdown sounds
-* [x] Template carousel
-* [x] Template Library
-* [x] Responsive editor
-* [x] Feedback wall
-* [x] PWA support
+- [x] Per-photo adjustments, stickers (160+ emoji), text overlays (6 fonts, 15 colors)
+- [x] Sticker/text drag/resize/rotate
+- [x] What's New changelog, feedback wall, PWA, responsive design
+- [x] Camera floating toolbar, template carousel, Template Library modal
+- [x] Frame Overlay tab, countdown sounds
 
----
-
-## Phase 4 — Production & Deployment 
-
+## Phase 4 — Polish & Deployment ✅
 **Status:** Complete
 
-* [x] Vercel deployment
-* [x] SEO setup
-* [x] Security headers
-* [x] SPA routing
-* [x] Sitemap
-* [x] Robots.txt
-* [x] Search Console integration
-* [x] React #310 fix
-* [x] Editor compactness pass
-* [x] UI centering pass
+- [x] Vercel deployment, SPA routing, security headers, SEO
+- [x] Google Search Console, sitemap, robots.txt, PWA manifest
+- [x] Code cleanup, React error #310 fix
+- [x] Editor compactness pass, centered UI
 
----
+## Phase 5 — Landing Page & UI Polish ✅
+**Status:** Complete
 
-## Phase 5 — Landing & UI Polish 🚧
-
-**Status:** In Progress
-
-### Completed
-
-* [x] Feature cards upgraded
-* [x] Mini visual previews
-* [x] Testimonials section
-* [x] Landing motion
-* [x] Hover interactions
-* [x] Accessibility pass
-* [x] Improved buttons
-* [x] Alternating backgrounds
-* [x] PNG frame templates
-* [x] Search improvements
-* [x] Category chips
-* [x] Selection feedback
-* [x] Hover quick actions
-
-### Remaining
-
-* [ ] Template showcase section
-* [x] Replace placeholder outputs (feature card visuals)
-* [x] Gallery preview section (SVG mockups)
-* [x] Camera page tooltip walkthrough (first-visit)
-* [x] Accessibility contrast audit
+- [x] Feature card visuals — realistic mockups replacing emoji placeholders
+- [x] Gallery preview section — 5 photo strip style mockups
+- [x] Testimonials section — real user reviews with star ratings
+- [x] Alternating section backgrounds across landing page
+- [x] Landing page motion — staggered entrances, hover effects
+- [x] Accessibility pass — aria-labels, focus rings, labels, roles
+- [x] Button component upgrade — gradient bg, deeper shadows, smoother hover
+- [x] Camera tooltip walkthrough — 4-step first-visit onboarding
+- [x] Accessibility contrast audit — WCAG AA analysis for all design tokens
+- [x] 9 PNG frame templates — Anniversary, Valentine, Family, Christmas, etc.
+- [x] Card hover interactions, search bar, category chips, selection feedback
+- [x] Hover quick actions (Preview, Use Template, Save)
 
 #### Contrast Audit Results (WCAG AA)
 
@@ -130,132 +87,62 @@ Development phases and status for ClickStudio.
 | `white` on `primary` | 4.18:1 | ❌ | ✅ | ✅ |
 | `white` on `secondary` | 2.30:1 | ❌ | ❌ | ❌ |
 
-**Issues:** `muted` and `primary` need darkening for small text. `secondary` needs significant darkening for all uses. Consider using `primary` for interactive elements instead of `secondary`.
+**Issues:** `muted` and `primary` need darkening for small text. `secondary` needs significant darkening for all uses.
 
 ---
 
-## Phase 6 — Editor UX Overhaul 🎨
-
+## Phase 6 — Editor UX Overhaul 🚧
 **Status:** In Progress
 
-### Layout
+### Completed
 
-* [x] Reduce empty canvas space (55vh → 65vh)
-* [x] Compress bottom panel (30vh → 24vh)
-* [ ] Collapsible controls
-* [ ] Resizable editor panel
-* [ ] Zoom controls
+- [x] Reduce empty canvas space (55vh → 65vh)
+- [x] Compress bottom panel (30vh → 24vh)
+- [x] Undo / Redo (50-state history)
+- [x] Group sliders (Light / Color categories)
+- [x] Compact sticker sheet (8-column grid)
+- [x] Filter labels (already present)
+- [x] Softer sliders (1.5px track, 16px thumb)
+- [x] Collapsible controls (click tab to collapse)
+- [x] Zoom controls (50%–150% with fit button)
+- [x] Sidebar tooltips (title attributes on tabs)
 
-### Workflow
+### Still Planned
 
-* [x] Undo / Redo (50-state history)
-* [ ] Better Save hierarchy
-* [ ] Live frame preview
-* [x] Filter labels
-* [ ] Better preview feedback
-
-### Controls
-
-* [x] Group sliders (Light / Color)
-* [x] Compact sticker sheet (8-col grid)
-* [ ] Improve selected states
-* [ ] Redesign text workflow
-* [ ] "+ Add Text" action
-* [ ] Sidebar tooltips
-* [x] Softer sliders (1.5px track, 16px thumb)
+- [ ] Improve selected states — background fill, font-weight 600
+- [ ] Redesign text workflow
+- [ ] "+ Add Text" primary button for text panel
+- [ ] Better Save hierarchy
+- [ ] Live frame preview on hover
+- [ ] Better preview feedback
 
 ### Extra
 
-* [ ] Polaroid captions
-* [ ] Photo reordering
-* [ ] Higher resolution export
-* [ ] Functional Session History
-* [ ] Community Gallery
-
-**Verdict:** "A real editor that needs one more UX pass." Next milestone: less scrolling, less distance, faster editing, more delight.
+- [ ] Polaroid captions
+- [ ] Photo reordering (drag-and-drop)
+- [ ] Higher resolution composites for print
+- [ ] Functional Session History page
+- [ ] Community Gallery page
 
 ---
 
-## Phase 7 — Future Features ⏸️
+## Phase 7 — Future (HOLD)
+**Status:** On hold
 
-**Status:** On Hold
-
-* [ ] User accounts
-* [ ] Premium templates
-* [ ] Payment system
-* [ ] Collaboration
-* [ ] Analytics
-* [ ] Admin dashboard
-* [ ] Branding tools
-* [ ] Multi-camera support
-* [ ] Social integrations
-
----
-
-## UI Review — Landing Page ✅
-
-**Status:** Reviewed
-
-* [x] Motion added
-
-* [x] Social proof added
-
-* [x] Better section hierarchy
-
-* [x] Accessibility improvements
-
-* [ ] Template showcase
-
-* [ ] Real output examples
-
-(verdict)
-
-**Verdict:** "Clean aesthetic and strong direction. Feels like a product now, not a concept."
-
----
-
-## UI Review — Template Library ✅
-
-**Status:** Reviewed
-
-* [x] Better hierarchy
-
-* [x] Hover interactions
-
-* [x] Search improvements
-
-* [x] Category refinement
-
-* [x] Selection feedback
-
-* [x] Featured templates
-
-* [ ] Premium previews
-
-* [ ] Favorites
-
-* [ ] Seasonal packs
-
-(verdict)
-
-**Verdict:** "Production-ready browsing experience with room for stronger discovery."
+User accounts, payment processing, premium templates, collaborative sessions, custom branding, multi-camera support, social media integration, print integration, admin dashboard, analytics.
 
 ---
 
 ## Design Tokens
 
-| Token      | Value   |
-| ---------- | ------- |
-| Background | #FDF5F7 |
-| Surface    | #FFFFFF |
-| Border     | #F5C5D8 |
-| Primary    | #E91E8C |
-| Secondary  | #FF85A2 |
-| Text       | #1C0B1A |
-| Muted      | #9B6B7B |
+| Token | Value | Usage |
+|---|---|---|
+| `--background` | `#FDF5F7` | Page background |
+| `--surface` | `#FFFFFF` | Cards and panels |
+| `--border` | `#F5C5D8` | Borders and dividers |
+| `--primary` | `#E91E8C` | Buttons, active states |
+| `--secondary` | `#FF85A2` | Accents |
+| `--text` | `#1C0B1A` | Body text |
+| `--muted` | `#9B6B7B` | Secondary text |
 
-Typography:
-
-* Inter
-* DM Serif Display
-* Dancing Script
+**Typography:** Inter (body), DM Serif Display (headings), Dancing Script (accents)
