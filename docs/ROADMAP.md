@@ -1,6 +1,6 @@
-# Roadmap & UI Review
+# Roadmap
 
-Development phases, status, and design review notes for ClickStudio.
+Development phases and status for ClickStudio.
 
 ---
 
@@ -8,7 +8,7 @@ Development phases, status, and design review notes for ClickStudio.
 
 | Metric        | Value                             |
 | ------------- | --------------------------------- |
-| Version       | 1.7.3                             |
+| Version       | 1.7.4                             |
 | Pages         | 10                                |
 | Templates     | 37 (28 library + 9 PNG templates) |
 | Categories    | 15                                |
