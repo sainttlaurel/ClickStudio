@@ -6,16 +6,10 @@ All notable changes to ClickStudio are documented here.
 
 ## v1.7.3 (June 28, 2026)
 
-### Added
-* Template Showcase section on landing page — 6 real template cards with layout labels
-* Testimonials section — 6 user reviews with star ratings
-* Alternating section backgrounds (white → rose-50 → white) across landing page
-
 ### Changed
 * Landing page motion — staggered card entrances, hover lift effects, animated photo strip preview
 * Accessibility pass — aria-labels, focus rings, html labels, role attributes on nav/footer
 * Landing page spacing — consistent py-16 sections, mb-12 headers, gap-5 card grids
-* Removed Template Showcase and Testimonials sections from landing page
 * Button component upgraded — gradient backgrounds, deeper shadows, smoother hover/tap animations
 
 ---
