@@ -8,7 +8,7 @@ Development phases and status for ClickStudio.
 
 | Metric        | Value                             |
 | ------------- | --------------------------------- |
-| Version       | 1.7.4                             |
+| Version       | 1.7.5                             |
 | Pages         | 10                                |
 | Templates     | 37 (28 library + 9 PNG templates) |
 | Categories    | 15                                |
@@ -136,33 +136,33 @@ Development phases and status for ClickStudio.
 
 ## Phase 6 — Editor UX Overhaul 🎨
 
-**Status:** Planned
+**Status:** In Progress
 
 ### Layout
 
-* [ ] Reduce empty canvas space
-* [ ] Compress bottom panel
+* [x] Reduce empty canvas space (55vh → 65vh)
+* [x] Compress bottom panel (30vh → 24vh)
 * [ ] Collapsible controls
 * [ ] Resizable editor panel
 * [ ] Zoom controls
 
 ### Workflow
 
-* [ ] Undo / Redo
+* [x] Undo / Redo (50-state history)
 * [ ] Better Save hierarchy
 * [ ] Live frame preview
-* [ ] Filter labels
+* [x] Filter labels
 * [ ] Better preview feedback
 
 ### Controls
 
-* [ ] Group sliders (Light / Color / Detail)
-* [ ] Compact sticker sheet
+* [x] Group sliders (Light / Color)
+* [x] Compact sticker sheet (8-col grid)
 * [ ] Improve selected states
 * [ ] Redesign text workflow
 * [ ] "+ Add Text" action
 * [ ] Sidebar tooltips
-* [ ] Softer sliders
+* [x] Softer sliders (1.5px track, 16px thumb)
 
 ### Extra
 
@@ -171,8 +171,6 @@ Development phases and status for ClickStudio.
 * [ ] Higher resolution export
 * [ ] Functional Session History
 * [ ] Community Gallery
-
-(verdict)
 
 **Verdict:** "A real editor that needs one more UX pass." Next milestone: less scrolling, less distance, faster editing, more delight.
 

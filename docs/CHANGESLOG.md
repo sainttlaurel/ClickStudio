@@ -4,6 +4,20 @@ All notable changes to ClickStudio are documented here.
 
 ---
 
+## v1.7.5 (June 28, 2026)
+
+### Added
+* Undo / Redo — full history tracking for editor changes
+
+### Changed
+* Canvas space — reduced empty space, larger editing area
+* Bottom panel — compressed to 24vh for more canvas room
+* Adjustment sliders — grouped by Light and Color categories
+* Sticker sheet — compact 8-column grid layout
+* Slider component — softer styling with thinner track and thumb
+
+---
+
 ## v1.7.4 (June 28, 2026)
 
 ### Added

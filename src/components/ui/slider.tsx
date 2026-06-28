@@ -98,7 +98,7 @@ export function Slider({
         <div
           ref={trackRef}
           className={cn(
-            'relative h-2 w-full rounded-full bg-surface cursor-pointer',
+            'relative h-1.5 w-full rounded-full bg-border/50 cursor-pointer',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
             disabled && 'opacity-50 cursor-not-allowed'
           )}
@@ -113,20 +113,20 @@ export function Slider({
         >
           {/* Track fill */}
           <div
-            className="absolute top-0 left-0 h-full bg-primary rounded-full transition-all duration-150"
+            className="absolute top-0 left-0 h-full bg-primary/60 rounded-full transition-all duration-150"
             style={{ width: `${percentage}%` }}
           />
           
           {/* Thumb */}
           <motion.div
             className={cn(
-              'absolute top-1/2 w-5 h-5 -mt-2.5 bg-primary rounded-full shadow-lg',
+              'absolute top-1/2 w-4 h-4 -mt-2 bg-primary rounded-full shadow-md',
               'border-2 border-background cursor-grab active:cursor-grabbing',
               'focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
-              isDragging && 'scale-110 shadow-xl',
+              isDragging && 'scale-110 shadow-lg',
               disabled && 'cursor-not-allowed'
             )}
-            style={{ left: `calc(${percentage}% - 0.625rem)` }}
+            style={{ left: `calc(${percentage}% - 0.5rem)` }}
             animate={{ scale: isDragging ? 1.1 : 1 }}
             transition={{ duration: 0.15 }}
           />

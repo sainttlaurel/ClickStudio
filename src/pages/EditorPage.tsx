@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import {
   Save,
   Undo,
+  Redo,
   Palette,
   Sliders,
   ArrowLeft,
@@ -78,6 +79,7 @@ export default function EditorPage() {
   const [activeTab, setActiveTab] = useState<
     'adjust' | 'filters' | 'stickers' | 'text' | 'frame'
   >('adjust')
+
   const [hasChanges, setHasChanges] = useState(false)
   const [activeFilter, setActiveFilter] = useState('none')
   const [activeFrame, setActiveFrame] = useState('none')
@@ -96,6 +98,67 @@ export default function EditorPage() {
   const [textColor, setTextColor] = useState('#FFFFFF')
   const [textSize, setTextSize] = useState(32)
   const [draggingText, setDraggingText] = useState<string | null>(null)
+
+  // ── Undo / Redo history ──
+  const [history, setHistory] = useState<Array<{
+    adjustments: PhotoAdjustments
+    stickers: PlacedSticker[]
+    texts: PlacedText[]
+    filter: string
+    frame: string
+  }>>([])
+  const [historyIndex, setHistoryIndex] = useState(-1)
+  const isUndoRedoRef = useRef(false)
+
+  // Push to history when state changes (not during undo/redo)
+  useEffect(() => {
+    if (isUndoRedoRef.current) {
+      isUndoRedoRef.current = false
+      return
+    }
+    if (!currentPhoto) return
+    
+    const state = {
+      adjustments: { ...adjustments },
+      stickers: placedStickers.map(s => ({ ...s })),
+      texts: placedTexts.map(t => ({ ...t })),
+      filter: activeFilter,
+      frame: activeFrame,
+    }
+    
+    setHistory(prev => {
+      const newHistory = prev.slice(0, historyIndex + 1)
+      newHistory.push(state)
+      return newHistory.slice(-50) // Keep last 50 states
+    })
+    setHistoryIndex(prev => Math.min(prev + 1, 49))
+  }, [adjustments, placedStickers, placedTexts, activeFilter, activeFrame])
+
+  const undo = useCallback(() => {
+    if (historyIndex <= 0) return
+    const prevState = history[historyIndex - 1]
+    isUndoRedoRef.current = true
+    setAdjustments(prevState.adjustments)
+    setPlacedStickers(prevState.stickers)
+    setPlacedTexts(prevState.texts)
+    setActiveFilter(prevState.filter)
+    setActiveFrame(prevState.frame)
+    setHistoryIndex(prev => prev - 1)
+    setHasChanges(true)
+  }, [history, historyIndex])
+
+  const redo = useCallback(() => {
+    if (historyIndex >= history.length - 1) return
+    const nextState = history[historyIndex + 1]
+    isUndoRedoRef.current = true
+    setAdjustments(nextState.adjustments)
+    setPlacedStickers(nextState.stickers)
+    setPlacedTexts(nextState.texts)
+    setActiveFilter(nextState.filter)
+    setActiveFrame(nextState.frame)
+    setHistoryIndex(prev => prev + 1)
+    setHasChanges(true)
+  }, [history, historyIndex])
 
   // ── Store latest values in refs for drawImage ──────────────────────────
   const adjustmentsRef = useRef(adjustments)
@@ -458,15 +521,25 @@ export default function EditorPage() {
 
   if (!currentPhoto) return null
 
-  const adjustmentControls = [
-    { key: 'brightness' as const, label: 'Brightness', min: -100, max: 100, icon: '☀️' },
-    { key: 'contrast' as const, label: 'Contrast', min: -100, max: 100, icon: '◐' },
-    { key: 'saturation' as const, label: 'Saturation', min: -100, max: 100, icon: '🎨' },
-    { key: 'exposure' as const, label: 'Exposure', min: -100, max: 100, icon: '📷' },
-    { key: 'shadows' as const, label: 'Shadows', min: -100, max: 100, icon: '🌑' },
-    { key: 'highlights' as const, label: 'Highlights', min: -100, max: 100, icon: '🌕' },
-    { key: 'temperature' as const, label: 'Temperature', min: -50, max: 50, icon: '🌡️' },
-    { key: 'tint' as const, label: 'Tint', min: -50, max: 50, icon: '💜' },
+  const adjustmentGroups = [
+    {
+      label: 'Light',
+      controls: [
+        { key: 'brightness' as const, label: 'Brightness', min: -100, max: 100, icon: '☀️' },
+        { key: 'exposure' as const, label: 'Exposure', min: -100, max: 100, icon: '📷' },
+        { key: 'contrast' as const, label: 'Contrast', min: -100, max: 100, icon: '◐' },
+        { key: 'shadows' as const, label: 'Shadows', min: -100, max: 100, icon: '🌑' },
+        { key: 'highlights' as const, label: 'Highlights', min: -100, max: 100, icon: '🌕' },
+      ],
+    },
+    {
+      label: 'Color',
+      controls: [
+        { key: 'saturation' as const, label: 'Saturation', min: -100, max: 100, icon: '🎨' },
+        { key: 'temperature' as const, label: 'Temperature', min: -50, max: 50, icon: '🌡️' },
+        { key: 'tint' as const, label: 'Tint', min: -50, max: 50, icon: '💜' },
+      ],
+    },
   ]
 
   return (
@@ -490,10 +563,26 @@ export default function EditorPage() {
             <span className="text-[10px] text-warning font-medium mr-1">Unsaved</span>
           )}
           <Button
+            variant="ghost"
+            size="sm"
+            onClick={undo}
+            disabled={historyIndex <= 0}
+            icon={<Undo className="h-3.5 w-3.5" />}
+            className="!px-2"
+          />
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={redo}
+            disabled={historyIndex >= history.length - 1}
+            icon={<Redo className="h-3.5 w-3.5" />}
+            className="!px-2"
+          />
+          <Button
             variant="outline"
             size="sm"
             onClick={handleReset}
-            icon={<Undo className="h-3.5 w-3.5" />}
+            icon={<RotateCcw className="h-3.5 w-3.5" />}
             className="!px-2.5"
           >
             Reset
@@ -523,7 +612,7 @@ export default function EditorPage() {
         <div ref={canvasWrapperRef} className="relative max-w-4xl w-full">
           <canvas
             ref={canvasRef}
-            className="max-w-full rounded-xl shadow-2xl block max-h-[45vh] lg:max-h-[55vh]"
+            className="max-w-full rounded-xl shadow-2xl block max-h-[55vh] lg:max-h-[65vh]"
             style={{
               width: 'auto',
               height: 'auto',
@@ -657,40 +746,44 @@ export default function EditorPage() {
 
       {/* Tab content panel */}
       {activeTab && (
-        <div className="border-t border-border bg-white overflow-y-auto max-h-[35vh] lg:max-h-[30vh] flex-shrink-0">
+        <div className="border-t border-border bg-white overflow-y-auto max-h-[28vh] lg:max-h-[24vh] flex-shrink-0">
           <div className="p-4">
             {activeTab === 'adjust' && (
-              <div className="space-y-2">
-                <h3 className="font-semibold text-text text-sm">Adjustments</h3>
-                <div className="space-y-2">
-                  {adjustmentControls.map(control => (
-                    <div key={control.key} className="space-y-1">
-                      <div className="flex items-center justify-between">
-                        <label className="text-xs text-muted flex items-center gap-1.5">
-                          <span>{control.icon}</span>
-                          {control.label}
-                        </label>
-                        <span className="text-xs text-text font-mono w-10 text-right">
-                          {adjustments[control.key] > 0 ? '+' : ''}{adjustments[control.key]}
-                        </span>
-                      </div>
-                      <Slider
-                        value={adjustments[control.key]}
-                        onChange={value =>
-                          handleAdjustmentChange(control.key, value)
-                        }
-                        min={control.min}
-                        max={control.max}
-                        step={1}
-                      />
+              <div className="space-y-3">
+                {adjustmentGroups.map(group => (
+                  <div key={group.label} className="space-y-2">
+                    <h4 className="text-xs font-semibold text-muted uppercase tracking-wider">{group.label}</h4>
+                    <div className="space-y-1.5">
+                      {group.controls.map(control => (
+                        <div key={control.key} className="space-y-0.5">
+                          <div className="flex items-center justify-between">
+                            <label className="text-xs text-muted flex items-center gap-1.5">
+                              <span>{control.icon}</span>
+                              {control.label}
+                            </label>
+                            <span className="text-xs text-text font-mono w-10 text-right">
+                              {adjustments[control.key] > 0 ? '+' : ''}{adjustments[control.key]}
+                            </span>
+                          </div>
+                          <Slider
+                            value={adjustments[control.key]}
+                            onChange={value =>
+                              handleAdjustmentChange(control.key, value)
+                            }
+                            min={control.min}
+                            max={control.max}
+                            step={1}
+                          />
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
                 <Button
                   variant="outline"
                   onClick={handleReset}
                   className="w-full"
-                  icon={<Undo className="h-4 w-4" />}
+                  icon={<RotateCcw className="h-4 w-4" />}
                 >
                   Reset All
                 </Button>
@@ -770,7 +863,7 @@ export default function EditorPage() {
                     </button>
                   ))}
                 </div>
-                <div className="grid grid-cols-6 gap-1.5 justify-center">
+                <div className="grid grid-cols-8 gap-1 justify-center">
                   {STICKER_PACKS[selectedStickerPack].stickers.map(
                     (emoji, i) => (
                       <motion.button
@@ -779,7 +872,7 @@ export default function EditorPage() {
                         whileTap={{ scale: 0.9 }}
                         onClick={() => handleSelectSticker(emoji)}
                         className={cn(
-                          'aspect-square rounded-lg border-2 text-xl flex items-center justify-center transition-all',
+                          'aspect-square rounded-lg border-2 text-lg flex items-center justify-center transition-all',
                           selectedSticker === emoji
                             ? 'border-primary bg-primary/5 ring-2 ring-primary/30 scale-110'
                             : 'border-border hover:border-primary/40 bg-white hover:bg-rose-50'
@@ -790,20 +883,20 @@ export default function EditorPage() {
                     )
                   )}
                 </div>
-                <p className="text-xs text-muted text-center">
+                <p className="text-[10px] text-muted text-center">
                   {selectedSticker
                     ? 'Tap sticker selected — click on the photo to place'
                     : 'Tap a sticker, then click on the photo to place'}
                 </p>
                 {placedStickers.length > 0 && (
-                  <div className="space-y-2">
-                    <h4 className="text-sm font-medium text-text">Placed ({placedStickers.length})</h4>
+                  <div className="space-y-1">
+                    <h4 className="text-[10px] font-medium text-muted">Placed ({placedStickers.length})</h4>
                     <div className="flex flex-wrap gap-1">
                       {placedStickers.map(s => (
-                        <div key={s.id} className="flex items-center gap-1 bg-rose-50 rounded-lg px-2 py-1 text-sm">
+                        <div key={s.id} className="flex items-center gap-1 bg-rose-50 rounded-lg px-1.5 py-0.5 text-xs">
                           <span>{s.emoji}</span>
                           <button onClick={() => handleDeleteSticker(s.id)} className="text-red-400 hover:text-red-600">
-                            <Trash2 className="h-3 w-3" />
+                            <Trash2 className="h-2.5 w-2.5" />
                           </button>
                         </div>
                       ))}

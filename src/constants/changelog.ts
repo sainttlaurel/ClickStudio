@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.7.4'
+export const APP_VERSION = '1.7.5'
 
 const LS_KEY = `cs_changelog_v${APP_VERSION}`
 export const isChangelogSeen = (): boolean =>
@@ -20,6 +20,18 @@ export interface ChangelogVersion {
 }
 
 export const CHANGELOG: ChangelogVersion[] = [
+  {
+    version: '1.7.5',
+    date: 'June 28, 2026',
+    entries: [
+      { type: 'new',      text: 'Undo / Redo — full history tracking for editor changes' },
+      { type: 'improved', text: 'Canvas space — reduced empty space, larger editing area' },
+      { type: 'improved', text: 'Bottom panel — compressed to 24vh for more canvas room' },
+      { type: 'improved', text: 'Adjustment sliders — grouped by Light and Color categories' },
+      { type: 'improved', text: 'Sticker sheet — compact 8-column grid layout' },
+      { type: 'improved', text: 'Slider component — softer styling with thinner track and thumb' },
+    ],
+  },
   {
     version: '1.7.4',
     date: 'June 28, 2026',
