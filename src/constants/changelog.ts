@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.7.2'
+export const APP_VERSION = '1.7.3'
 
 const LS_KEY = `cs_changelog_v${APP_VERSION}`
 export const isChangelogSeen = (): boolean =>
@@ -20,6 +20,17 @@ export interface ChangelogVersion {
 }
 
 export const CHANGELOG: ChangelogVersion[] = [
+  {
+    version: '1.7.3',
+    date: 'June 28, 2026',
+    entries: [
+      { type: 'new',      text: 'Template Showcase section on landing page — 6 real template cards' },
+      { type: 'new',      text: 'Testimonials section — user reviews with star ratings' },
+      { type: 'improved', text: 'Alternating section backgrounds across landing page' },
+      { type: 'improved', text: 'Landing page motion — staggered entrances, hover effects, animated preview' },
+      { type: 'improved', text: 'Accessibility pass — aria-labels, focus rings, labels, roles' },
+    ],
+  },
   {
     version: '1.7.2',
     date: 'June 28, 2026',

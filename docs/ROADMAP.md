@@ -69,6 +69,14 @@ Active development phases for ClickStudio.
 ## Phase 5 — Next Steps 🚧
 **Status:** In Progress
 
+### Shipped in v1.7.3
+- [x] Template Showcase section on landing page
+- [x] Testimonials section — user reviews with star ratings
+- [x] Alternating section backgrounds across landing page
+- [x] Landing page motion — staggered entrances, hover effects, animated preview
+- [x] Accessibility pass — aria-labels, focus rings, labels, roles
+- [x] Landing page spacing consistency
+
 ### Shipped in v1.7.2
 - [x] 9 PNG frame templates (Anniversary, Valentine, Family, Christmas, etc.)
 - [x] Frame composite style — compositor renders PNG backgrounds
@@ -99,10 +107,9 @@ Active development phases for ClickStudio.
 - [ ] Higher resolution composites for print
 - [ ] Session History page (functional)
 - [ ] Gallery page (community showcase)
-- [ ] Replace placeholder graphics with real photo strips
-- [ ] Add template showcase to landing page
-- [ ] Add testimonials/social proof
-- [ ] Improve accessibility (contrast, focus rings, labels)
+- [ ] Replace placeholder graphics with real photo strips (camera, editor pages)
+- [ ] Add testimonials/social proof — more sources beyond landing page
+- [ ] Improve accessibility — contrast audit, remaining focus rings
 
 ## Phase 6 — Future (HOLD)
 **Status:** On hold
@@ -115,7 +122,7 @@ User accounts, payment processing, premium templates, collaborative sessions, cu
 
 | Metric | Value |
 |---|---|
-| Version | 1.7.2 |
+| Version | 1.7.3 |
 | Pages | 10 (Landing, Camera, Preview, Editor, Share, About, Help, Settings, Gallery, SessionHistory) |
 | Templates | 37 (28 library + 9 PNG frame templates) across 15 categories |
 | Filters | 13 film presets |
