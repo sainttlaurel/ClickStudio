@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
-import { Camera, Star, Send, Loader2, Sparkles, Image, Share2 } from 'lucide-react'
+import { Camera, Star, Send, Loader2, Image, Share2, Printer } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { submitFeedback, fetchApprovedFeedback, type DbFeedback } from '@/lib/supabase'
 import { useToast } from '@/store/useUIStore'
@@ -10,10 +10,87 @@ import { cn } from '@/utils/cn'
 
 /* ─── Feature cards ─────────────────────────────────────── */
 const features = [
-  { title: 'Live Camera', description: 'HD webcam with countdown, grid overlays and smooth capture.', icon: Camera },
-  { title: 'Vintage Filters', description: '13 film filters, adjustments and aesthetic frames per shot.', icon: Sparkles },
-  { title: 'Instant Export', description: 'Download as PNG, share via QR, or print-ready PDF in seconds.', icon: Image },
-  { title: 'Share Everywhere', description: 'QR codes, public links, native share — your strips, your way.', icon: Share2 },
+  {
+    title: 'Live Camera',
+    description: 'HD webcam with countdown, grid overlays and smooth capture.',
+    visual: (
+      <div className="w-full h-24 bg-gray-900 rounded-xl overflow-hidden relative">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-16 h-16 rounded-full border-2 border-white/30 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-full bg-primary/80 flex items-center justify-center">
+              <Camera className="h-5 w-5 text-white" />
+            </div>
+          </div>
+        </div>
+        <div className="absolute top-2 left-2 flex gap-1">
+          <div className="w-1.5 h-1.5 rounded-full bg-red-400" />
+          <div className="w-1.5 h-1.5 rounded-full bg-yellow-400" />
+        </div>
+        <div className="absolute bottom-2 right-2 text-[8px] text-white/60 font-mono">3... 2... 1...</div>
+      </div>
+    ),
+  },
+  {
+    title: 'Vintage Filters',
+    description: '13 film filters, adjustments and aesthetic frames per shot.',
+    visual: (
+      <div className="w-full h-24 rounded-xl overflow-hidden grid grid-cols-4 gap-0.5">
+        <div className="bg-gradient-to-b from-rose-100 to-rose-200 flex items-center justify-center"><span className="text-[8px] text-rose-400 font-medium">Soft</span></div>
+        <div className="bg-gradient-to-b from-amber-100 to-amber-200 flex items-center justify-center"><span className="text-[8px] text-amber-600 font-medium">Warm</span></div>
+        <div className="bg-gradient-to-b from-gray-700 to-gray-900 flex items-center justify-center"><span className="text-[8px] text-gray-300 font-medium">B&W</span></div>
+        <div className="bg-gradient-to-b from-pink-100 to-rose-200 flex items-center justify-center"><span className="text-[8px] text-pink-500 font-medium">Blush</span></div>
+      </div>
+    ),
+  },
+  {
+    title: 'Instant Export',
+    description: 'Download as PNG, share via QR, or print-ready PDF in seconds.',
+    visual: (
+      <div className="w-full h-24 bg-white rounded-xl border border-border/50 p-2 flex gap-2">
+        <div className="flex-1 bg-rose-50 rounded-lg flex flex-col items-center justify-center gap-1">
+          <Image className="h-4 w-4 text-primary" />
+          <span className="text-[7px] text-muted">PNG</span>
+        </div>
+        <div className="flex-1 bg-gray-50 rounded-lg flex flex-col items-center justify-center gap-1">
+          <Printer className="h-4 w-4 text-gray-500" />
+          <span className="text-[7px] text-muted">PDF</span>
+        </div>
+        <div className="flex-1 bg-rose-50 rounded-lg flex flex-col items-center justify-center gap-1">
+          <Share2 className="h-4 w-4 text-primary" />
+          <span className="text-[7px] text-muted">QR</span>
+        </div>
+      </div>
+    ),
+  },
+  {
+    title: 'Share Everywhere',
+    description: 'QR codes, public links, native share — your strips, your way.',
+    visual: (
+      <div className="w-full h-24 bg-gradient-to-br from-rose-50 to-pink-50 rounded-xl flex items-center justify-center">
+        <div className="bg-white rounded-xl shadow-md border border-border/30 px-3 py-2 flex items-center gap-2">
+          <div className="w-10 h-10 bg-gray-900 rounded-lg flex items-center justify-center">
+            <div className="grid grid-cols-3 gap-0.5">
+              {Array.from({ length: 9 }).map((_, i) => (
+                <div key={i} className={`w-1 h-1 ${i % 2 === 0 ? 'bg-white' : 'bg-gray-900'} rounded-sm`} />
+              ))}
+            </div>
+          </div>
+          <div className="text-left">
+            <p className="text-[8px] font-semibold text-text">Share your strip</p>
+            <p className="text-[7px] text-muted">Scan or tap to view</p>
+          </div>
+        </div>
+      </div>
+    ),
+  },
+]
+
+/* ─── Testimonials ──────────────────────────────────────── */
+const testimonials = [
+  { name: 'bea', text: 'did my whole bday party on this omg. everyone was fighting over who goes next lol', emoji: '🎂' },
+  { name: 'kiana', text: 'the polaroid template literally looks like a real instax. obsessed.', emoji: '📷' },
+  { name: 'mitch', text: 'used it for our wedding photobooth. qr code thing is genius, guests loved it', emoji: '💒' },
+  { name: 'julia', text: 'no download??? in this economy??? finally something that just works', emoji: '🙌' },
 ]
 
 /* ─── Steps ─────────────────────────────────────────────── */
@@ -316,13 +393,55 @@ export default function LandingPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="bg-white rounded-3xl p-5 border border-border shadow-card hover:shadow-polaroid hover:border-primary/30 hover:-translate-y-1 transition-all duration-300 group text-center"
+                className="bg-white rounded-3xl p-5 border border-border shadow-card hover:shadow-polaroid hover:border-primary/30 hover:-translate-y-1 transition-all duration-300 group"
               >
-                <div className="w-12 h-12 rounded-2xl bg-rose-50 flex items-center justify-center mx-auto mb-3 group-hover:bg-primary/10 transition-colors">
-                  <f.icon className="h-6 w-6 text-primary" />
+                <div className="mb-3 group-hover:scale-[1.02] transition-transform duration-300">
+                  {f.visual}
                 </div>
-                <h3 className="font-semibold text-text mb-1.5">{f.title}</h3>
+                <h3 className="font-semibold text-text mb-1">{f.title}</h3>
                 <p className="text-muted text-sm leading-relaxed">{f.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </Section>
+
+      {/* ── Testimonials ── */}
+      <Section className="py-16 px-4 sm:px-6">
+        <div className="max-w-5xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <p className="font-script text-primary text-lg mb-2">Love letters</p>
+            <h2 className="font-display text-4xl md:text-5xl text-text">
+              What people <em className="font-script not-italic text-primary">say.</em>
+            </h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {testimonials.map((t, i) => (
+              <motion.div
+                key={t.name}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.08 }}
+                className="bg-white rounded-2xl p-5 border border-border shadow-card hover:shadow-polaroid transition-all duration-300"
+              >
+                <div className="flex items-center gap-1 mb-2">
+                  {Array.from({ length: 5 }).map((_, j) => (
+                    <Star key={j} className="h-3 w-3 text-primary fill-primary" />
+                  ))}
+                </div>
+                <p className="text-text text-sm leading-relaxed mb-3">"{t.text}"</p>
+                <div className="flex items-center gap-2">
+                  <span className="text-base" aria-hidden="true">{t.emoji}</span>
+                  <span className="text-xs text-muted font-medium">{t.name}</span>
+                </div>
               </motion.div>
             ))}
           </div>

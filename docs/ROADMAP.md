@@ -136,9 +136,9 @@ Score: **9.2/10**. Clean aesthetic, intuitive flow, solid features.
 | Issue | Status |
 |---|---|
 | Static / Not Alive | ✅ Done — motion, hover effects on landing page |
-| Placeholder Graphics | ❌ Open — still using emoji in feature cards |
+| Placeholder Graphics | ✅ Done — feature cards use mini visual mockups |
 | Repetitive Layouts | ✅ Done — alternating backgrounds |
-| Missing Social Proof | ❌ Open — need testimonials section |
+| Missing Social Proof | ✅ Done — testimonials section added |
 | Missing Template Showcase | ❌ Open — need showcase on landing page |
 | Accessibility | ✅ Done — pass completed |
 | Spacing | ✅ Done — consistent across landing page |

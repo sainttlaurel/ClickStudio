@@ -47,6 +47,8 @@ Feature ideas for ClickStudio. Shipped items are checked off; everything else is
 - [x] Landing page motion — staggered entrances, hover effects, animated preview
 - [x] Accessibility pass — aria-labels, focus rings, html labels, roles
 - [x] Landing page spacing consistency
+- [x] Feature card visuals — mini mockups replacing emoji icons
+- [x] Testimonials section — user reviews with star ratings
 
 ---
 

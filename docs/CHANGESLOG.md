@@ -6,6 +6,10 @@ All notable changes to ClickStudio are documented here.
 
 ## v1.7.3 (June 28, 2026)
 
+### Added
+* Feature card visuals — mini mockups replacing emoji icons (camera viewfinder, filter grid, export options, QR share)
+* Testimonials section — 4 user reviews with star ratings
+
 ### Changed
 * Landing page motion — staggered card entrances, hover lift effects, animated photo strip preview
 * Accessibility pass — aria-labels, focus rings, html labels, role attributes on nav/footer
