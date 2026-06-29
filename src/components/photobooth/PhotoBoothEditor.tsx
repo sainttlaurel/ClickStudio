@@ -42,6 +42,9 @@ export const PhotoBoothEditor = () => {
   const [selectedStickerEmoji, setSelectedStickerEmoji] = useState<string | null>(null)
   const [placedStickers, setPlacedStickers] = useState<StickerData[]>([])
   const [placedTexts, setPlacedTexts] = useState<TextData[]>([])
+  const [zoom, setZoom] = useState(1)
+  const zoomLevels = [0.5, 0.75, 1, 1.25, 1.5, 2]
+  const zoomIndex = zoomLevels.indexOf(zoom)
   const [undoStack, setUndoStack] = useState<Array<{
     adjustments: PhotoAdjustments; activeFilter: string; activeFrame: string
     placedStickers: StickerData[]; placedTexts: TextData[]; selectedStickerEmoji: string | null
@@ -199,6 +202,15 @@ export const PhotoBoothEditor = () => {
             </div>
 
             {currentScreen === 'edit' && (
+              <div className="flex items-center gap-1">
+                <button onClick={() => setZoom(z => zoomLevels[Math.max(0, zoomLevels.indexOf(z) - 1)])} disabled={zoomIndex <= 0} className="px-2 py-1 rounded-lg border border-gray-200 text-xs text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all">−</button>
+                <span className="text-xs text-gray-500 w-10 text-center font-mono">{Math.round(zoom * 100)}%</span>
+                <button onClick={() => setZoom(z => zoomLevels[Math.min(zoomLevels.length - 1, zoomLevels.indexOf(z) + 1)])} disabled={zoomIndex >= zoomLevels.length - 1} className="px-2 py-1 rounded-lg border border-gray-200 text-xs text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all">+</button>
+                <button onClick={() => setZoom(1)} className="ml-1 px-2 py-1 rounded-lg border border-gray-200 text-xs text-gray-500 hover:bg-gray-50 transition-all">Fit</button>
+              </div>
+            )}
+
+            {currentScreen === 'edit' && (
               <div className="flex gap-2">
                 <button onClick={handleReset} className="px-4 py-1.5 rounded-full border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all">Reset</button>
                 <button onClick={handleUndo} className={`px-4 py-1.5 rounded-full border text-sm font-medium transition-all ${undoStack.length > 0 ? 'border-gray-200 text-gray-700 hover:bg-gray-50' : 'border-gray-100 text-gray-300 cursor-not-allowed'}`}>Undo</button>
@@ -245,9 +257,11 @@ export const PhotoBoothEditor = () => {
               placedStickers={placedStickers}
               placedTexts={placedTexts}
               onTextsChange={(t) => { pushUndo(); setPlacedTexts(t) }}
+              onStickersChange={(s) => { pushUndo(); setPlacedStickers(s) }}
               selectedStickerEmoji={selectedStickerEmoji}
               onStickerSelect={setSelectedStickerEmoji}
               onCanvasClick={handleCanvasClick}
+              scale={zoom}
             />
           )}
         </div>

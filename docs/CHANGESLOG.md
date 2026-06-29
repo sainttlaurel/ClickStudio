@@ -44,6 +44,8 @@ All notable changes to ClickStudio are documented here.
 * **TemplatePicker component** — modal with category filter + grid of templates showing emoji, name, description, layout, aspect ratio, badges
 * **PNG frame template compositing** — `FrameOverlay` renders `frameImage` as `<img>` overlay on camera + canvas; `bakeEdits` loads and composites PNG frame background with photo on top
 * **Click-to-place text** — "Add to Photo" now enters placement mode (crosshair cursor), click canvas to place text at exact position (instead of always centering); `pendingTextConfig` state in EditScreen, unified `placementActive` prop on Canvas for sticker + text placement; works correctly on polaroid and all frame aspect ratios
+* **Draggable sticker/text overlays** — Canvas overlays now use `cursor-grab` / `cursor-grabbing` with pointer events; drag to reposition any sticker or text element on the canvas; updates backed by `onStickersUpdate` / `onTextsUpdate` callbacks through EditScreen → PhotoBoothEditor
+* **Zoom controls** — `−` / `+` buttons (50%–200% in 6 steps) + `Fit` (100%) button in editor top bar; `scale` prop on Canvas scales base dimensions (208px × frame height)
 * Duplicate emoji removed from sticker packs; `墨镜` replaced with emoji
 * Date formatting standardized to `en-US` locale
 * Breadcrumb text simplified (removed confusing "Preview ›" prefix)

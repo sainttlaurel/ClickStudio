@@ -35,9 +35,11 @@ interface EditScreenProps {
   placedStickers: StickerData[]
   placedTexts: TextData[]
   onTextsChange: (texts: TextData[]) => void
+  onStickersChange: (stickers: StickerData[]) => void
   selectedStickerEmoji: string | null
   onStickerSelect: (emoji: string | null) => void
   onCanvasClick: (x: number, y: number) => void
+  scale?: number
 }
 
 export const EditScreen = ({ 
@@ -52,9 +54,11 @@ export const EditScreen = ({
   placedStickers,
   placedTexts,
   onTextsChange,
+  onStickersChange,
   selectedStickerEmoji,
   onStickerSelect,
-  onCanvasClick
+  onCanvasClick,
+  scale = 1
 }: EditScreenProps) => {
   const [activeTab, setActiveTab] = useState<EditorTab>('adjust')
   const [pendingTextConfig, setPendingTextConfig] = useState<{ text: string; color: string; fontSize: number; font: string } | null>(null)
@@ -99,6 +103,9 @@ export const EditScreen = ({
         texts={placedTexts}
         onClick={handleCanvasClickWrapper}
         placementActive={placementActive}
+        scale={scale}
+        onStickersUpdate={onStickersChange}
+        onTextsUpdate={onTextsChange}
       />
       
       <RightPanel
