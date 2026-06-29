@@ -16,6 +16,19 @@ All notable changes to ClickStudio are documented here.
 * Version bump to 1.7.9 to force PWA service worker cache refresh
 * Editor build — removed broken duplicate layout, restored clean build
 
+### Improved
+* Template Library — 10-point senior polish pass:
+  - Reduced subtitle opacity for softer feel
+  - Search + sort height reduced to 50px for lighter modal
+  - Category chips overflow scroll with padding-bottom fix
+  - Grid centers incomplete rows with justify-items-center
+  - Card metadata contrast increased (#8f6878)
+  - Hover: translateY(-6px) + primary border + deeper shadow
+  - Mini wireframe previews replace placeholder camera icons
+  - Close button: white bg + shadow + rotate-90 on hover
+  - Selected state with primary border + checkmark badge
+  - "Showing X templates" count under category chips
+
 ---
 
 ## v1.7.8 (June 28, 2026)
