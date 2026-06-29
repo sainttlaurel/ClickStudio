@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import type { Photo, PhotoSession, Template, CameraSettings } from '@/types'
 import {
-  supabase,
+  getClient,
   TABLES,
   uploadPhotoToStorage,
   removePhotosFromStorage,
@@ -134,7 +134,7 @@ export const usePhotoStore = create<PhotoState>()(
         set({ isSyncing: true, error: null })
         try {
           // 1. Upsert session row
-          const { error: sessionErr } = await supabase
+          const { error: sessionErr } = await getClient()
             .from(TABLES.SESSIONS)
             .upsert({
               id: currentSession.id,
@@ -154,7 +154,7 @@ export const usePhotoStore = create<PhotoState>()(
               photo.id
             )
 
-            const { error: photoErr } = await supabase
+            const { error: photoErr } = await getClient()
               .from(TABLES.PHOTOS)
               .upsert({
                 id: photo.id,
@@ -183,7 +183,7 @@ export const usePhotoStore = create<PhotoState>()(
       fetchSessions: async () => {
         set({ isSyncing: true })
         try {
-          const { data, error } = await supabase
+          const { data, error } = await getClient()
             .from(TABLES.SESSIONS)
             .select(`*, photos (*)`)
             .order('created_at', { ascending: false })
@@ -222,7 +222,7 @@ export const usePhotoStore = create<PhotoState>()(
         set({ isSyncing: true })
         try {
           // Get storage paths so we can clean up files
-          const { data: photos } = await supabase
+          const { data: photos } = await getClient()
             .from(TABLES.PHOTOS)
             .select('storage_path')
             .eq('session_id', sessionId)
@@ -232,7 +232,7 @@ export const usePhotoStore = create<PhotoState>()(
           }
 
           // Delete session row (photos cascade-delete via FK)
-          const { error } = await supabase
+          const { error } = await getClient()
             .from(TABLES.SESSIONS)
             .delete()
             .eq('id', sessionId)
@@ -254,7 +254,7 @@ export const usePhotoStore = create<PhotoState>()(
       loadSession: async sessionId => {
         set({ isLoading: true })
         try {
-          const { data, error } = await supabase
+          const { data, error } = await getClient()
             .from(TABLES.SESSIONS)
             .select(`*, photos (*)`)
             .eq('id', sessionId)
@@ -296,9 +296,10 @@ export const usePhotoStore = create<PhotoState>()(
     {
       name: 'clickstudio-store',
       storage: createJSONStorage(() => localStorage),
-      // Only persist camera settings — photos stay in memory during a session
       partialize: state => ({
         cameraSettings: state.cameraSettings,
+        capturedPhotos: state.capturedPhotos,
+        currentSession: state.currentSession,
       }),
     }
   )

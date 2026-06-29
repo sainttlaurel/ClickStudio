@@ -5,7 +5,7 @@ export default function HelpPage() {
     <div className="h-full p-6">
       <div className="max-w-4xl mx-auto space-y-8">
         <div>
-          <h1 className="font-display text-2xl text-text">Help & Support</h1>
+          <h1 className="font-display text-2xl text-foreground">Help & Support</h1>
           <p className="text-muted-foreground font-body">Get help with using ClickStudio</p>
         </div>
 
@@ -14,7 +14,7 @@ export default function HelpPage() {
           <div className="bg-white rounded-2xl p-6 border border-border shadow-card">
             <div className="flex items-center gap-3 mb-4">
               <Camera className="h-5 w-5 text-primary" />
-              <h2 className="font-display text-lg text-text">
+              <h2 className="font-display text-lg text-foreground">
                 Getting Started
               </h2>
             </div>
@@ -36,7 +36,7 @@ export default function HelpPage() {
           <div className="bg-white rounded-2xl p-6 border border-border shadow-card">
             <div className="flex items-center gap-3 mb-4">
               <HelpCircle className="h-5 w-5 text-primary" />
-              <h2 className="font-display text-lg text-text">
+              <h2 className="font-display text-lg text-foreground">
                 Frequently Asked Questions
               </h2>
             </div>

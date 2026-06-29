@@ -1,20 +1,21 @@
-import { useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { useRegisterSW } from 'virtual:pwa-register/react'
 import { Toaster } from '@/components/ui/toaster'
 import ChangelogModal from '@/components/ui/changelog-modal'
 import Layout from '@/components/layout/Layout'
 import LandingPage from '@/pages/LandingPage'
-import CameraPage from '@/pages/CameraPage'
-import PreviewPage from '@/pages/PreviewPage'
-import EditorPage from '@/pages/EditorPage'
-import GalleryPage from '@/pages/GalleryPage'
-import SessionHistoryPage from '@/pages/SessionHistoryPage'
-import SettingsPage from '@/pages/SettingsPage'
-import HelpPage from '@/pages/HelpPage'
-import AboutPage from '@/pages/AboutPage'
-import SharePage from '@/pages/SharePage'
 import StudioPage from '@/pages/StudioPage'
+import SharePage from '@/pages/SharePage'
+
+const GalleryPage = lazy(() => import('@/pages/GalleryPage'))
+const SessionHistoryPage = lazy(() => import('@/pages/SessionHistoryPage'))
+const SettingsPage = lazy(() => import('@/pages/SettingsPage'))
+const HelpPage = lazy(() => import('@/pages/HelpPage'))
+const AboutPage = lazy(() => import('@/pages/AboutPage'))
+const CameraPage = lazy(() => import('@/pages/CameraPage'))
+const EditorPage = lazy(() => import('@/pages/EditorPage'))
+const PreviewPage = lazy(() => import('@/pages/PreviewPage'))
 
 function App() {
   const {
@@ -44,14 +45,14 @@ function App() {
         <Route path="/studio" element={<StudioPage />} />
         <Route path="/share/:sessionId" element={<SharePage />} />
         <Route element={<Layout />}>
-          <Route path="/camera" element={<CameraPage />} />
-          <Route path="/preview" element={<PreviewPage />} />
-          <Route path="/editor" element={<EditorPage />} />
-          <Route path="/gallery" element={<GalleryPage />} />
-          <Route path="/history" element={<SessionHistoryPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/help" element={<HelpPage />} />
-          <Route path="/about" element={<AboutPage />} />
+          <Route path="/camera" element={<Suspense fallback={null}><CameraPage /></Suspense>} />
+          <Route path="/preview" element={<Suspense fallback={null}><PreviewPage /></Suspense>} />
+          <Route path="/editor" element={<Suspense fallback={null}><EditorPage /></Suspense>} />
+          <Route path="/gallery" element={<Suspense fallback={null}><GalleryPage /></Suspense>} />
+          <Route path="/history" element={<Suspense fallback={null}><SessionHistoryPage /></Suspense>} />
+          <Route path="/settings" element={<Suspense fallback={null}><SettingsPage /></Suspense>} />
+          <Route path="/help" element={<Suspense fallback={null}><HelpPage /></Suspense>} />
+          <Route path="/about" element={<Suspense fallback={null}><AboutPage /></Suspense>} />
         </Route>
       </Routes>
       <Toaster />

@@ -96,12 +96,12 @@ export function Modal({
               <div className="flex items-center justify-between p-6 border-b border-border/50">
                 <div>
                   {title && (
-                    <h2 id="modal-title" className="text-lg font-semibold text-text">
+                    <h2 id="modal-title" className="text-lg font-semibold text-foreground">
                       {title}
                     </h2>
                   )}
                   {description && (
-                    <p id="modal-description" className="mt-1 text-sm text-muted">
+                    <p id="modal-description" className="mt-1 text-sm text-muted-foreground">
                       {description}
                     </p>
                   )}

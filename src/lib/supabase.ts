@@ -3,9 +3,10 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error(
-    'Missing Supabase env vars. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your .env file.'
+const missingEnv = !supabaseUrl || !supabaseAnonKey
+if (missingEnv) {
+  console.warn(
+    'Missing Supabase env vars. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your .env file. Supabase features will be disabled.'
   )
 }
 
@@ -43,13 +44,22 @@ export interface DbFeedback {
   created_at: string
 }
 
-// ─── Supabase client ───────────────────────────────────────────
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-  },
-})
+// ─── Supabase client (lazy - safe to import without env vars) ──
+import type { SupabaseClient } from '@supabase/supabase-js'
+
+let _client: SupabaseClient | null = null
+
+export function getClient(): SupabaseClient {
+  if (!_client) {
+    if (!supabaseUrl || !supabaseAnonKey) {
+      throw new Error('Supabase env vars not configured')
+    }
+    _client = createClient(supabaseUrl, supabaseAnonKey, {
+      auth: { persistSession: true, autoRefreshToken: true },
+    })
+  }
+  return _client
+}
 
 // ─── Constants ────────────────────────────────────────────────
 export const STORAGE_BUCKETS = {
@@ -74,13 +84,13 @@ export async function uploadPhotoToStorage(
 
   const storagePath = `${sessionId}/${photoId}.png`
 
-  const { error: uploadError } = await supabase.storage
+  const { error: uploadError } = await getClient().storage
     .from(STORAGE_BUCKETS.PHOTOS)
     .upload(storagePath, blob, { contentType: 'image/png', upsert: true })
 
   if (uploadError) throw uploadError
 
-  const { data } = supabase.storage
+  const { data } = getClient().storage
     .from(STORAGE_BUCKETS.PHOTOS)
     .getPublicUrl(storagePath)
 
@@ -90,7 +100,7 @@ export async function uploadPhotoToStorage(
 // ─── Remove photos from storage ───────────────────────────────
 export async function removePhotosFromStorage(paths: string[]): Promise<void> {
   if (!paths.length) return
-  const { error } = await supabase.storage
+  const { error } = await getClient().storage
     .from(STORAGE_BUCKETS.PHOTOS)
     .remove(paths)
   if (error) console.error('Storage remove error:', error)
@@ -104,7 +114,7 @@ export async function submitFeedback(
   emoji: string = '♡',
   sessionId?: string
 ): Promise<void> {
-  const { error } = await supabase
+  const { error } = await getClient()
     .from(TABLES.FEEDBACK)
     .insert({
       name: name?.trim() || null,
@@ -117,7 +127,7 @@ export async function submitFeedback(
 }
 
 export async function fetchApprovedFeedback(): Promise<DbFeedback[]> {
-  const { data, error } = await supabase
+  const { data, error } = await getClient()
     .from(TABLES.FEEDBACK)
     .select('*')
     .eq('approved', true)

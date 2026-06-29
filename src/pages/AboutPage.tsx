@@ -1,5 +1,6 @@
 import { Github, Mail, MessageSquare } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { APP_VERSION } from '@/constants/changelog'
 
 export default function AboutPage() {
   return (
@@ -11,12 +12,12 @@ export default function AboutPage() {
             alt="ClickStudio Logo"
             className="h-20 w-auto object-contain mx-auto mb-4"
           />
-          <h1 className="font-display text-3xl text-text mb-2">ClickStudio</h1>
-          <p className="text-muted-foreground font-body text-lg">Version 1.7.8</p>
+          <h1 className="font-display text-3xl text-foreground mb-2">ClickStudio</h1>
+          <p className="text-muted-foreground font-body text-lg">Version {APP_VERSION}</p>
         </div>
 
         <div className="bg-white rounded-2xl p-8 border border-border shadow-card text-center">
-          <h2 className="font-display text-xl text-text mb-4">
+          <h2 className="font-display text-xl text-foreground mb-4">
             Modern ClickStudio Experience
           </h2>
           <p className="text-muted-foreground font-body leading-relaxed mb-6">
@@ -33,7 +34,7 @@ export default function AboutPage() {
 
         {/* Tech Stack */}
         <div className="bg-white rounded-2xl p-6 border border-border shadow-card">
-          <h3 className="font-display text-lg text-text mb-4">Built With</h3>
+          <h3 className="font-display text-lg text-foreground mb-4">Built With</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
               'React 18',
@@ -46,7 +47,7 @@ export default function AboutPage() {
               'Vercel',
             ].map(tech => (
               <div key={tech} className="text-center p-3 bg-secondary rounded-lg">
-                <span className="text-sm font-medium text-text">{tech}</span>
+                <span className="text-sm font-medium text-foreground">{tech}</span>
               </div>
             ))}
           </div>
@@ -54,7 +55,7 @@ export default function AboutPage() {
 
         {/* Features */}
         <div className="bg-white rounded-2xl p-6 border border-border shadow-card">
-          <h3 className="font-display text-lg text-text mb-4">Features</h3>
+          <h3 className="font-display text-lg text-foreground mb-4">Features</h3>
           <div className="grid md:grid-cols-2 gap-4">
             {[
               'Live webcam capture with HD quality',
@@ -76,7 +77,7 @@ export default function AboutPage() {
 
         {/* Contact */}
         <div className="bg-white rounded-2xl p-6 border border-border shadow-card">
-          <h3 className="font-display text-lg text-text mb-4 text-center">Contact</h3>
+          <h3 className="font-display text-lg text-foreground mb-4 text-center">Contact</h3>
           <div className="flex flex-col items-center gap-3 text-muted-foreground font-body text-sm">
             <a
               href="mailto:clickstudio.dev@gmail.com"

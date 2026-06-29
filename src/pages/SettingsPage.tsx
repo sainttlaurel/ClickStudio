@@ -5,7 +5,7 @@ export default function SettingsPage() {
     <div className="h-full p-6">
       <div className="max-w-4xl mx-auto space-y-8">
         <div>
-          <h1 className="font-display text-2xl text-text">Settings</h1>
+          <h1 className="font-display text-2xl text-foreground">Settings</h1>
           <p className="text-muted-foreground font-body">Customize your ClickStudio experience</p>
         </div>
 
@@ -14,7 +14,7 @@ export default function SettingsPage() {
           <div className="bg-white rounded-2xl p-6 border border-border shadow-card">
             <div className="flex items-center gap-3 mb-4">
               <Camera className="h-5 w-5 text-primary" />
-              <h2 className="font-display text-lg text-text">
+              <h2 className="font-display text-lg text-foreground">
                 Camera Settings
               </h2>
             </div>
@@ -29,7 +29,7 @@ export default function SettingsPage() {
           <div className="bg-white rounded-2xl p-6 border border-border shadow-card">
             <div className="flex items-center gap-3 mb-4">
               <Palette className="h-5 w-5 text-primary" />
-              <h2 className="font-display text-lg text-text">Appearance</h2>
+              <h2 className="font-display text-lg text-foreground">Appearance</h2>
             </div>
             <div className="space-y-4">
               <div className="text-sm text-muted-foreground font-body">
@@ -42,7 +42,7 @@ export default function SettingsPage() {
           <div className="bg-white rounded-2xl p-6 border border-border shadow-card">
             <div className="flex items-center gap-3 mb-4">
               <Download className="h-5 w-5 text-primary" />
-              <h2 className="font-display text-lg text-text">
+              <h2 className="font-display text-lg text-foreground">
                 Export Settings
               </h2>
             </div>
@@ -57,7 +57,7 @@ export default function SettingsPage() {
           <div className="bg-white rounded-2xl p-6 border border-border shadow-card">
             <div className="flex items-center gap-3 mb-4">
               <Shield className="h-5 w-5 text-primary" />
-              <h2 className="font-display text-lg text-text">
+              <h2 className="font-display text-lg text-foreground">
                 Privacy & Security
               </h2>
             </div>

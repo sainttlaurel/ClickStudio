@@ -1,1 +1,2 @@
-export { supabase, STORAGE_BUCKETS, TABLES, uploadPhotoToStorage, removePhotosFromStorage } from './supabase'
+export { getClient, STORAGE_BUCKETS, TABLES, uploadPhotoToStorage, removePhotosFromStorage } from './supabase'
+

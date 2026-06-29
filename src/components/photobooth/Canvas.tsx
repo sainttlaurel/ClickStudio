@@ -24,8 +24,11 @@ interface CanvasProps {
   imageUrl?: string | null
   isEditing?: boolean
   filterId?: string
+  frameId?: string
   stickers?: StickerOverlay[]
   texts?: TextOverlay[]
+  onClick?: (x: number, y: number) => void
+  selectedStickerEmoji?: string | null
 }
 
 const selectFilterCss = (filterId: string): string => {
@@ -37,10 +40,21 @@ export const Canvas = ({
   imageUrl, 
   isEditing = false, 
   filterId = 'none',
+  frameId,
   stickers = [],
-  texts = []
+  texts = [],
+  onClick,
+  selectedStickerEmoji
 }: CanvasProps) => {
   const filterCss = selectFilterCss(filterId)
+
+  const handleCanvasClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!onClick) return
+    const rect = e.currentTarget.getBoundingClientRect()
+    const x = ((e.clientX - rect.left) / rect.width) * 100
+    const y = ((e.clientY - rect.top) / rect.height) * 100
+    onClick(x, y)
+  }
 
   return (
     <div className="flex-1 bg-gray-50 flex items-center justify-center">
@@ -48,8 +62,10 @@ export const Canvas = ({
         className={cn(
           'relative rounded-2xl overflow-hidden shadow-lg',
           isEditing ? 'w-[208px] h-[208px]' : 'w-[300px] h-[300px]',
-          isEditing && stickers.length > 0 && 'border-2 border-dashed border-gray-300'
+          isEditing && 'border-2 border-dashed border-gray-300',
+          isEditing && selectedStickerEmoji && 'cursor-crosshair'
         )}
+        onClick={handleCanvasClick}
       >
         {imageUrl ? (
           <>
@@ -88,12 +104,42 @@ export const Canvas = ({
                   color: text.color,
                   fontSize: `${text.fontSize}px`,
                   fontFamily: text.font || 'sans-serif',
-                  textShadow: text.color === '#FFFFFF' ? '0 1px 3px rgba(0,0,0,0.3)' : 'none'
+                  textShadow: ['#FFFFFF', '#FFD700', '#FF69B4', '#FFB6C1', '#FF4500', '#00FF00', '#4ECDC4'].includes(text.color) ? '0 1px 3px rgba(0,0,0,0.3)' : 'none'
                 }}
               >
                 {text.text}
               </div>
             ))}
+
+            {/* Frame overlay */}
+            {frameId && frameId !== 'none' && (
+              <div className="absolute inset-0 pointer-events-none">
+                {frameId === 'film' && (
+                  <>
+                    <div className="absolute top-0 left-0 right-0 h-[6.5%] bg-[#111111]" />
+                    <div className="absolute bottom-0 left-0 right-0 h-[6.5%] bg-[#111111]" />
+                  </>
+                )}
+                {frameId === 'blush' && (
+                  <div className="absolute inset-0" style={{
+                    background: 'radial-gradient(ellipse at center, transparent 28%, rgba(233,30,140,0.28) 80%)'
+                  }} />
+                )}
+                {frameId === 'minimal' && (
+                  <div className="absolute inset-0 border-[3px] border-white/85 rounded-sm" />
+                )}
+                {frameId === 'polaroid' && (
+                  <div className="absolute inset-0" style={{
+                    boxShadow: 'inset 0 0 0 4% #FFFFFF, inset 0 -20% 0 0 #FFFFFF'
+                  }}>
+                    <div className="absolute bottom-[10%] left-0 right-0 text-center text-[11px] italic"
+                      style={{ color: 'rgba(155, 107, 123, 0.45)' }}>
+                      ClickStudio
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </>
         ) : (
           <div className="w-full h-full bg-[#0F172A] flex flex-col items-center justify-center">

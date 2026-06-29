@@ -663,7 +663,7 @@ export default function LandingPage() {
     if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
       try { await navigator.mediaDevices.getUserMedia({ video: true }) } catch { /* re-requested on camera page */ }
     }
-    navigate('/camera')
+    navigate('/studio')
   }
 
   return (

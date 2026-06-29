@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Download, Loader2, Camera, Calendar } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { supabase, TABLES } from '@/lib/supabase'
+import { getClient, TABLES } from '@/lib/supabase'
 import { composeStrip, downloadComposite } from '@/utils/compositor'
 import type { Photo, Template } from '@/types'
 
@@ -30,11 +30,11 @@ export default function SharePage() {
 
   // Fetch session data
   useEffect(() => {
-    if (!sessionId) return
+    if (!sessionId) { setError('Invalid share link'); setIsLoading(false); return }
 
     const fetchSession = async () => {
       try {
-        const { data, error: fetchError } = await supabase
+        const { data, error: fetchError } = await getClient()
           .from(TABLES.SESSIONS)
           .select(`
             id,
@@ -108,7 +108,7 @@ export default function SharePage() {
           <div className="h-24 w-24 rounded-full bg-white border border-border flex items-center justify-center mx-auto">
             <Camera className="h-12 w-12 text-muted-foreground" />
           </div>
-          <h1 className="font-display text-3xl text-text">Session not found</h1>
+          <h1 className="font-display text-3xl text-foreground">Session not found</h1>
           <p className="text-muted-foreground text-sm font-body">
             {error || 'This photo strip may have been removed or the link is incorrect.'}
           </p>
@@ -160,7 +160,7 @@ export default function SharePage() {
         >
           {/* Title */}
           <div>
-            <h1 className="font-display text-3xl text-text mb-2">
+            <h1 className="font-display text-3xl text-foreground mb-2">
               {session.template.name}
             </h1>
             <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground font-body">

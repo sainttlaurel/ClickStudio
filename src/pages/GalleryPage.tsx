@@ -17,6 +17,7 @@ import { Modal } from '@/components/ui/modal'
 import { usePhotoStore } from '@/store/usePhotoStore'
 import { useToast } from '@/store/useUIStore'
 import { cn } from '@/utils/cn'
+import type { Photo } from '@/types'
 
 export default function GalleryPage() {
   const { capturedPhotos, removePhoto } = usePhotoStore()
@@ -31,7 +32,7 @@ export default function GalleryPage() {
     .filter(photo => {
       if (!searchTerm) return true
       const searchLower = searchTerm.toLowerCase()
-      const date = new Date(photo.timestamp).toLocaleDateString().toLowerCase()
+      const date = new Date(photo.timestamp).toLocaleDateString('en-US').toLowerCase()
       return date.includes(searchLower)
     })
     .sort((a, b) => {
@@ -48,7 +49,7 @@ export default function GalleryPage() {
     success('Photo deleted', 'Photo has been removed from gallery')
   }
 
-  const handleShare = async (photo: any) => {
+  const handleShare = async (photo: Photo) => {
     if (navigator.share) {
       try {
         const response = await fetch(photo.url)
@@ -81,7 +82,7 @@ export default function GalleryPage() {
           <div className="h-24 w-24 rounded-full bg-white border border-border flex items-center justify-center mx-auto">
             <Grid3X3 className="h-12 w-12 text-primary" />
           </div>
-          <h2 className="font-display text-2xl text-text">No photos yet ♡</h2>
+          <h2 className="font-display text-2xl text-foreground">No photos yet ♡</h2>
           <p className="text-muted-foreground font-body">
             Your captured photos will appear here. Start taking photos to build
             your gallery!
@@ -97,7 +98,7 @@ export default function GalleryPage() {
       <div className="p-6 border-b border-border">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="font-display text-3xl text-text">Gallery</h1>
+            <h1 className="font-display text-3xl text-foreground">Gallery</h1>
             <p className="text-muted-foreground font-body">
               {filteredPhotos.length} of {capturedPhotos.length} photos
             </p>
@@ -196,7 +197,7 @@ export default function GalleryPage() {
 
                 {/* Date Badge */}
                 <div className="absolute bottom-2 left-2 text-xs text-white bg-black/50 px-2 py-1 rounded">
-                  {new Date(photo.timestamp).toLocaleDateString()}
+                  {new Date(photo.timestamp).toLocaleDateString('en-US')}
                 </div>
               </motion.div>
             ))}
@@ -220,7 +221,7 @@ export default function GalleryPage() {
                 />
 
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-text truncate">
+                  <h3 className="font-medium text-foreground truncate">
                     Photo {index + 1}
                   </h3>
                   <div className="flex items-center gap-4 text-sm text-muted-foreground font-body">
@@ -282,14 +283,14 @@ export default function GalleryPage() {
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <label className="block text-muted-foreground font-body mb-1">Captured</label>
-                <div className="text-text">
+                <div className="text-foreground">
                   {new Date(selectedPhotoData.timestamp).toLocaleString()}
                 </div>
               </div>
 
               <div>
                 <label className="block text-muted-foreground font-body mb-1">Size</label>
-                <div className="text-text">
+                <div className="text-foreground">
                   {selectedPhotoData.metadata?.width}×
                   {selectedPhotoData.metadata?.height}
                 </div>
@@ -297,14 +298,14 @@ export default function GalleryPage() {
 
               <div>
                 <label className="block text-muted-foreground font-body mb-1">Format</label>
-                <div className="text-text">
+                <div className="text-foreground">
                   {selectedPhotoData.metadata?.format?.toUpperCase() || 'PNG'}
                 </div>
               </div>
 
               <div>
                 <label className="block text-muted-foreground font-body mb-1">File Size</label>
-                <div className="text-text">
+                <div className="text-foreground">
                   {selectedPhotoData.metadata?.size
                     ? Math.round(selectedPhotoData.metadata.size / 1024) + ' KB'
                     : 'Unknown'}

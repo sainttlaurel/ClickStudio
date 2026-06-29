@@ -39,6 +39,9 @@ export default {
           800: '#800A47',
           900: '#5A0631',
         },
+        surface: '#FFFFFF',
+        'surface-foreground': '#1A0812',
+        studio: '#EC1A66',
       },
       fontFamily: {
         sans: ['DM Sans', 'system-ui', 'sans-serif'],

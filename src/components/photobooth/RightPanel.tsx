@@ -15,8 +15,9 @@ interface RightPanelProps {
   onFilterChange: (id: string) => void
   activeFrame: string
   onFrameChange: (id: string) => void
-  onStickerAdd: (emoji: string) => void
-  onTextAdd: (text: string, color: string, fontSize: number) => void
+  selectedStickerEmoji?: string | null
+  onStickerSelect: (emoji: string) => void
+  onTextAdd: (text: string, color: string, fontSize: number, font?: string) => void
   placedStickers: Array<{ id: string; emoji: string; x: number; y: number }>
   placedTexts: Array<{ id: string; text: string; color: string; fontSize: number; x: number; y: number }>
 }
@@ -30,7 +31,8 @@ export const RightPanel = ({
   onFilterChange,
   activeFrame,
   onFrameChange,
-  onStickerAdd,
+  selectedStickerEmoji,
+  onStickerSelect,
   onTextAdd,
   placedStickers,
   placedTexts
@@ -45,7 +47,7 @@ export const RightPanel = ({
           <FiltersPanel value={activeFilter} onChange={onFilterChange} />
         )}
         {activeTab === 'stickers' && (
-          <StickersPanel onStickerAdd={onStickerAdd} placedStickers={placedStickers} />
+          <StickersPanel onStickerAdd={onStickerSelect} placedStickers={placedStickers} selectedStickerEmoji={selectedStickerEmoji} />
         )}
         {activeTab === 'text' && (
           <TextPanel onTextAdd={onTextAdd} placedTexts={placedTexts} />

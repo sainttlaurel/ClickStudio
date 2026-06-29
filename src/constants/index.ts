@@ -1,2 +1,5 @@
 export * from './filters'
 export * from './frames'
+export * from './stickers'
+export * from './templates'
+export * from './changelog'

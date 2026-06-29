@@ -32,9 +32,11 @@ interface EditScreenProps {
   activeFrame: string
   onFrameChange: (id: string) => void
   placedStickers: StickerData[]
-  onStickersChange: (stickers: StickerData[]) => void
   placedTexts: TextData[]
   onTextsChange: (texts: TextData[]) => void
+  selectedStickerEmoji: string | null
+  onStickerSelect: (emoji: string | null) => void
+  onCanvasClick: (x: number, y: number) => void
 }
 
 export const EditScreen = ({ 
@@ -46,24 +48,15 @@ export const EditScreen = ({
   activeFrame,
   onFrameChange,
   placedStickers,
-  onStickersChange,
   placedTexts,
-  onTextsChange
+  onTextsChange,
+  selectedStickerEmoji,
+  onStickerSelect,
+  onCanvasClick
 }: EditScreenProps) => {
   const [activeTab, setActiveTab] = useState<EditorTab>('adjust')
 
-  const handleStickerAdd = (emoji: string) => {
-    onStickersChange([...placedStickers, {
-      id: `sticker-${Date.now()}`,
-      emoji,
-      x: 50 + Math.random() * 20 - 10,
-      y: 50 + Math.random() * 20 - 10,
-      scale: 1,
-      rotation: 0
-    }])
-  }
-
-  const handleTextAdd = (text: string, color: string, fontSize: number) => {
+  const handleTextAdd = (text: string, color: string, fontSize: number, font?: string) => {
     onTextsChange([...placedTexts, {
       id: `text-${Date.now()}`,
       text,
@@ -71,8 +64,13 @@ export const EditScreen = ({
       fontSize,
       x: 50,
       y: 50,
-      font: 'sans-serif'
+      font: font || 'sans-serif'
     }])
+    onStickerSelect(null)
+  }
+
+  const handleStickerSelect = (emoji: string) => {
+    onStickerSelect(selectedStickerEmoji === emoji ? null : emoji)
   }
 
   return (
@@ -81,8 +79,11 @@ export const EditScreen = ({
         imageUrl={imageUrl} 
         isEditing 
         filterId={activeFilter}
+        frameId={activeFrame}
         stickers={placedStickers}
         texts={placedTexts}
+        onClick={(x, y) => { if (selectedStickerEmoji) { onCanvasClick(x, y) } }}
+        selectedStickerEmoji={selectedStickerEmoji}
       />
       
       <RightPanel
@@ -94,7 +95,8 @@ export const EditScreen = ({
         onFilterChange={onFilterChange}
         activeFrame={activeFrame}
         onFrameChange={onFrameChange}
-        onStickerAdd={handleStickerAdd}
+        onStickerSelect={handleStickerSelect}
+        selectedStickerEmoji={selectedStickerEmoji}
         onTextAdd={handleTextAdd}
         placedStickers={placedStickers}
         placedTexts={placedTexts}

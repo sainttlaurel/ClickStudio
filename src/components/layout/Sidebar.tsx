@@ -4,7 +4,6 @@ import {
   Camera,
   ImageIcon,
   Edit3,
-  History,
   Settings,
   HelpCircle,
   Info,
@@ -15,10 +14,9 @@ import { cn } from '@/utils/cn'
 
 const navigation = [
   { name: 'Home', href: '/', icon: Home, exact: true },
-  { name: 'Camera', href: '/camera', icon: Camera },
-  { name: 'Preview', href: '/preview', icon: ImageIcon },
-  { name: 'Editor', href: '/editor', icon: Edit3 },
-  { name: 'History', href: '/history', icon: History },
+  { name: 'Studio', href: '/studio', icon: Camera },
+  { name: 'Gallery', href: '/gallery', icon: ImageIcon },
+  { name: 'History', href: '/history', icon: Edit3 },
 ]
 
 const secondaryNavigation = [
@@ -45,10 +43,10 @@ function NavItem({ item, collapsed }: NavItemProps) {
       end={item.exact}
       className={cn(
         'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
-        'hover:bg-rose-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+        'hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
         isActive
           ? 'bg-primary/10 text-primary border border-primary/20 shadow-sm'
-          : 'text-muted hover:text-primary',
+          : 'text-muted-foreground hover:text-primary',
         collapsed && 'justify-center px-2'
       )}
       title={collapsed ? item.name : undefined}
@@ -196,7 +194,7 @@ export default function Sidebar() {
                     'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors',
                     isActive
                       ? 'bg-primary/10 text-primary border border-primary/20'
-                      : 'text-muted hover:text-primary hover:bg-rose-50'
+                      : 'text-muted-foreground hover:text-primary hover:bg-secondary'
                   )
                 }
               >
@@ -218,7 +216,7 @@ export default function Sidebar() {
                     'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors',
                     isActive
                       ? 'bg-primary/10 text-primary border border-primary/20'
-                      : 'text-muted hover:text-primary hover:bg-rose-50'
+                      : 'text-muted-foreground hover:text-primary hover:bg-secondary'
                   )
                 }
               >

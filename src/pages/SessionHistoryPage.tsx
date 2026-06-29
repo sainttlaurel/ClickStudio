@@ -60,7 +60,7 @@ export default function SessionHistoryPage() {
       const q = searchTerm.toLowerCase()
       return (
         s.template.name.toLowerCase().includes(q) ||
-        new Date(s.createdAt).toLocaleDateString().toLowerCase().includes(q)
+        new Date(s.createdAt).toLocaleDateString('en-US').toLowerCase().includes(q)
       )
     })
     .sort((a, b) =>
@@ -114,7 +114,7 @@ export default function SessionHistoryPage() {
           <div className="h-24 w-24 rounded-full bg-white border border-border flex items-center justify-center mx-auto">
             <History className="h-12 w-12 text-primary" />
           </div>
-          <h2 className="font-display text-2xl text-text">No sessions yet ♡</h2>
+          <h2 className="font-display text-2xl text-foreground">No sessions yet ♡</h2>
           <p className="text-muted-foreground font-body">
             Your ClickStudio sessions will appear here once you save them to the
             cloud.
@@ -130,7 +130,7 @@ export default function SessionHistoryPage() {
       <div className="p-6 border-b border-border bg-white">
         <div className="flex items-center justify-between mb-5">
           <div>
-            <h1 className="font-display text-2xl text-text">Session History</h1>
+            <h1 className="font-display text-2xl text-foreground">Session History</h1>
             <p className="text-sm text-muted-foreground font-body">
               {filteredSessions.length} of {allSessions.length} sessions
             </p>
@@ -230,7 +230,7 @@ export default function SessionHistoryPage() {
                         </div>
 
                         <div className="min-w-0">
-                          <h3 className="font-semibold text-text flex items-center gap-2 flex-wrap">
+                          <h3 className="font-semibold text-foreground flex items-center gap-2 flex-wrap">
                             {session.template.name}
                             {isCurrentSession && (
                               <span className="text-xs bg-primary text-white px-2 py-0.5 rounded-full">
@@ -254,7 +254,7 @@ export default function SessionHistoryPage() {
                       <div className="flex flex-wrap gap-4 text-xs text-muted-foreground font-body">
                         <span className="flex items-center gap-1">
                           <Calendar className="h-3.5 w-3.5" />
-                          {new Date(session.createdAt).toLocaleDateString()}
+                          {new Date(session.createdAt).toLocaleDateString('en-US')}
                         </span>
                         <span className="flex items-center gap-1">
                           <Clock className="h-3.5 w-3.5" />
@@ -342,25 +342,25 @@ export default function SessionHistoryPage() {
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <p className="text-muted-foreground font-body mb-1">Template</p>
-                <p className="text-text font-medium">
+                <p className="text-foreground font-medium">
                   {selectedSession.template.name}
                 </p>
               </div>
               <div>
                 <p className="text-muted-foreground font-body mb-1">Photos</p>
-                <p className="text-text">
+                <p className="text-foreground">
                   {selectedSession.photos.length} captured
                 </p>
               </div>
               <div>
                 <p className="text-muted-foreground font-body mb-1">Created</p>
-                <p className="text-text">
+                <p className="text-foreground">
                   {new Date(selectedSession.createdAt).toLocaleString()}
                 </p>
               </div>
               <div>
                 <p className="text-muted-foreground font-body mb-1">Last Modified</p>
-                <p className="text-text">
+                <p className="text-foreground">
                   {new Date(selectedSession.updatedAt).toLocaleString()}
                 </p>
               </div>

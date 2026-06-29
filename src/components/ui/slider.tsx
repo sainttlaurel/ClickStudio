@@ -90,8 +90,8 @@ export function Slider({
     <div className={cn('space-y-2', className)}>
       {label && (
         <div className="flex justify-between items-center">
-          <label className="text-sm font-medium text-text">{label}</label>
-          <span className="text-sm text-muted">{value}</span>
+          <label className="text-sm font-medium text-foreground">{label}</label>
+          <span className="text-sm text-muted-foreground">{value}</span>
         </div>
       )}
       <div className="relative">

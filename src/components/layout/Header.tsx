@@ -19,7 +19,7 @@ export default function Header() {
             variant="ghost"
             size="sm"
             onClick={toggleSidebar}
-            icon={<Menu className="h-5 w-5 text-muted" />}
+            icon={<Menu className="h-5 w-5 text-muted-foreground" />}
             aria-label="Toggle sidebar"
           />
 
@@ -46,8 +46,8 @@ export default function Header() {
 
         {/* Center — Session info chip */}
         {currentSession && (
-          <div className="flex items-center gap-3 text-xs text-muted bg-rose-50 border border-border rounded-full px-4 py-1.5">
-            <span className="font-medium text-text">
+          <div className="flex items-center gap-3 text-xs text-muted-foreground bg-secondary border border-border rounded-full px-4 py-1.5">
+            <span className="font-medium text-foreground">
               {currentSession.template.name}
             </span>
             <span className="text-border">·</span>
@@ -64,7 +64,7 @@ export default function Header() {
             variant="ghost"
             size="sm"
             onClick={() => navigate('/settings')}
-            icon={<Settings className="h-4 w-4 text-muted" />}
+            icon={<Settings className="h-4 w-4 text-muted-foreground" />}
             aria-label="Settings"
           />
         </div>

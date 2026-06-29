@@ -18,8 +18,8 @@ const buttonVariants = {
   secondary:
     'bg-gradient-to-b from-secondary to-rose-400 text-white hover:from-rose-400 hover:to-rose-500 shadow-lg shadow-secondary/25 border border-secondary/20',
   outline:
-    'border-2 border-border bg-white/80 hover:bg-rose-50 text-text hover:border-primary/40 hover:shadow-md hover:shadow-primary/5',
-  ghost: 'bg-transparent hover:bg-rose-50 text-text hover:text-primary',
+    'border-2 border-border bg-white/80 hover:bg-rose-50 text-foreground hover:border-primary/40 hover:shadow-md hover:shadow-primary/5',
+  ghost: 'bg-transparent hover:bg-rose-50 text-foreground hover:text-primary',
   danger: 'bg-gradient-to-b from-error to-red-600 text-white hover:from-red-500 hover:to-red-700 shadow-lg shadow-error/25 border border-error/20',
   dark: 'bg-gradient-to-b from-gray-800 to-gray-900 text-white hover:from-gray-700 hover:to-gray-800 shadow-lg shadow-text/20 border border-gray-700/50',
 }

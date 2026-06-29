@@ -3,7 +3,7 @@ import { cn } from '@/utils/cn'
 import { TEXT_PRESETS, TEXT_COLORS } from '@/constants/stickers'
 
 interface TextPanelProps {
-  onTextAdd?: (text: string, color: string, fontSize: number) => void
+  onTextAdd?: (text: string, color: string, fontSize: number, font?: string) => void
   placedTexts?: Array<{ id: string; text: string; color: string; fontSize: number; x: number; y: number }>
 }
 
@@ -15,7 +15,7 @@ export const TextPanel = ({ onTextAdd, placedTexts = [] }: TextPanelProps) => {
 
   const handleAddText = () => {
     if (textInput.trim()) {
-      onTextAdd?.(textInput, textColor, fontSize)
+      onTextAdd?.(textInput, textColor, fontSize, TEXT_PRESETS[fontPreset].font)
       setTextInput('')
     }
   }
@@ -32,7 +32,7 @@ export const TextPanel = ({ onTextAdd, placedTexts = [] }: TextPanelProps) => {
           value={textInput}
           onChange={(e) => setTextInput(e.target.value)}
           placeholder="Type something..."
-          className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#EC1A66]/50"
+          className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-studio/50"
           onKeyDown={(e) => e.key === 'Enter' && handleAddText()}
         />
         
@@ -45,7 +45,7 @@ export const TextPanel = ({ onTextAdd, placedTexts = [] }: TextPanelProps) => {
                 onClick={() => setTextColor(color)}
                 className={cn(
                   'w-8 h-8 rounded-full transition-all',
-                  textColor === color ? 'ring-2 ring-offset-2 ring-[#EC1A66]' : '',
+                  textColor === color ? 'ring-2 ring-offset-2 ring-studio' : '',
                   color === '#FFFFFF' ? 'border-2 border-gray-300' : ''
                 )}
                 style={{ backgroundColor: color }}
@@ -64,7 +64,7 @@ export const TextPanel = ({ onTextAdd, placedTexts = [] }: TextPanelProps) => {
                 className={cn(
                   'flex-1 py-1 rounded-lg border text-xs transition-all',
                   fontPreset === i 
-                    ? 'border-[#EC1A66] text-[#EC1A66] bg-pink-50' 
+                    ? 'border-studio text-studio bg-pink-50' 
                     : 'border-gray-200 text-gray-700 hover:border-gray-300'
                 )}
                 style={{ fontFamily: `"${preset.font}", serif` }}
@@ -85,14 +85,14 @@ export const TextPanel = ({ onTextAdd, placedTexts = [] }: TextPanelProps) => {
             onChange={(e) => setFontSize(parseInt(e.target.value))}
             className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer
               [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 
-              [&::-webkit-slider-thumb]:bg-[#EC1A66] [&::-webkit-slider-thumb]:rounded-full 
+              [&::-webkit-slider-thumb]:bg-studio [&::-webkit-slider-thumb]:rounded-full 
               [&::-webkit-slider-thumb]:cursor-pointer"
           />
         </div>
         
         <button
           onClick={handleAddText}
-          className="w-full py-2.5 rounded-full bg-[#EC1A66] text-white font-medium text-sm hover:bg-[#EC1A66]/90 transition-all"
+          className="w-full py-2.5 rounded-full bg-studio text-white font-medium text-sm hover:bg-studio/90 transition-all"
         >
           Add to Photo
         </button>

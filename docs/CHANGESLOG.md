@@ -2,6 +2,49 @@
 
 All notable changes to ClickStudio are documented here.
 
+## v1.8.0 (June 29, 2026)
+
+### Added
+* Photo compositing — filters, stickers, text, and frames are now baked into the saved image via `utils/bakeEdits.ts`
+* Frame overlay rendering — Canvas now displays frame overlays visually (Film, Blush, Minimal, Polaroid)
+* `bakePhotoEdits` utility — composites image + adjustments + CSS filter + emoji stickers + text overlays + frame overlay onto a canvas, returns baked data URL
+* StickersPanel pack switching — 160 emojis across 10 themed packs with tab selector
+* Lazy loading — all secondary pages now code-split via `React.lazy`, main bundle reduced to 621KB
+
+### Fixed
+* **Adjustment sliders now bake into saved image** — brightness, contrast, saturation, exposure, highlights, shadows, temperature, tint are all composited via `adjustmentsToCss()` in `bakeEdits.ts`
+* Save now preserves all edits — adjustments + filters + stickers + text + frames are composited before storing
+* `text-text` (44 occurrences) replaced with `text-foreground` — these were silently ignored no-op Tailwind classes
+* `surface` color (`#FFFFFF`) added to Tailwind config — `bg-surface` now resolves properly
+* Dead code removed: `sounds.ts` (39 lines), `pdf.ts` (195 lines), `TemplateLibrary.tsx` (376 lines), `qrcode` + `jspdf` npm packages (45 packages removed)
+* Duplicate `bakeFrameOverlay` removed — `bakeEdits.ts` now imports from `frameOverlay.ts`
+* `handleBack` from preview screen now correctly returns to edit mode without corrupting state
+* Supabase env vars: app no longer crashes at startup if vars are missing — warns instead, creates client lazily
+* `bg-rose-50` → `bg-secondary`, `hover:bg-rose-50` → `hover:bg-secondary` in Header and Sidebar
+* AdjustPanel — labels match actual adjustment keys, added missing temperature/tint sliders, switched from local to controlled state
+* FiltersPanel — imports from constants with data-driven `thumbColor`, `90s` filter no longer missing
+* StickersPanel — imports `STICKER_PACKS` instead of hardcoded 16 emojis
+* FramesPanel — uses matching IDs from `@/constants/frames`
+* CaptureScreen — countdown (3s), flash effect, color swatches now tint viewport
+* SharePage: `sessionId` undefined now shows error instead of infinite loading
+* GalleryPage: `handleShare` type fixed from `any` to `Photo`
+* AboutPage: version now reads from `APP_VERSION` constant (was hardcoded `1.7.8`)
+* Changelog constant added to `constants/index.ts` barrel export
+* `text-text` (44 occurrences) replaced with `text-foreground` across old layout pages
+* LandingPage "Start the Studio" links directly to `/studio`
+* Sidebar nav: Camera→Studio, Preview→Gallery, Editor→History
+* Raw `<svg>` replaced with `lucide-react` icons in PhotoBoothEditor sidebar nav and BottomTabs (8 icons) — removes 2KB of inline SVG strings
+* `#EC1A66` hardcoded color replaced with `studio` Tailwind color token across all 11 photobooth components — centralized color management
+* Duplicate emoji removed from sticker packs; `墨镜` replaced with emoji
+* Date formatting standardized to `en-US` locale
+* Breadcrumb text simplified (removed confusing "Preview ›" prefix)
+* Text shadow extended to all light colors (gold, pink, lime, cyan)
+
+### Changed
+* Bundle size: ~672KB → ~621KB (react-query, qrcode, jspdf removed; lazy loading added)
+* Supabase client: lazy initialization via `getClient()`, no crash on missing env vars
+* PhotoBoothEditor — centralized state management, fixed undo stack closure issue
+
 ## v1.7.9 (June 29, 2026)
 
 ### Added
@@ -59,6 +102,12 @@ All notable changes to ClickStudio are documented here.
   - Capture screen: camera viewport with corner guides, color swatches, shutter button
   - Edit screen: Adjust tab (6 sliders), Filters tab (12 swatches), Stickers tab (16 emoji), Text tab (input + colors + size), Frames tab (8 options)
   - Design system: #EC1A66 pink primary, #F7F7F8 background, gray-400 secondary text
+  - Preview screen: Save shows result with Download + Gallery buttons instead of broken /preview redirect
+  - Capture count: shows `1 / 1` immediately after capture, not just on Save
+  - Font preset rendering: TextPanel now passes font through canvas overlay
+  - Old pages redirect: CameraPage, EditorPage, PreviewPage all redirect to /studio (removed ~2.8KB old code)
+* Click-to-place stickers — select sticker emoji → cursor changes to crosshair → click canvas to place at exact position (replaces random-position placement)
+* Font preset now renders on canvas overlay — TextPanel passes font through EditScreen → Canvas `fontFamily`
 
 ---
 

@@ -21,7 +21,7 @@ export default function Layout() {
         <main 
           className={cn(
             'flex-1 overflow-auto transition-all duration-300',
-            sidebarOpen ? 'lg:ml-64' : 'lg:ml-16'
+            sidebarOpen ? 'lg:ml-60' : 'lg:ml-16'
           )}
         >
           <Outlet />
