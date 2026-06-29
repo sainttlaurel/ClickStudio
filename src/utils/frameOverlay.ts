@@ -2,7 +2,8 @@ export function bakeFrameOverlay(
   ctx: CanvasRenderingContext2D,
   w: number,
   h: number,
-  frameId?: string
+  frameId?: string,
+  caption?: string
 ): void {
   if (frameId === 'film') {
     const barH = Math.round(h * 0.065)
@@ -44,10 +45,11 @@ export function bakeFrameOverlay(
     ctx.fillRect(0, 0, border, h)
     ctx.fillRect(w - border, 0, border, h)
     ctx.fillRect(0, h - bottomH, w, bottomH)
+    const displayCaption = caption?.trim() || 'ClickStudio'
     ctx.fillStyle = 'rgba(155, 107, 123, 0.45)'
     ctx.font = `italic ${Math.round(h * 0.028)}px cursive`
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'
-    ctx.fillText('ClickStudio', w / 2, h - bottomH / 2)
+    ctx.fillText(displayCaption, w / 2, h - bottomH / 2)
   }
 }

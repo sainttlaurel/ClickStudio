@@ -277,7 +277,7 @@ export default function PreviewPage() {
       {/* ── Body: composite + sidebar ── */}
       <div className="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden">
         {/* ── Composite preview (main area) ── */}
-        <div className="flex-1 flex flex-col items-center justify-start p-4 lg:p-6 overflow-auto bg-[#F9F0F4]/40 gap-4">
+        <div className="flex-1 flex flex-col items-center justify-center p-4 lg:p-6 overflow-auto bg-[#F9F0F4]/40 gap-4">
           {/* Not-all-done notice */}
           {!allDone && (
             <motion.div

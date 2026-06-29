@@ -253,18 +253,7 @@ export default function EditorPage() {
       }
 
       // Draw frame overlay
-      bakeFrameOverlay(ctx, img.width, img.height, frameRef.current)
-      
-      // Draw Polaroid caption
-      if (polaroidCaptionRef.current && (frameRef.current === 'polaroid' || frameRef.current === 'blush')) {
-        ctx.save()
-        ctx.font = `24px "${polaroidCaptionFontRef.current}"`
-        ctx.fillStyle = '#1C0B1A'
-        ctx.textAlign = 'center'
-        ctx.textBaseline = 'bottom'
-        ctx.fillText(polaroidCaptionRef.current, img.width / 2, img.height - 20)
-        ctx.restore()
-      }
+      bakeFrameOverlay(ctx, img.width, img.height, frameRef.current, polaroidCaptionRef.current)
     }
     img.src = currentPhoto.url
   }, [currentPhoto])
@@ -700,7 +689,7 @@ export default function EditorPage() {
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex-1 overflow-y-auto p-4 flex flex-col justify-center">
           {activeTab === 'adjust' && (
             <div className="space-y-3">
               {adjustmentGroups.map(group => (
