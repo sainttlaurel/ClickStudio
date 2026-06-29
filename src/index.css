@@ -1,17 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Dancing+Script:wght@700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
+
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+/* ─── Theme: ClickStudio v2 ───────────────────────────── */
 :root {
-  --background: #fdf5f7;
+  --background: #fef8fa;
+  --foreground: #1a0812;
+  --card: #ffffff;
+  --card-foreground: #1a0812;
+  --popover: #ffffff;
+  --popover-foreground: #1a0812;
+  --primary: #e8127a;
+  --primary-foreground: #ffffff;
+  --secondary: #fde8f0;
+  --secondary-foreground: #1a0812;
+  --muted: #fff5f8;
+  --muted-foreground: #8a5a6e;
+  --accent: #ff69b4;
+  --accent-foreground: #ffffff;
+  --destructive: #d4183d;
+  --destructive-foreground: #ffffff;
+  --border: rgba(232, 18, 122, 0.12);
+  --input: transparent;
+  --input-background: #fef0f5;
+  --switch-background: #f9c0d8;
+  --ring: rgba(232, 18, 122, 0.35);
+  --radius: 0.625rem;
+
+  /* Legacy aliases for existing components */
   --surface: #ffffff;
-  --card: #fff0f5;
-  --border: #f5c5d8;
-  --primary: #e91e8c;
-  --secondary: #ff85a2;
-  --accent: #ffb3c6;
-  --text: #1c0b1a;
-  --muted: #9b6b7b;
   --success: #4caf50;
   --warning: #ff9800;
   --error: #ef4444;
@@ -23,19 +42,16 @@
 
 html {
   scroll-behavior: smooth;
+  font-size: 16px;
 }
 
 body {
   margin: 0;
-  font-family:
-    'Inter',
-    system-ui,
-    -apple-system,
-    sans-serif;
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--background);
-  color: var(--text);
+  color: var(--foreground);
   overflow-x: hidden;
 }
 
@@ -46,7 +62,7 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--card);
+  background: var(--muted);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -55,7 +71,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--secondary);
+  background: var(--primary);
 }
 
 /* ─── Focus ───────────────────────────────────────────── */
@@ -79,24 +95,24 @@ textarea:focus-visible,
   }
 }
 
-/* ─── Glass morphism (light pink) ────────────────────── */
+/* ─── Glass morphism ──────────────────────────────────── */
 .glass {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  background: rgba(255, 255, 255, 0.82);
-  border: 1px solid rgba(245, 197, 216, 0.45);
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(232, 18, 122, 0.1);
 }
 
 .glass-dark {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  background: rgba(28, 11, 26, 0.88);
-  border: 1px solid rgba(245, 197, 216, 0.15);
+  background: rgba(26, 8, 18, 0.88);
+  border: 1px solid rgba(232, 18, 122, 0.15);
 }
 
 /* ─── Dot grid background ─────────────────────────────── */
 .dot-grid {
-  background-image: radial-gradient(circle, #f5c5d8 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(232, 18, 122, 0.08) 1px, transparent 1px);
   background-size: 22px 22px;
 }
 
@@ -104,7 +120,7 @@ textarea:focus-visible,
 .pink-radial {
   background: radial-gradient(
     ellipse 70% 55% at 50% 48%,
-    rgba(233, 30, 140, 0.13) 0%,
+    rgba(232, 18, 122, 0.12) 0%,
     transparent 70%
   );
 }
@@ -112,7 +128,7 @@ textarea:focus-visible,
 /* ─── Camera viewport ─────────────────────────────────── */
 .camera-viewport {
   aspect-ratio: 4/3;
-  background: #1c0b1a;
+  background: #1a0812;
   border-radius: 1.25rem;
   overflow: hidden;
   position: relative;
@@ -145,22 +161,16 @@ textarea:focus-visible,
 
 /* ─── Flash animation ─────────────────────────────────── */
 @keyframes flash {
-  0% {
-    opacity: 0;
-  }
-  30% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
+  0% { opacity: 0; }
+  30% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 /* ─── Polaroid card ───────────────────────────────────── */
 .polaroid {
   background: white;
   padding: 8px 8px 24px 8px;
-  box-shadow: 0 4px 16px rgba(28, 11, 26, 0.12);
+  box-shadow: 0 4px 16px rgba(26, 8, 18, 0.1);
   border-radius: 4px;
 }
 
@@ -171,8 +181,30 @@ textarea:focus-visible,
   padding: 4px 12px;
   font-family: 'Dancing Script', cursive;
   font-size: 0.9rem;
-  box-shadow: 2px 3px 10px rgba(28, 11, 26, 0.1);
+  box-shadow: 2px 3px 10px rgba(26, 8, 18, 0.08);
   white-space: nowrap;
+}
+
+/* ─── Film grain overlay ──────────────────────────────── */
+.film-grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px;
+}
+
+/* ─── Marquee animation ───────────────────────────────── */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
 }
 
 /* ─── Print styles ────────────────────────────────────── */
@@ -181,7 +213,6 @@ textarea:focus-visible,
     background: white;
     color: black;
   }
-
   .no-print {
     display: none !important;
   }
@@ -196,11 +227,15 @@ textarea:focus-visible,
   }
 }
 
-/* ─── Script text helper ──────────────────────────────── */
+/* ─── Font helpers ────────────────────────────────────── */
 .font-script {
   font-family: 'Dancing Script', cursive;
 }
 
 .font-display {
-  font-family: 'DM Serif Display', serif;
+  font-family: 'Playfair Display', serif;
+}
+
+.font-body {
+  font-family: 'DM Sans', sans-serif;
 }
