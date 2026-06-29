@@ -38,7 +38,7 @@ export const RightPanel = ({
   placedTexts
 }: RightPanelProps) => {
   return (
-    <div className="w-[35%] max-w-[360px] min-w-[240px] bg-white border-l border-gray-200 flex flex-col">
+    <div className="w-[200px] bg-white border-l border-gray-200 flex flex-col flex-shrink-0">
       <div className="flex-1 overflow-y-auto">
         {activeTab === 'adjust' && (
           <AdjustPanel value={adjustments} onChange={onAdjustmentsChange} />
@@ -56,7 +56,7 @@ export const RightPanel = ({
           <FramesPanel value={activeFrame} onChange={onFrameChange} />
         )}
       </div>
-      
+
       <BottomTabs activeTab={activeTab} onTabChange={onTabChange} />
     </div>
   )

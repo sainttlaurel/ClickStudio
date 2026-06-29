@@ -49,7 +49,7 @@ function NavItem({ item, collapsed }: NavItemProps) {
           : 'text-muted-foreground hover:text-primary',
         collapsed && 'justify-center px-2'
       )}
-      title={collapsed ? item.name : undefined}
+      title={item.name}
     >
       <item.icon className="h-5 w-5 flex-shrink-0" />
       {!collapsed && (
@@ -122,7 +122,7 @@ export default function Sidebar() {
                 <Camera className="h-4 w-4 text-white" />
               </div>
               {!collapsed && (
-                <span className="font-script text-xl text-primary leading-tight">
+                <span className="font-display text-xl text-primary leading-tight font-bold">
                   ClickStudio
                 </span>
               )}
@@ -175,7 +175,7 @@ export default function Sidebar() {
               <div className="h-8 w-8 bg-primary rounded-xl flex items-center justify-center shadow-md shadow-primary/30">
                 <Camera className="h-4 w-4 text-white" />
               </div>
-              <span className="font-script text-xl text-primary leading-tight">
+              <span className="font-display text-xl text-primary leading-tight font-bold">
                 ClickStudio
               </span>
             </div>
@@ -189,6 +189,7 @@ export default function Sidebar() {
                 to={item.href}
                 end={item.exact}
                 onClick={() => setSidebarOpen(false)}
+                title={item.name}
                 className={({ isActive }) =>
                   cn(
                     'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors',
@@ -211,6 +212,7 @@ export default function Sidebar() {
                 key={item.name}
                 to={item.href}
                 onClick={() => setSidebarOpen(false)}
+                title={item.name}
                 className={({ isActive }) =>
                   cn(
                     'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors',

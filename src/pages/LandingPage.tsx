@@ -244,7 +244,7 @@ function Hero({ onOpenStudio }: { onOpenStudio: () => void }) {
                 <Star key={i} className="w-4 h-4 fill-current text-yellow-400" />
               ))}
             </div>
-            <span className="text-sm text-foreground/45 font-body">Loved by creators worldwide</span>
+            <span className="text-sm text-foreground/45 font-body">500+ creators worldwide</span>
           </motion.div>
         </div>
 

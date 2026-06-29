@@ -97,15 +97,15 @@ textarea:focus-visible,
 
 /* ─── Glass morphism ──────────────────────────────────── */
 .glass {
-  backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
   background: rgba(255, 255, 255, 0.85);
   border: 1px solid rgba(232, 18, 122, 0.1);
 }
 
 .glass-dark {
-  backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
   background: rgba(26, 8, 18, 0.88);
   border: 1px solid rgba(232, 18, 122, 0.15);
 }
@@ -238,4 +238,8 @@ textarea:focus-visible,
 
 .font-body {
   font-family: 'DM Sans', sans-serif;
+}
+
+.font-emoji {
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
 }

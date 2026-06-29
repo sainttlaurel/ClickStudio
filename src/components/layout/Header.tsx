@@ -38,7 +38,7 @@ export default function Header() {
               }}
             />
             {/* Inline fallback shown while logo.png isn't loaded */}
-            <span className="font-script text-xl text-primary leading-none sm:hidden">
+            <span className="font-display text-xl text-primary leading-none font-bold sm:hidden">
               ClickStudio
             </span>
           </button>

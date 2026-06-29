@@ -23,6 +23,15 @@ interface TextOverlay {
   font?: string
 }
 
+interface ResizeState {
+  id: string | null
+  type: 'sticker' | 'text' | null
+  startX: number
+  startY: number
+  startScale?: number
+  startFontSize?: number
+}
+
 interface CanvasProps {
   imageUrl?: string | null
   isEditing?: boolean
@@ -68,6 +77,7 @@ export const Canvas = ({
   const containerRef = useRef<HTMLDivElement>(null)
   const [dragId, setDragId] = useState<string | null>(null)
   const [dragType, setDragType] = useState<'sticker' | 'text' | null>(null)
+  const [resizeState, setResizeState] = useState<ResizeState>({ id: null, type: null, startX: 0, startY: 0 })
 
   const handleCanvasClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!onClick || dragId) return
@@ -77,35 +87,80 @@ export const Canvas = ({
     onClick(x, y)
   }
 
-  const handlePointerDown = useCallback((e: React.PointerEvent, type: 'sticker' | 'text', id: string) => {
+  const handlePointerDown = useCallback((e: React.PointerEvent, type: 'sticker' | 'text', id: string, isResize = false) => {
     if (placementActive) return
     e.stopPropagation()
     const target = e.currentTarget as HTMLElement
     target.setPointerCapture(e.pointerId)
-    setDragId(id)
-    setDragType(type)
-  }, [placementActive])
+
+    if (isResize) {
+      if (type === 'sticker') {
+        const sticker = stickers.find(s => s.id === id)
+        setResizeState({
+          id,
+          type,
+          startX: e.clientX,
+          startY: e.clientY,
+          startScale: sticker?.scale || 1,
+          startFontSize: undefined
+        })
+      } else {
+        const text = texts.find(t => t.id === id)
+        setResizeState({
+          id,
+          type,
+          startX: e.clientX,
+          startY: e.clientY,
+          startScale: undefined,
+          startFontSize: text?.fontSize
+        })
+      }
+    } else {
+      setDragId(id)
+      setDragType(type)
+    }
+  }, [placementActive, stickers, texts])
 
   const handlePointerMove = useCallback((e: React.PointerEvent) => {
-    if (!dragId || !containerRef.current || !dragType) return
-    const rect = containerRef.current.getBoundingClientRect()
-    const x = ((e.clientX - rect.left) / rect.width) * 100
-    const y = ((e.clientY - rect.top) / rect.height) * 100
-    const clampedX = Math.max(0, Math.min(100, x))
-    const clampedY = Math.max(0, Math.min(100, y))
+    // Handle dragging
+    if (dragId && containerRef.current && dragType) {
+      const rect = containerRef.current.getBoundingClientRect()
+      const x = ((e.clientX - rect.left) / rect.width) * 100
+      const y = ((e.clientY - rect.top) / rect.height) * 100
+      const clampedX = Math.max(0, Math.min(100, x))
+      const clampedY = Math.max(0, Math.min(100, y))
 
-    if (dragType === 'sticker') {
-      const updated = stickers.map(s => s.id === dragId ? { ...s, x: clampedX, y: clampedY } : s)
-      onStickersUpdate?.(updated)
-    } else {
-      const updated = texts.map(t => t.id === dragId ? { ...t, x: clampedX, y: clampedY } : t)
-      onTextsUpdate?.(updated)
+      if (dragType === 'sticker') {
+        const updated = stickers.map(s => s.id === dragId ? { ...s, x: clampedX, y: clampedY } : s)
+        onStickersUpdate?.(updated)
+      } else {
+        const updated = texts.map(t => t.id === dragId ? { ...t, x: clampedX, y: clampedY } : t)
+        onTextsUpdate?.(updated)
+      }
     }
-  }, [dragId, dragType, stickers, texts, onStickersUpdate, onTextsUpdate])
+
+    // Handle resizing
+    if (resizeState.id && resizeState.type) {
+      const dx = e.clientX - resizeState.startX
+      const dy = e.clientY - resizeState.startY
+      const delta = (dx + dy) / 2 // Average of x and y movement
+
+      if (resizeState.type === 'sticker' && resizeState.startScale !== undefined) {
+        const newScale = Math.max(0.5, Math.min(3, resizeState.startScale + delta / 100))
+        const updated = stickers.map(s => s.id === resizeState.id ? { ...s, scale: newScale } : s)
+        onStickersUpdate?.(updated)
+      } else if (resizeState.type === 'text' && resizeState.startFontSize !== undefined) {
+        const newFontSize = Math.max(12, Math.min(72, resizeState.startFontSize + delta / 2))
+        const updated = texts.map(t => t.id === resizeState.id ? { ...t, fontSize: newFontSize } : t)
+        onTextsUpdate?.(updated)
+      }
+    }
+  }, [dragId, dragType, resizeState, stickers, texts, onStickersUpdate, onTextsUpdate])
 
   const handlePointerUp = useCallback(() => {
     setDragId(null)
     setDragType(null)
+    setResizeState({ id: null, type: null, startX: 0, startY: 0 })
   }, [])
 
   return (
@@ -138,7 +193,7 @@ export const Canvas = ({
                 <div
                   key={sticker.id}
                   className={cn(
-                    'absolute select-none',
+                    'absolute select-none group',
                     placementActive ? 'pointer-events-none' : 'cursor-grab',
                     dragId === sticker.id && 'cursor-grabbing'
                   )}
@@ -151,6 +206,16 @@ export const Canvas = ({
                   onPointerDown={(e) => handlePointerDown(e, 'sticker', sticker.id)}
                 >
                   {sticker.emoji}
+                  {/* Resize handle */}
+                  {!placementActive && (
+                    <div
+                      className="absolute -bottom-1 -right-1 w-4 h-4 bg-white border-2 border-studio rounded-full cursor-se-resize opacity-0 group-hover:opacity-100 transition-opacity"
+                      onPointerDown={(e) => {
+                        e.stopPropagation()
+                        handlePointerDown(e, 'sticker', sticker.id, true)
+                      }}
+                    />
+                  )}
                 </div>
               ))}
             </div>
@@ -161,7 +226,7 @@ export const Canvas = ({
                 <div
                   key={text.id}
                   className={cn(
-                    'absolute select-none',
+                    'absolute select-none group',
                     placementActive ? 'pointer-events-none' : 'cursor-grab',
                     dragId === text.id && 'cursor-grabbing'
                   )}
@@ -177,6 +242,16 @@ export const Canvas = ({
                   onPointerDown={(e) => handlePointerDown(e, 'text', text.id)}
                 >
                   {text.text}
+                  {/* Resize handle */}
+                  {!placementActive && (
+                    <div
+                      className="absolute -bottom-1 -right-1 w-4 h-4 bg-white border-2 border-studio rounded-full cursor-se-resize opacity-0 group-hover:opacity-100 transition-opacity"
+                      onPointerDown={(e) => {
+                        e.stopPropagation()
+                        handlePointerDown(e, 'text', text.id, true)
+                      }}
+                    />
+                  )}
                 </div>
               ))}
             </div>

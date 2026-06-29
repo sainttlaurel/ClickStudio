@@ -32,6 +32,7 @@ export const TextPanel = ({ onTextAdd, placedTexts = [] }: TextPanelProps) => {
           value={textInput}
           onChange={(e) => setTextInput(e.target.value)}
           placeholder="Type something..."
+          aria-label="Text input"
           className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-studio/50"
           onKeyDown={(e) => e.key === 'Enter' && handleAddText()}
         />
@@ -43,6 +44,7 @@ export const TextPanel = ({ onTextAdd, placedTexts = [] }: TextPanelProps) => {
               <button
                 key={i}
                 onClick={() => setTextColor(color)}
+                aria-label={`Select color ${color}`}
                 className={cn(
                   'w-8 h-8 rounded-full transition-all',
                   textColor === color ? 'ring-2 ring-offset-2 ring-studio' : '',
@@ -61,10 +63,11 @@ export const TextPanel = ({ onTextAdd, placedTexts = [] }: TextPanelProps) => {
               <button
                 key={i}
                 onClick={() => setFontPreset(i)}
+                aria-label={`Select font ${preset.name}`}
                 className={cn(
                   'flex-1 py-1 rounded-lg border text-xs transition-all',
-                  fontPreset === i 
-                    ? 'border-studio text-studio bg-pink-50' 
+                  fontPreset === i
+                    ? 'border-studio text-studio bg-pink-50'
                     : 'border-gray-200 text-gray-700 hover:border-gray-300'
                 )}
                 style={{ fontFamily: `"${preset.font}", serif` }}
@@ -83,6 +86,7 @@ export const TextPanel = ({ onTextAdd, placedTexts = [] }: TextPanelProps) => {
             max={72}
             value={fontSize}
             onChange={(e) => setFontSize(parseInt(e.target.value))}
+            aria-label="Font size"
             className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer
               [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 
               [&::-webkit-slider-thumb]:bg-studio [&::-webkit-slider-thumb]:rounded-full 
@@ -92,6 +96,7 @@ export const TextPanel = ({ onTextAdd, placedTexts = [] }: TextPanelProps) => {
         
         <button
           onClick={handleAddText}
+          aria-label="Add text to photo"
           className="w-full py-2.5 rounded-full bg-studio text-white font-medium text-sm hover:bg-studio/90 transition-all"
         >
           Add to Photo

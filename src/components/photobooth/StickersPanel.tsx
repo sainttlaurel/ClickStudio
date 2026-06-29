@@ -47,7 +47,7 @@ export const StickersPanel = ({ onStickerAdd, placedStickers = [], selectedStick
             key={`${emoji}-${i}`}
             onClick={() => handleStickerClick(emoji)}
             className={cn(
-              'w-12 h-12 rounded-full border-2 border-gray-200 flex items-center justify-center text-xl transition-all',
+              'w-12 h-12 rounded-full border-2 border-gray-200 flex items-center justify-center text-2xl transition-all font-emoji',
               selectedStickerEmoji === emoji 
                 ? 'border-studio bg-pink-50 scale-110' 
                 : 'hover:border-gray-300 hover:bg-gray-50'

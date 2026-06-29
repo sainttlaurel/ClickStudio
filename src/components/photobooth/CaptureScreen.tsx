@@ -8,21 +8,21 @@ import { TemplatePicker } from './TemplatePicker'
 import type { TemplateLibraryItem } from '@/constants/templates'
 
 const COLOR_SWATCHES_ROW1 = [
-  { id: 'pink', color: '#EC1A66' },
-  { id: 'orange', color: '#F97316' },
-  { id: 'blue', color: '#60A5FA' },
-  { id: 'gray', color: '#D1D5DB' },
-  { id: 'purple', color: '#A78BFA' },
-  { id: 'khaki', color: '#D4A574' },
-  { id: 'black', color: '#1F2937' },
-  { id: 'gold', color: '#F59E0B' },
-  { id: 'blush', color: '#FBCFE8' }
+  { id: 'pink', color: '#EC1A66', name: 'Pink' },
+  { id: 'orange', color: '#F97316', name: 'Orange' },
+  { id: 'blue', color: '#60A5FA', name: 'Blue' },
+  { id: 'gray', color: '#D1D5DB', name: 'Gray' },
+  { id: 'purple', color: '#A78BFA', name: 'Purple' },
+  { id: 'khaki', color: '#D4A574', name: 'Khaki' },
+  { id: 'black', color: '#1F2937', name: 'Black' },
+  { id: 'gold', color: '#F59E0B', name: 'Gold' },
+  { id: 'blush', color: '#FBCFE8', name: 'Blush' }
 ]
 
 const COLOR_SWATCHES_ROW2 = [
-  { id: 'teal', color: '#14B8A6' },
-  { id: 'lavender', color: '#C4B5FD' },
-  { id: 'lightGray', color: '#E5E7EB' }
+  { id: 'teal', color: '#14B8A6', name: 'Teal' },
+  { id: 'lavender', color: '#C4B5FD', name: 'Lavender' },
+  { id: 'lightGray', color: '#E5E7EB', name: 'Light Gray' }
 ]
 
 interface CaptureScreenProps {
@@ -166,27 +166,29 @@ export const CaptureScreen = ({ onCapture, frameId = 'none', onFrameChange, fram
           <button
             key={swatch.id}
             onClick={() => setSelectedColor(swatch.id)}
+            title={swatch.name}
             className={cn(
               'w-7 h-7 rounded-full transition-all',
-              selectedColor === swatch.id 
-                ? 'ring-2 ring-offset-2 ring-studio scale-110' 
+              selectedColor === swatch.id
+                ? 'ring-2 ring-offset-2 ring-studio scale-110'
                 : ''
             )}
             style={{ backgroundColor: swatch.color }}
           />
         ))}
       </div>
-      
+
       {/* Color swatches - Row 2 */}
       <div className="flex gap-2 mb-4">
         {COLOR_SWATCHES_ROW2.map((swatch) => (
           <button
             key={swatch.id}
             onClick={() => setSelectedColor(swatch.id)}
+            title={swatch.name}
             className={cn(
               'w-7 h-7 rounded-full transition-all',
-              selectedColor === swatch.id 
-                ? 'ring-2 ring-offset-2 ring-studio scale-110' 
+              selectedColor === swatch.id
+                ? 'ring-2 ring-offset-2 ring-studio scale-110'
                 : ''
             )}
             style={{ backgroundColor: swatch.color }}
@@ -232,9 +234,10 @@ export const CaptureScreen = ({ onCapture, frameId = 'none', onFrameChange, fram
       />
       
       {/* Shutter button */}
-      <button 
+      <button
         onClick={handleCapture}
         disabled={!cameraReady || capturing}
+        aria-label="Capture photo"
         className="w-14 h-14 rounded-full bg-studio flex items-center justify-center hover:bg-studio/90 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

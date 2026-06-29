@@ -61,7 +61,7 @@ export const AdjustPanel = ({ value, onChange }: AdjustPanelProps) => {
     <div key={key}>
       <div className="flex justify-between items-center mb-2">
         <span className="text-sm font-medium text-gray-700">{label}</span>
-        <span className="text-sm text-gray-400">{adjustments[key]}</span>
+        <span className="text-sm font-mono text-gray-500">{adjustments[key] > 0 ? `+${adjustments[key]}` : adjustments[key]}</span>
       </div>
       <input
         type="range"
@@ -69,6 +69,7 @@ export const AdjustPanel = ({ value, onChange }: AdjustPanelProps) => {
         max={max}
         value={adjustments[key]}
         onChange={(e) => handleSliderChange(key, parseInt(e.target.value))}
+        aria-label={`${label} adjustment`}
         className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer
           [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 
           [&::-webkit-slider-thumb]:bg-studio [&::-webkit-slider-thumb]:rounded-full 
