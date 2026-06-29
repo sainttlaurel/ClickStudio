@@ -803,14 +803,7 @@ export default function CameraPage() {
             </button>
           </div>
 
-          {/* ── Bottom hint ── */}
-          <div className="flex-shrink-0 text-center pb-6">
-            <p className="text-xs text-muted/40 flex items-center justify-center gap-1.5">
-              <span>←</span>
-              <span>Scroll to browse</span>
-              <span>→</span>
-            </p>
-          </div>
+
         </div>
 
         {/* ── Template Preview Modal ── */}
