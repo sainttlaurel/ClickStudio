@@ -31,6 +31,7 @@ interface EditScreenProps {
   onFilterChange: (id: string) => void
   activeFrame: string
   onFrameChange: (id: string) => void
+  frameImage?: string
   placedStickers: StickerData[]
   placedTexts: TextData[]
   onTextsChange: (texts: TextData[]) => void
@@ -47,6 +48,7 @@ export const EditScreen = ({
   onFilterChange,
   activeFrame,
   onFrameChange,
+  frameImage,
   placedStickers,
   placedTexts,
   onTextsChange,
@@ -80,6 +82,7 @@ export const EditScreen = ({
         isEditing 
         filterId={activeFilter}
         frameId={activeFrame}
+        frameImage={frameImage}
         stickers={placedStickers}
         texts={placedTexts}
         onClick={(x, y) => { if (selectedStickerEmoji) { onCanvasClick(x, y) } }}

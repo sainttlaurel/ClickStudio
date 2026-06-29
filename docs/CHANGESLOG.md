@@ -38,7 +38,10 @@ All notable changes to ClickStudio are documented here.
 * **Frame live preview on camera** — CaptureScreen now shows frame overlay on camera viewport with frame selector row (Clean, Film, Blush, Minimal, Polaroid); selected frame carries through to editor after capture
 * **Realistic frame visuals** — Film (10% black bars + repeating sprocket holes), Blush (stronger gradient + corner sparkles + inner border), Minimal (thick white border + soft shadow + corner accents), Polaroid (thick white frame + outer shadow + serif caption); aligned `bakeFrameOverlay` canvas version to match CSS overlays
 * **Frame-specific aspect ratios** — `frames.ts` now includes `aspectRatio` per frame (Film: 3/2 landscape, Blush: 4/5 portrait, Polaroid: 4/5 portrait, Clean/Minimal: 1/1) — `getFrameAspectRatio()` and `calcFrameHeight()` utilities drive dynamic sizing
-* **Dynamic canvas/viewport sizing** — Canvas (edit + preview), CaptureScreen camera viewport, and Preview screen all use `calcFrameHeight()` to match the selected frame's aspect ratio; baked output size also adapts (640px wide × frame-calculated height) instead of fixed 640×640
+* **Frame library connected** — `TEMPLATE_LIBRARY` (28 templates, 9 with PNG frame backgrounds) now accessible via `TemplatePicker` modal on camera screen; selecting a template sets frame style + aspect ratio + frameImage
+* **TemplatePicker component** — modal with category filter + grid of templates showing emoji, name, description, layout, aspect ratio, badges
+* **PNG frame template compositing** — `FrameOverlay` renders `frameImage` as `<img>` overlay on camera + canvas; `bakeEdits` loads and composites PNG frame background with photo on top
+* **Dynamic frame-to-template mapping** — templates with CSS compositeStyle (clean/polaroid/film/blush/minimal) use existing CSS frames; templates with `compositeStyle: 'frame'` use PNG image; switching between CSS frames and templates clears the other
 * Duplicate emoji removed from sticker packs; `墨镜` replaced with emoji
 * Date formatting standardized to `en-US` locale
 * Breadcrumb text simplified (removed confusing "Preview ›" prefix)

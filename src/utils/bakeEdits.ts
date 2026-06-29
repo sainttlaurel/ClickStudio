@@ -40,6 +40,7 @@ export interface BakeOptions {
   stickers: StickerData[]
   texts: TextData[]
   frameId?: string
+  frameImage?: string
   size?: { w: number; h: number }
 }
 
@@ -56,7 +57,13 @@ export async function bakePhotoEdits(options: BakeOptions): Promise<string> {
   const adjCss = adjustmentsToCss(options.adjustments)
   const combinedFilter = [adjCss, options.filterCss !== 'none' ? options.filterCss : ''].filter(Boolean).join(' ')
 
-  ctx.drawImage(img, 0, 0, size.w, size.h)
+  if (options.frameImage) {
+    const frameImg = await loadImage(options.frameImage)
+    ctx.drawImage(frameImg, 0, 0, size.w, size.h)
+    ctx.drawImage(img, 0, 0, size.w, size.h)
+  } else {
+    ctx.drawImage(img, 0, 0, size.w, size.h)
+  }
 
   if (combinedFilter) {
     ctx.filter = combinedFilter
@@ -99,7 +106,9 @@ export async function bakePhotoEdits(options: BakeOptions): Promise<string> {
     ctx.restore()
   }
 
-  bakeFrameOverlay(ctx, size.w, size.h, options.frameId)
+  if (!options.frameImage) {
+    bakeFrameOverlay(ctx, size.w, size.h, options.frameId)
+  }
 
   return canvas.toDataURL('image/png', 1.0)
 }

@@ -8,6 +8,7 @@ import type { PhotoAdjustments } from '@/types'
 import { bakePhotoEdits } from '@/utils/bakeEdits'
 import { FILTERS } from '@/constants/filters'
 import { calcFrameHeight } from '@/constants/frames'
+import type { TemplateLibraryItem } from '@/constants/templates'
 
 type Screen = 'capture' | 'edit' | 'preview'
 
@@ -16,6 +17,10 @@ interface StickerData {
 }
 interface TextData {
   id: string; text: string; color: string; fontSize: number; x: number; y: number; font?: string
+}
+
+const COMPOSITE_TO_FRAME: Record<string, string> = {
+  clean: 'none', polaroid: 'polaroid', film: 'film', blush: 'blush', minimal: 'minimal'
 }
 
 export const PhotoBoothEditor = () => {
@@ -33,6 +38,7 @@ export const PhotoBoothEditor = () => {
   })
   const [activeFilter, setActiveFilter] = useState('none')
   const [activeFrame, setActiveFrame] = useState('none')
+  const [activeFrameImage, setActiveFrameImage] = useState<string | undefined>(undefined)
   const [selectedStickerEmoji, setSelectedStickerEmoji] = useState<string | null>(null)
   const [placedStickers, setPlacedStickers] = useState<StickerData[]>([])
   const [placedTexts, setPlacedTexts] = useState<TextData[]>([])
@@ -59,6 +65,20 @@ export const PhotoBoothEditor = () => {
     setSelectedStickerEmoji(prev.selectedStickerEmoji)
   }, [undoStack])
 
+  const handleTemplateSelect = useCallback((template: TemplateLibraryItem | null) => {
+    if (!template) {
+      setActiveFrameImage(undefined)
+      return
+    }
+    if (template.compositeStyle === 'frame' && template.frameImage) {
+      setActiveFrame('none')
+      setActiveFrameImage(template.frameImage)
+    } else {
+      setActiveFrame(COMPOSITE_TO_FRAME[template.compositeStyle] || 'none')
+      setActiveFrameImage(undefined)
+    }
+  }, [])
+
   const handleCapture = (imageUrl: string) => {
     setCapturedImage(imageUrl)
     setCaptureCount(1)
@@ -76,7 +96,7 @@ export const PhotoBoothEditor = () => {
 
   const handleReset = () => {
     setAdjustments({ brightness: 0, contrast: 0, saturation: 0, exposure: 0, shadows: 0, highlights: 0, temperature: 0, tint: 0 })
-    setActiveFilter('none'); setActiveFrame('none'); setSelectedStickerEmoji(null); setPlacedStickers([]); setPlacedTexts([])
+    setActiveFilter('none'); setActiveFrame('none'); setActiveFrameImage(undefined); setSelectedStickerEmoji(null); setPlacedStickers([]); setPlacedTexts([])
   }
 
   const handleCanvasClick = (x: number, y: number) => {
@@ -84,10 +104,7 @@ export const PhotoBoothEditor = () => {
     setPlacedStickers(prev => [...prev, {
       id: `sticker-${Date.now()}`,
       emoji: selectedStickerEmoji,
-      x,
-      y,
-      scale: 1,
-      rotation: 0
+      x, y, scale: 1, rotation: 0
     }])
     setSelectedStickerEmoji(null)
   }
@@ -102,6 +119,7 @@ export const PhotoBoothEditor = () => {
       stickers: placedStickers,
       texts: placedTexts,
       frameId: activeFrame,
+      frameImage: activeFrameImage,
     })
     addPhoto({
       id: `photo-${Date.now()}`,
@@ -203,10 +221,10 @@ export const PhotoBoothEditor = () => {
 
           {/* Content */}
           {currentScreen === 'capture' ? (
-            <CaptureScreen onCapture={handleCapture} frameId={activeFrame} onFrameChange={setActiveFrame} />
+            <CaptureScreen onCapture={handleCapture} frameId={activeFrame} onFrameChange={(id) => { setActiveFrame(id); setActiveFrameImage(undefined) }} frameImage={activeFrameImage} onTemplateSelect={handleTemplateSelect} />
           ) : currentScreen === 'preview' ? (
             <div className="flex-1 flex flex-col items-center justify-center p-6">
-              <div className="relative w-[300px] rounded-2xl overflow-hidden shadow-lg mb-6" style={{ height: calcFrameHeight(300, activeFrame) }}>
+              <div className="relative w-[300px] rounded-2xl overflow-hidden shadow-lg mb-6" style={{ height: calcFrameHeight(300, activeFrameImage ? 'none' : activeFrame) }}>
                 <img src={bakedImage || capturedImage || ''} alt="Result" className="w-full h-full object-cover" />
               </div>
               <div className="text-center">
@@ -222,7 +240,8 @@ export const PhotoBoothEditor = () => {
               activeFilter={activeFilter}
               onFilterChange={(id) => { pushUndo(); setActiveFilter(id) }}
               activeFrame={activeFrame}
-              onFrameChange={(id) => { pushUndo(); setActiveFrame(id) }}
+              onFrameChange={(id) => { pushUndo(); setActiveFrame(id); setActiveFrameImage(undefined) }}
+              frameImage={activeFrameImage}
               placedStickers={placedStickers}
               placedTexts={placedTexts}
               onTextsChange={(t) => { pushUndo(); setPlacedTexts(t) }}

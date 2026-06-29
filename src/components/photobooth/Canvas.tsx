@@ -27,6 +27,7 @@ interface CanvasProps {
   isEditing?: boolean
   filterId?: string
   frameId?: string
+  frameImage?: string
   stickers?: StickerOverlay[]
   texts?: TextOverlay[]
   onClick?: (x: number, y: number) => void
@@ -43,6 +44,7 @@ export const Canvas = ({
   isEditing = false, 
   filterId = 'none',
   frameId = 'none',
+  frameImage,
   stickers = [],
   texts = [],
   onClick,
@@ -116,7 +118,7 @@ export const Canvas = ({
             ))}
 
             {/* Frame overlay */}
-            <FrameOverlay frameId={frameId || 'none'} />
+            <FrameOverlay frameId={frameId || 'none'} frameImage={frameImage} />
           </>
         ) : (
           <div className="w-full h-full bg-[#0F172A] flex flex-col items-center justify-center">

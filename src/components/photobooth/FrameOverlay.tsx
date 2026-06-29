@@ -1,10 +1,20 @@
 interface FrameOverlayProps {
   frameId: string
+  frameImage?: string
   caption?: string
 }
 
-export const FrameOverlay = ({ frameId, caption = 'ClickStudio' }: FrameOverlayProps) => {
-  if (!frameId || frameId === 'none') return null
+export const FrameOverlay = ({ frameId, frameImage, caption = 'ClickStudio' }: FrameOverlayProps) => {
+  if (!frameId && !frameImage) return null
+  if (frameId === 'none' && !frameImage) return null
+
+  if (frameImage) {
+    return (
+      <div className="absolute inset-0 pointer-events-none z-10">
+        <img src={frameImage} alt="" className="w-full h-full object-cover" />
+      </div>
+    )
+  }
 
   if (frameId === 'film') {
     return (
