@@ -586,7 +586,7 @@ export default function EditorPage() {
               'w-9 h-9 rounded-xl flex items-center justify-center transition-all',
               item.label === 'Edit'
                 ? 'bg-primary/10 text-primary'
-                : 'text-muted hover:text-primary hover:bg-rose-50'
+                : 'text-muted-foreground font-body hover:text-primary hover:bg-secondary'
             )}
             title={item.label}
           >
@@ -605,7 +605,7 @@ export default function EditorPage() {
             <h1 className="font-display text-sm text-text">Edit photo âœ¶</h1>
           </div>
           <div className="flex items-center gap-1">
-            <span className="text-[10px] text-muted bg-rose-50 px-2 py-0.5 rounded-full">1 photo</span>
+            <span className="text-[10px] text-muted-foreground font-body bg-secondary px-2 py-0.5 rounded-full">1 photo</span>
           </div>
         </div>
 
@@ -613,11 +613,11 @@ export default function EditorPage() {
         <div ref={containerRef} className="flex-1 flex items-center justify-center p-3 bg-white overflow-auto min-h-0 relative" onMouseMove={handleMouseMove} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
           {/* Zoom controls */}
           <div className="absolute top-2 right-2 z-20 flex items-center gap-0.5 bg-white/90 backdrop-blur-sm rounded-lg border border-border shadow-sm px-1.5 py-0.5">
-            <button onClick={() => setZoom(z => Math.max(50, z - 25))} className="p-0.5 rounded text-muted hover:text-primary hover:bg-rose-50 transition-colors" title="Zoom out"><ZoomOut className="h-3 w-3" /></button>
+            <button onClick={() => setZoom(z => Math.max(50, z - 25))} className="p-0.5 rounded text-muted-foreground font-body hover:text-primary hover:bg-secondary transition-colors" title="Zoom out"><ZoomOut className="h-3 w-3" /></button>
             <span className="text-[9px] font-medium text-text w-7 text-center">{zoom}%</span>
-            <button onClick={() => setZoom(z => Math.min(150, z + 25))} className="p-0.5 rounded text-muted hover:text-primary hover:bg-rose-50 transition-colors" title="Zoom in"><ZoomIn className="h-3 w-3" /></button>
+            <button onClick={() => setZoom(z => Math.min(150, z + 25))} className="p-0.5 rounded text-muted-foreground font-body hover:text-primary hover:bg-secondary transition-colors" title="Zoom in"><ZoomIn className="h-3 w-3" /></button>
             <div className="w-px h-3 bg-border mx-0.5" />
-            <button onClick={() => setZoom(100)} className="p-0.5 rounded text-muted hover:text-primary hover:bg-rose-50 transition-colors" title="Fit"><Maximize className="h-3 w-3" /></button>
+            <button onClick={() => setZoom(100)} className="p-0.5 rounded text-muted-foreground font-body hover:text-primary hover:bg-secondary transition-colors" title="Fit"><Maximize className="h-3 w-3" /></button>
           </div>
 
           <div ref={canvasWrapperRef} className="relative max-w-3xl w-full" style={{ transform: `scale(${zoom / 100})`, transformOrigin: 'center center' }}>
@@ -669,7 +669,7 @@ export default function EditorPage() {
         {/* Left panel tab bar */}
         <div className="flex border-t border-border bg-white flex-shrink-0">
           {editorTabs.map(tab => (
-            <button key={tab.key} onClick={() => setActiveTab(tab.key)} className={cn('flex-1 flex items-center justify-center gap-1.5 py-2.5 text-[11px] font-medium transition-all border-b-2', activeTab === tab.key ? 'text-primary border-primary bg-primary/5' : 'text-muted border-transparent hover:text-text hover:bg-rose-50')}>
+            <button key={tab.key} onClick={() => setActiveTab(tab.key)} className={cn('flex-1 flex items-center justify-center gap-1.5 py-2.5 text-[11px] font-medium transition-all border-b-2', activeTab === tab.key ? 'text-primary border-primary bg-primary/5' : 'text-muted-foreground font-body border-transparent hover:text-text hover:bg-secondary')}>
               <tab.icon className="h-3.5 w-3.5" />
               <span className="hidden xl:inline">{tab.label}</span>
             </button>
@@ -694,12 +694,12 @@ export default function EditorPage() {
             <div className="space-y-3">
               {adjustmentGroups.map(group => (
                 <div key={group.label} className="space-y-2">
-                  <h4 className="text-xs font-semibold text-muted uppercase tracking-wider">{group.label}</h4>
+                  <h4 className="text-xs font-semibold text-muted-foreground font-body uppercase tracking-wider">{group.label}</h4>
                   <div className="space-y-1.5">
                     {group.controls.map(control => (
                       <div key={control.key} className="space-y-0.5">
                         <div className="flex items-center justify-between">
-                          <label className="text-xs text-muted flex items-center gap-1.5"><span>{control.icon}</span>{control.label}</label>
+                          <label className="text-xs text-muted-foreground font-body flex items-center gap-1.5"><span>{control.icon}</span>{control.label}</label>
                           <span className="text-xs text-text font-mono w-10 text-right">{adjustments[control.key] > 0 ? '+' : ''}{adjustments[control.key]}</span>
                         </div>
                         <Slider value={adjustments[control.key]} onChange={value => handleAdjustmentChange(control.key, value)} min={control.min} max={control.max} step={1} />
@@ -716,11 +716,11 @@ export default function EditorPage() {
             <div className="space-y-2">
               <div className="flex gap-1.5 overflow-x-auto pb-1">
                 {FILTERS.map(filter => (
-                  <motion.button key={filter.id} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => { setActiveFilter(filter.id); setHasChanges(true) }} className={cn('flex-shrink-0 w-14 rounded-lg border-2 p-1 flex flex-col items-center gap-0.5 transition-all', activeFilter === filter.id ? 'border-primary bg-primary/5 ring-2 ring-primary/20' : 'border-border hover:border-primary/40 bg-white hover:bg-rose-50')}>
+                  <motion.button key={filter.id} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => { setActiveFilter(filter.id); setHasChanges(true) }} className={cn('flex-shrink-0 w-14 rounded-lg border-2 p-1 flex flex-col items-center gap-0.5 transition-all', activeFilter === filter.id ? 'border-primary bg-primary/5 ring-2 ring-primary/20' : 'border-border hover:border-primary/40 bg-white hover:bg-secondary')}>
                     <div className="w-full aspect-square rounded overflow-hidden bg-gray-100" style={{ filter: filter.id === 'none' ? 'none' : filter.css }}>
                       <img src={currentPhoto.url} alt={filter.name} className="w-full h-full object-cover" />
                     </div>
-                    <span className={cn('text-[8px] font-medium leading-tight', activeFilter === filter.id ? 'text-primary' : 'text-muted')}>{filter.name}</span>
+                    <span className={cn('text-[8px] font-medium leading-tight', activeFilter === filter.id ? 'text-primary' : 'text-muted-foreground font-body')}>{filter.name}</span>
                   </motion.button>
                 ))}
               </div>
@@ -733,25 +733,25 @@ export default function EditorPage() {
               <h3 className="font-semibold text-text text-sm">Stickers</h3>
               <div className="flex flex-wrap gap-1.5">
                 {STICKER_PACKS.map((pack, i) => (
-                  <button key={pack.name} onClick={() => setSelectedStickerPack(i)} className={cn('px-2.5 py-1 rounded-full text-xs border transition-all', selectedStickerPack === i ? 'border-primary bg-primary/10 text-primary' : 'border-border text-muted hover:border-primary/40')}>
+                  <button key={pack.name} onClick={() => setSelectedStickerPack(i)} className={cn('px-2.5 py-1 rounded-full text-xs border transition-all', selectedStickerPack === i ? 'border-primary bg-primary/10 text-primary' : 'border-border text-muted-foreground font-body hover:border-primary/40')}>
                     {pack.emoji} {pack.name}
                   </button>
                 ))}
               </div>
               <div className="grid grid-cols-10 gap-0.5">
                 {STICKER_PACKS[selectedStickerPack].stickers.map((emoji, i) => (
-                  <motion.button key={`${emoji}-${i}`} whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }} onClick={() => handleSelectSticker(emoji)} className={cn('aspect-square rounded-lg border-2 text-lg flex items-center justify-center transition-all', selectedSticker === emoji ? 'border-primary bg-primary/10 ring-2 ring-primary/30 scale-110' : 'border-border hover:border-primary/40 bg-white hover:bg-rose-50')}>
+                  <motion.button key={`${emoji}-${i}`} whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }} onClick={() => handleSelectSticker(emoji)} className={cn('aspect-square rounded-lg border-2 text-lg flex items-center justify-center transition-all', selectedSticker === emoji ? 'border-primary bg-primary/10 ring-2 ring-primary/30 scale-110' : 'border-border hover:border-primary/40 bg-white hover:bg-secondary')}>
                     {emoji}
                   </motion.button>
                 ))}
               </div>
-              <p className="text-[10px] text-muted text-center">{selectedSticker ? 'Tap sticker selected â€” click on the photo to place' : 'Tap a sticker, then click on the photo to place'}</p>
+              <p className="text-[10px] text-muted-foreground font-body text-center">{selectedSticker ? 'Tap sticker selected â€” click on the photo to place' : 'Tap a sticker, then click on the photo to place'}</p>
               {placedStickers.length > 0 && (
                 <div className="space-y-1">
-                  <h4 className="text-[10px] font-medium text-muted">Placed ({placedStickers.length})</h4>
+                  <h4 className="text-[10px] font-medium text-muted-foreground font-body">Placed ({placedStickers.length})</h4>
                   <div className="flex flex-wrap gap-1">
                     {placedStickers.map(s => (
-                      <div key={s.id} className="flex items-center gap-1 bg-rose-50 rounded-lg px-1.5 py-0.5 text-xs">
+                      <div key={s.id} className="flex items-center gap-1 bg-secondary rounded-lg px-1.5 py-0.5 text-xs">
                         <span>{s.emoji}</span>
                         <button onClick={() => handleDeleteSticker(s.id)} className="text-red-400 hover:text-red-600"><Trash2 className="h-2.5 w-2.5" /></button>
                       </div>
@@ -765,28 +765,28 @@ export default function EditorPage() {
           {activeTab === 'text' && (
             <div className="space-y-3">
               <div className="flex gap-2">
-                <input type="text" value={textInput} onChange={e => setTextInput(e.target.value)} placeholder="Type your text..." maxLength={40} className="flex-1 rounded-xl border border-border bg-rose-50/50 px-3 py-2 text-sm text-text placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-primary/40" onKeyDown={e => { if (e.key === 'Enter') handleAddText() }} />
+                <input type="text" value={textInput} onChange={e => setTextInput(e.target.value)} placeholder="Type your text..." maxLength={40} className="flex-1 rounded-xl border border-border bg-secondary/50 px-3 py-2 text-sm text-text placeholder:text-muted-foreground font-body/50 focus:outline-none focus:ring-2 focus:ring-primary/40" onKeyDown={e => { if (e.key === 'Enter') handleAddText() }} />
                 <Button onClick={handleAddText} disabled={!textInput.trim()} size="sm" className="!px-4" icon={<Plus className="h-4 w-4" />}>Add</Button>
               </div>
               <div className="flex gap-3">
                 <div className="flex-1">
-                  <label className="block text-[10px] text-muted mb-1">Font</label>
+                  <label className="block text-[10px] text-muted-foreground font-body mb-1">Font</label>
                   <div className="flex gap-1">
                     {TEXT_PRESETS.map((preset, i) => (
-                      <button key={preset.name} onClick={() => setTextPreset(i)} className={cn('flex-1 py-1 rounded-lg border text-[10px] transition-all', textPreset === i ? 'border-primary bg-primary/10 text-primary font-semibold' : 'border-border text-muted hover:border-primary/40')} style={{ fontFamily: `"${preset.font}", serif`, fontStyle: preset.style }}>
+                      <button key={preset.name} onClick={() => setTextPreset(i)} className={cn('flex-1 py-1 rounded-lg border text-[10px] transition-all', textPreset === i ? 'border-primary bg-primary/10 text-primary font-semibold' : 'border-border text-muted-foreground font-body hover:border-primary/40')} style={{ fontFamily: `"${preset.font}", serif`, fontStyle: preset.style }}>
                         {preset.name}
                       </button>
                     ))}
                   </div>
                 </div>
                 <div>
-                  <label className="block text-[10px] text-muted mb-1">Size</label>
+                  <label className="block text-[10px] text-muted-foreground font-body mb-1">Size</label>
                   <input type="range" min={12} max={72} value={textSize} onChange={e => setTextSize(Number(e.target.value))} className="w-16 accent-primary" />
-                  <span className="text-[10px] text-muted text-center block">{textSize}px</span>
+                  <span className="text-[10px] text-muted-foreground font-body text-center block">{textSize}px</span>
                 </div>
               </div>
               <div>
-                <label className="block text-[10px] text-muted mb-1">Color</label>
+                <label className="block text-[10px] text-muted-foreground font-body mb-1">Color</label>
                 <div className="flex flex-wrap gap-1">
                   {TEXT_COLORS.map(color => (
                     <button key={color} onClick={() => setTextColor(color)} className={cn('w-6 h-6 rounded-full border-2 transition-all', textColor === color ? 'border-primary scale-110 ring-1 ring-primary/30' : 'border-border hover:border-primary/40')} style={{ backgroundColor: color }} />
@@ -795,10 +795,10 @@ export default function EditorPage() {
               </div>
               {placedTexts.length > 0 && (
                 <div className="space-y-1">
-                  <h4 className="text-[10px] font-medium text-muted">Placed ({placedTexts.length})</h4>
+                  <h4 className="text-[10px] font-medium text-muted-foreground font-body">Placed ({placedTexts.length})</h4>
                   <div className="space-y-1">
                     {placedTexts.map(t => (
-                      <div key={t.id} className="flex items-center justify-between bg-rose-50 rounded-lg px-2 py-1.5 text-xs">
+                      <div key={t.id} className="flex items-center justify-between bg-secondary rounded-lg px-2 py-1.5 text-xs">
                         <span style={{ fontFamily: `"${t.font}", serif`, fontStyle: t.style, color: t.color }}>{t.text}</span>
                         <button onClick={() => handleDeleteText(t.id)} className="text-red-400 hover:text-red-600"><Trash2 className="h-3 w-3" /></button>
                       </div>
@@ -814,20 +814,20 @@ export default function EditorPage() {
               <h3 className="font-semibold text-text text-sm">Frame Overlay</h3>
               <div className="grid grid-cols-3 gap-2">
                 {FRAMES.map(frame => (
-                  <button key={frame.id} onClick={() => { setActiveFrame(frame.id); setHasChanges(true) }} onMouseEnter={() => { if (frame.id !== 'none') setActiveFrame(frame.id) }} onMouseLeave={() => { if (frame.id !== 'none') setActiveFrame('none') }} className={cn('flex flex-col items-center gap-1.5 p-2.5 rounded-xl border-2 transition-all', activeFrame === frame.id ? 'border-primary bg-primary/5 ring-2 ring-primary/20' : 'border-border hover:border-primary/40 bg-white hover:bg-rose-50')}>
+                  <button key={frame.id} onClick={() => { setActiveFrame(frame.id); setHasChanges(true) }} onMouseEnter={() => { if (frame.id !== 'none') setActiveFrame(frame.id) }} onMouseLeave={() => { if (frame.id !== 'none') setActiveFrame('none') }} className={cn('flex flex-col items-center gap-1.5 p-2.5 rounded-xl border-2 transition-all', activeFrame === frame.id ? 'border-primary bg-primary/5 ring-2 ring-primary/20' : 'border-border hover:border-primary/40 bg-white hover:bg-secondary')}>
                     <span className="text-xl">{frame.emoji}</span>
-                    <span className={cn('text-[11px] font-medium', activeFrame === frame.id ? 'text-primary' : 'text-muted')}>{frame.name}</span>
+                    <span className={cn('text-[11px] font-medium', activeFrame === frame.id ? 'text-primary' : 'text-muted-foreground font-body')}>{frame.name}</span>
                   </button>
                 ))}
               </div>
               {activeFrame !== 'none' && <Button variant="outline" onClick={() => { setActiveFrame('none'); setHasChanges(true) }} className="w-full" icon={<Undo className="h-4 w-4" />}>Remove Frame</Button>}
               {(activeFrame === 'polaroid' || activeFrame === 'blush') && (
                 <div className="space-y-2 pt-2 border-t border-border">
-                  <label className="text-xs text-muted font-medium">Polaroid Caption</label>
-                  <input type="text" value={polaroidCaption} onChange={e => { setPolaroidCaption(e.target.value); setHasChanges(true) }} placeholder="Add a caption..." maxLength={30} className="w-full rounded-xl border border-border bg-rose-50/50 px-3 py-2 text-sm text-text placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-primary/40" />
+                  <label className="text-xs text-muted-foreground font-body font-medium">Polaroid Caption</label>
+                  <input type="text" value={polaroidCaption} onChange={e => { setPolaroidCaption(e.target.value); setHasChanges(true) }} placeholder="Add a caption..." maxLength={30} className="w-full rounded-xl border border-border bg-secondary/50 px-3 py-2 text-sm text-text placeholder:text-muted-foreground font-body/50 focus:outline-none focus:ring-2 focus:ring-primary/40" />
                   <div className="flex gap-1">
                     {['Dancing Script', 'Inter', 'DM Serif Display'].map(font => (
-                      <button key={font} onClick={() => { setPolaroidCaptionFont(font); setHasChanges(true) }} className={cn('flex-1 py-1 rounded-lg border text-[10px] transition-all', polaroidCaptionFont === font ? 'border-primary bg-primary/10 text-primary font-semibold' : 'border-border text-muted hover:border-primary/40')} style={{ fontFamily: `"${font}", serif` }}>
+                      <button key={font} onClick={() => { setPolaroidCaptionFont(font); setHasChanges(true) }} className={cn('flex-1 py-1 rounded-lg border text-[10px] transition-all', polaroidCaptionFont === font ? 'border-primary bg-primary/10 text-primary font-semibold' : 'border-border text-muted-foreground font-body hover:border-primary/40')} style={{ fontFamily: `"${font}", serif` }}>
                         {font.split(' ')[0]}
                       </button>
                     ))}
@@ -843,7 +843,7 @@ export default function EditorPage() {
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-border z-30">
         <div className="flex border-b border-border">
           {editorTabs.map(tab => (
-            <button key={tab.key} onClick={() => setActiveTab(tab.key)} className={cn('flex-1 flex items-center justify-center gap-1 py-2.5 text-[11px] font-medium transition-all border-b-2', activeTab === tab.key ? 'text-primary border-primary bg-primary/5' : 'text-muted border-transparent hover:text-text')}>
+            <button key={tab.key} onClick={() => setActiveTab(tab.key)} className={cn('flex-1 flex items-center justify-center gap-1 py-2.5 text-[11px] font-medium transition-all border-b-2', activeTab === tab.key ? 'text-primary border-primary bg-primary/5' : 'text-muted-foreground font-body border-transparent hover:text-text')}>
               <tab.icon className="h-3.5 w-3.5" />
               <span>{tab.label}</span>
             </button>
@@ -852,11 +852,11 @@ export default function EditorPage() {
         <div className="max-h-[40vh] overflow-y-auto p-3">
           {activeTab === 'adjust' && adjustmentGroups.map(group => (
             <div key={group.label} className="space-y-2 mb-3">
-              <h4 className="text-xs font-semibold text-muted uppercase tracking-wider">{group.label}</h4>
+              <h4 className="text-xs font-semibold text-muted-foreground font-body uppercase tracking-wider">{group.label}</h4>
               {group.controls.map(control => (
                 <div key={control.key} className="space-y-0.5">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs text-muted flex items-center gap-1.5"><span>{control.icon}</span>{control.label}</label>
+                    <label className="text-xs text-muted-foreground font-body flex items-center gap-1.5"><span>{control.icon}</span>{control.label}</label>
                     <span className="text-xs text-text font-mono w-10 text-right">{adjustments[control.key] > 0 ? '+' : ''}{adjustments[control.key]}</span>
                   </div>
                   <Slider value={adjustments[control.key]} onChange={value => handleAdjustmentChange(control.key, value)} min={control.min} max={control.max} step={1} />

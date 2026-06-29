@@ -115,7 +115,7 @@ export default function SessionHistoryPage() {
             <History className="h-12 w-12 text-primary" />
           </div>
           <h2 className="font-display text-2xl text-text">No sessions yet ♡</h2>
-          <p className="text-muted">
+          <p className="text-muted-foreground font-body">
             Your ClickStudio sessions will appear here once you save them to the
             cloud.
           </p>
@@ -131,7 +131,7 @@ export default function SessionHistoryPage() {
         <div className="flex items-center justify-between mb-5">
           <div>
             <h1 className="font-display text-2xl text-text">Session History</h1>
-            <p className="text-muted text-sm">
+            <p className="text-sm text-muted-foreground font-body">
               {filteredSessions.length} of {allSessions.length} sessions
             </p>
           </div>
@@ -243,7 +243,7 @@ export default function SessionHistoryPage() {
                               </span>
                             )}
                           </h3>
-                          <p className="text-sm text-muted">
+                          <p className="text-sm text-muted-foreground font-body">
                             {session.photos.length} photo
                             {session.photos.length !== 1 ? 's' : ''} captured
                           </p>
@@ -251,7 +251,7 @@ export default function SessionHistoryPage() {
                       </div>
 
                       {/* Meta chips */}
-                      <div className="flex flex-wrap gap-4 text-xs text-muted">
+                      <div className="flex flex-wrap gap-4 text-xs text-muted-foreground font-body">
                         <span className="flex items-center gap-1">
                           <Calendar className="h-3.5 w-3.5" />
                           {new Date(session.createdAt).toLocaleDateString()}
@@ -317,7 +317,7 @@ export default function SessionHistoryPage() {
                         />
                       ))}
                       {session.photos.length > 6 && (
-                        <div className="w-12 h-12 bg-rose-50 rounded-lg flex items-center justify-center text-xs text-muted flex-shrink-0 border border-border">
+                        <div className="w-12 h-12 bg-secondary rounded-lg flex items-center justify-center text-xs text-muted-foreground flex-shrink-0 border border-border">
                           +{session.photos.length - 6}
                         </div>
                       )}
@@ -341,25 +341,25 @@ export default function SessionHistoryPage() {
           <div className="space-y-6">
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <p className="text-muted mb-1">Template</p>
+                <p className="text-muted-foreground font-body mb-1">Template</p>
                 <p className="text-text font-medium">
                   {selectedSession.template.name}
                 </p>
               </div>
               <div>
-                <p className="text-muted mb-1">Photos</p>
+                <p className="text-muted-foreground font-body mb-1">Photos</p>
                 <p className="text-text">
                   {selectedSession.photos.length} captured
                 </p>
               </div>
               <div>
-                <p className="text-muted mb-1">Created</p>
+                <p className="text-muted-foreground font-body mb-1">Created</p>
                 <p className="text-text">
                   {new Date(selectedSession.createdAt).toLocaleString()}
                 </p>
               </div>
               <div>
-                <p className="text-muted mb-1">Last Modified</p>
+                <p className="text-muted-foreground font-body mb-1">Last Modified</p>
                 <p className="text-text">
                   {new Date(selectedSession.updatedAt).toLocaleString()}
                 </p>
@@ -368,7 +368,7 @@ export default function SessionHistoryPage() {
 
             {selectedSession.photos.length > 0 && (
               <div>
-                <p className="text-muted text-sm mb-3">Photos</p>
+                <p className="text-sm text-muted-foreground font-body mb-3">Photos</p>
                 <div className="grid grid-cols-3 gap-2">
                   {selectedSession.photos.map((photo, i) => (
                     <img

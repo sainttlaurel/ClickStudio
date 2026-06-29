@@ -12,21 +12,21 @@ export default function AboutPage() {
             className="h-20 w-auto object-contain mx-auto mb-4"
           />
           <h1 className="font-display text-3xl text-text mb-2">ClickStudio</h1>
-          <p className="text-muted text-lg">Version 1.7.8</p>
+          <p className="text-muted-foreground font-body text-lg">Version 1.7.8</p>
         </div>
 
         <div className="bg-white rounded-2xl p-8 border border-border shadow-card text-center">
           <h2 className="font-display text-xl text-text mb-4">
             Modern ClickStudio Experience
           </h2>
-          <p className="text-muted leading-relaxed mb-6">
+          <p className="text-muted-foreground font-body leading-relaxed mb-6">
             ClickStudio brings the joy of photo creation to the web with
             professional-grade features and elegant design. Capture, edit, and
             share memorable moments with friends and family using our intuitive
             interface and powerful tools.
           </p>
 
-          <div className="flex items-center justify-center gap-2 text-muted">
+          <div className="flex items-center justify-center gap-2 text-muted-foreground font-body">
             <span>Made with ♡ for creating memories</span>
           </div>
         </div>
@@ -45,7 +45,7 @@ export default function AboutPage() {
               'Vite',
               'Vercel',
             ].map(tech => (
-              <div key={tech} className="text-center p-3 bg-rose-50 rounded-lg">
+              <div key={tech} className="text-center p-3 bg-secondary rounded-lg">
                 <span className="text-sm font-medium text-text">{tech}</span>
               </div>
             ))}
@@ -68,7 +68,7 @@ export default function AboutPage() {
             ].map(feature => (
               <div key={feature} className="flex items-start gap-3">
                 <div className="h-2 w-2 bg-primary rounded-full mt-2 flex-shrink-0" />
-                <span className="text-muted text-sm">{feature}</span>
+                <span className="text-muted-foreground font-body text-sm">{feature}</span>
               </div>
             ))}
           </div>
@@ -77,7 +77,7 @@ export default function AboutPage() {
         {/* Contact */}
         <div className="bg-white rounded-2xl p-6 border border-border shadow-card">
           <h3 className="font-display text-lg text-text mb-4 text-center">Contact</h3>
-          <div className="flex flex-col items-center gap-3 text-muted text-sm">
+          <div className="flex flex-col items-center gap-3 text-muted-foreground font-body text-sm">
             <a
               href="mailto:clickstudio.dev@gmail.com"
               className="flex items-center gap-2 hover:text-primary transition-colors"
@@ -113,7 +113,7 @@ export default function AboutPage() {
         </div>
 
         {/* Copyright */}
-        <div className="text-center text-sm text-muted border-t border-border pt-6">
+        <div className="text-center text-sm text-muted-foreground font-body border-t border-border pt-6">
           <p>© 2026 ClickStudio. All rights reserved.</p>
         </div>
       </div>

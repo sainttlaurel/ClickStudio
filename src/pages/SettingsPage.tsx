@@ -6,7 +6,7 @@ export default function SettingsPage() {
       <div className="max-w-4xl mx-auto space-y-8">
         <div>
           <h1 className="font-display text-2xl text-text">Settings</h1>
-          <p className="text-muted">Customize your ClickStudio experience</p>
+          <p className="text-muted-foreground font-body">Customize your ClickStudio experience</p>
         </div>
 
         <div className="grid gap-6">
@@ -19,7 +19,7 @@ export default function SettingsPage() {
               </h2>
             </div>
             <div className="space-y-4">
-              <div className="text-sm text-muted">
+              <div className="text-sm text-muted-foreground font-body">
                 Camera settings will be available here
               </div>
             </div>
@@ -32,7 +32,7 @@ export default function SettingsPage() {
               <h2 className="font-display text-lg text-text">Appearance</h2>
             </div>
             <div className="space-y-4">
-              <div className="text-sm text-muted">
+              <div className="text-sm text-muted-foreground font-body">
                 Theme and appearance options will be available here
               </div>
             </div>
@@ -47,7 +47,7 @@ export default function SettingsPage() {
               </h2>
             </div>
             <div className="space-y-4">
-              <div className="text-sm text-muted">
+              <div className="text-sm text-muted-foreground font-body">
                 Export and sharing preferences will be available here
               </div>
             </div>
@@ -62,7 +62,7 @@ export default function SettingsPage() {
               </h2>
             </div>
             <div className="space-y-4">
-              <div className="text-sm text-muted">
+              <div className="text-sm text-muted-foreground font-body">
                 Privacy and security settings will be available here
               </div>
             </div>

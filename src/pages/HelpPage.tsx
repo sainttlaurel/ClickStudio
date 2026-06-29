@@ -6,7 +6,7 @@ export default function HelpPage() {
       <div className="max-w-4xl mx-auto space-y-8">
         <div>
           <h1 className="font-display text-2xl text-text">Help & Support</h1>
-          <p className="text-muted">Get help with using ClickStudio</p>
+          <p className="text-muted-foreground font-body">Get help with using ClickStudio</p>
         </div>
 
         <div className="grid gap-6">
@@ -18,7 +18,7 @@ export default function HelpPage() {
                 Getting Started
               </h2>
             </div>
-            <div className="space-y-4 text-muted">
+            <div className="space-y-4 text-muted-foreground font-body">
               <p>
                 Learn how to use ClickStudio to create amazing photo memories.
               </p>
@@ -41,7 +41,7 @@ export default function HelpPage() {
               </h2>
             </div>
             <div className="space-y-4">
-              <div className="text-sm text-muted">
+              <div className="text-sm text-muted-foreground font-body">
                 Common questions and answers will be available here
               </div>
             </div>

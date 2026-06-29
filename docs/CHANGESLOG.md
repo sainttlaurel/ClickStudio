@@ -50,6 +50,10 @@ All notable changes to ClickStudio are documented here.
   - Close button: white bg + shadow + rotate-90 on hover
   - Selected state with primary border + checkmark badge
   - "Showing X templates" count under category chips
+* All remaining pages converted to new design tokens:
+  - `text-muted` → `text-muted-foreground`, `bg-rose-50` → `bg-secondary` across 9 pages
+  - SharePage, GalleryPage, SessionHistoryPage, SettingsPage, HelpPage, AboutPage
+  - PreviewPage, EditorPage, CameraPage — full token consistency
 
 ---
 

@@ -56,12 +56,12 @@ const frameTemplates: TemplateCard[] = [
 const photoCounts: Record<string, number> = { single: 1, double: 2, quad: 4, six: 6 }
 
 const styleConfig: Record<string, { bg: string; cardBg: string; emoji: string }> = {
-  clean: { bg: 'bg-rose-50', cardBg: 'bg-white', emoji: '🤍' },
-  polaroid: { bg: 'bg-rose-50', cardBg: 'bg-white', emoji: '📷' },
-  film: { bg: 'bg-rose-50', cardBg: 'bg-white', emoji: '🎞️' },
-  blush: { bg: 'bg-rose-50', cardBg: 'bg-white', emoji: '🌸' },
-  minimal: { bg: 'bg-rose-50', cardBg: 'bg-white', emoji: '◻️' },
-  frame: { bg: 'bg-rose-50', cardBg: 'bg-white', emoji: '🖼️' },
+  clean: { bg: 'bg-secondary', cardBg: 'bg-white', emoji: '🤍' },
+  polaroid: { bg: 'bg-secondary', cardBg: 'bg-white', emoji: '📷' },
+  film: { bg: 'bg-secondary', cardBg: 'bg-white', emoji: '🎞️' },
+  blush: { bg: 'bg-secondary', cardBg: 'bg-white', emoji: '🌸' },
+  minimal: { bg: 'bg-secondary', cardBg: 'bg-white', emoji: '◻️' },
+  frame: { bg: 'bg-secondary', cardBg: 'bg-white', emoji: '🖼️' },
 }
 
 const badgeStyles: Record<string, string> = {
@@ -108,7 +108,7 @@ function FilterThumbnail({
       <span
         className={cn(
           'text-[10px] font-medium leading-none transition-colors',
-          selected ? 'text-primary' : 'text-muted group-hover:text-text'
+          selected ? 'text-primary' : 'text-muted-foreground group-hover:text-text'
         )}
       >
         {filter.name}
@@ -126,17 +126,17 @@ function CameraDeniedCard({ onRetry }: { onRetry: () => void }) {
         <h3 className="font-display text-xl text-text mb-2">
           Camera access needed
         </h3>
-        <p className="text-muted text-sm leading-relaxed mb-5">
+        <p className="text-muted-foreground text-sm leading-relaxed mb-5">
           ClickStudio needs your camera to take photos. Please allow access in
           your browser.
         </p>
-        <div className="bg-rose-50 border border-border rounded-xl p-4 text-left text-xs space-y-2 mb-6">
+        <div className="bg-secondary border border-border rounded-xl p-4 text-left text-xs space-y-2 mb-6">
           <p className="font-semibold text-text mb-1">How to allow:</p>
-          <p className="text-muted">① Click the 🔒 icon in the address bar</p>
-          <p className="text-muted">
+          <p className="text-muted-foreground">① Click the 🔒 icon in the address bar</p>
+          <p className="text-muted-foreground">
             ② Set <strong className="text-text">Camera</strong> → Allow
           </p>
-          <p className="text-muted">③ Click Try Again below</p>
+          <p className="text-muted-foreground">③ Click Try Again below</p>
         </div>
         <Button
           pill
@@ -159,7 +159,7 @@ function CameraUnsupportedCard() {
         <h3 className="font-display text-xl text-text mb-2">
           Camera not supported
         </h3>
-        <p className="text-muted text-sm leading-relaxed">
+        <p className="text-muted-foreground text-sm leading-relaxed">
           Your browser doesn't support camera access. Try Chrome or Safari.
         </p>
       </div>
@@ -191,7 +191,7 @@ function ToolbarButton({
         'w-10 h-10 rounded-xl flex items-center justify-center transition-all',
         active
           ? 'bg-primary text-white shadow-sm'
-          : 'text-muted hover:bg-rose-50 hover:text-primary',
+          : 'text-muted-foreground hover:bg-secondary hover:text-primary',
         disabled && 'opacity-30 cursor-not-allowed'
       )}
       title={label}
@@ -605,7 +605,7 @@ export default function CameraPage() {
           <div className="absolute inset-y-0 left-0 w-3 bg-white" />
           <div className="absolute inset-y-0 right-0 w-3 bg-white" />
           <div className="absolute inset-x-0 bottom-0 h-16 bg-white flex items-end justify-center pb-2">
-            <span className="font-script text-xs text-muted/50 select-none">
+            <span className="font-script text-xs text-muted-foreground/50 select-none">
               ClickStudio
             </span>
           </div>
@@ -641,7 +641,7 @@ export default function CameraPage() {
             <h1 className="font-display text-3xl md:text-4xl text-text leading-tight">
               Choose a <em className="font-script not-italic text-primary">look.</em>
             </h1>
-            <p className="text-muted/70 mt-2.5 text-sm">Select a layout, then start capturing.</p>
+            <p className="text-muted-foreground/70 mt-2.5 text-sm">Select a layout, then start capturing.</p>
           </div>
 
           {/* ── Category tabs ── */}
@@ -652,7 +652,7 @@ export default function CameraPage() {
                 'px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 border',
                 templateTab === 'classic'
                   ? 'bg-primary text-white border-primary shadow-[0_4px_16px_-2px_rgba(233,30,140,0.35)] scale-[1.03]'
-                  : 'bg-white/80 text-muted border-border/60 hover:border-primary/40 hover:text-primary hover:shadow-sm backdrop-blur-sm'
+                  : 'bg-white/80 text-muted-foreground border-border/60 hover:border-primary/40 hover:text-primary hover:shadow-sm backdrop-blur-sm'
               )}
             >
               Classic
@@ -663,7 +663,7 @@ export default function CameraPage() {
                 'px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 border',
                 templateTab === 'frame'
                   ? 'bg-primary text-white border-primary shadow-[0_4px_16px_-2px_rgba(233,30,140,0.35)] scale-[1.03]'
-                  : 'bg-white/80 text-muted border-border/60 hover:border-primary/40 hover:text-primary hover:shadow-sm backdrop-blur-sm'
+                  : 'bg-white/80 text-muted-foreground border-border/60 hover:border-primary/40 hover:text-primary hover:shadow-sm backdrop-blur-sm'
               )}
             >
               Frame Styles
@@ -718,7 +718,7 @@ export default function CameraPage() {
 
                       {/* Favorite button */}
                       <div className="absolute top-3 right-3 z-10 w-7 h-7 rounded-full bg-white/70 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm">
-                        <button className="text-muted hover:text-primary transition-colors">♡</button>
+                        <button className="text-muted-foreground hover:text-primary transition-colors">♡</button>
                       </div>
 
                       {/* Preview area */}
@@ -748,17 +748,17 @@ export default function CameraPage() {
                         <div className="flex items-start justify-between">
                           <div>
                             <h3 className="font-display text-sm text-text">{template.name}</h3>
-                            <p className="text-[11px] text-muted/70 mt-0.5">{template.description}</p>
+                            <p className="text-[11px] text-muted-foreground/70 mt-0.5">{template.description}</p>
                           </div>
-                          <div className="flex items-center gap-1 text-[10px] text-muted/50 flex-shrink-0 ml-2">
+                          <div className="flex items-center gap-1 text-[10px] text-muted-foreground/50 flex-shrink-0 ml-2">
                             <span className="font-mono">{count} poses</span>
                           </div>
                         </div>
                         <div className="flex items-center gap-1.5 mt-3">
-                          <div className="text-[10px] text-muted/50 border border-border/40 rounded-md px-2 py-0.5">
+                          <div className="text-[10px] text-muted-foreground/50 border border-border/40 rounded-md px-2 py-0.5">
                             {template.aspectRatio}
                           </div>
-                          <div className="text-[10px] text-muted/50 border border-border/40 rounded-md px-2 py-0.5">
+                          <div className="text-[10px] text-muted-foreground/50 border border-border/40 rounded-md px-2 py-0.5">
                             {template.compositeStyle === 'clean' ? 'Clean' :
                              template.compositeStyle === 'polaroid' ? 'Polaroid' :
                              template.compositeStyle === 'film' ? 'Film' :
@@ -779,16 +779,16 @@ export default function CameraPage() {
                 transition={{ delay: templates.length * 0.08, duration: 0.4 }}
                 className="snap-start flex-shrink-0 w-[220px] md:w-[240px]"
               >
-                <div className="relative h-full bg-white/50 border-2 border-dashed border-border/50 rounded-2xl flex flex-col items-center justify-center gap-3 p-6 text-center hover:border-primary/40 hover:bg-rose-50/30 transition-all cursor-pointer">
+                <div className="relative h-full bg-white/50 border-2 border-dashed border-border/50 rounded-2xl flex flex-col items-center justify-center gap-3 p-6 text-center hover:border-primary/40 hover:bg-secondary/30 transition-all cursor-pointer">
                   <div className="absolute top-3 left-3 z-10 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-muted/60 text-white">
                     Coming Soon
                   </div>
-                  <div className="w-12 h-12 rounded-full bg-rose-100 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center">
                     <Plus className="h-6 w-6 text-primary" />
                   </div>
                   <div>
                     <h3 className="font-display text-sm text-text mb-1">Custom Layout</h3>
-                    <p className="text-xs text-muted/60">Create your own template</p>
+                    <p className="text-xs text-muted-foreground/60">Create your own template</p>
                   </div>
                 </div>
               </motion.div>
@@ -837,7 +837,7 @@ export default function CameraPage() {
                 <div className="flex items-start justify-between mb-3">
                   <div>
                     <h2 className="font-display text-xl text-text">{previewTemplate.name}</h2>
-                    <p className="text-sm text-muted/70 mt-1">{previewTemplate.description}</p>
+                    <p className="text-sm text-muted-foreground/70 mt-1">{previewTemplate.description}</p>
                   </div>
                   {previewTemplate.badge && (
                     <span className={cn(
@@ -851,14 +851,14 @@ export default function CameraPage() {
 
                 {/* Details */}
                 <div className="flex flex-wrap gap-2 mb-5">
-                  <div className="text-xs bg-rose-50 border border-border/40 rounded-lg px-3 py-1.5 flex items-center gap-1.5">
+                  <div className="text-xs bg-secondary border border-border/40 rounded-lg px-3 py-1.5 flex items-center gap-1.5">
                     <Camera className="h-3 w-3 text-primary" />
                     {photoCounts[previewTemplate.layout]} poses
                   </div>
-                  <div className="text-xs bg-rose-50 border border-border/40 rounded-lg px-3 py-1.5">
+                  <div className="text-xs bg-secondary border border-border/40 rounded-lg px-3 py-1.5">
                     {previewTemplate.aspectRatio}
                   </div>
-                  <div className="text-xs bg-rose-50 border border-border/40 rounded-lg px-3 py-1.5">
+                  <div className="text-xs bg-secondary border border-border/40 rounded-lg px-3 py-1.5">
                     {previewTemplate.compositeStyle === 'clean' ? 'Clean finish' :
                      previewTemplate.compositeStyle === 'polaroid' ? 'Polaroid borders' :
                      previewTemplate.compositeStyle === 'film' ? 'Film strip' :
@@ -881,7 +881,7 @@ export default function CameraPage() {
 
                 <button
                   onClick={() => setPreviewTemplate(null)}
-                  className="w-full mt-2 py-2 text-xs text-muted/50 hover:text-muted transition-colors"
+                  className="w-full mt-2 py-2 text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors"
                 >
                   Browse other templates
                 </button>
@@ -915,12 +915,12 @@ export default function CameraPage() {
                 <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
                   <span className="text-primary font-bold text-sm">{tourStep + 1}</span>
                 </div>
-                <p className="text-xs text-muted">Step {tourStep + 1} of {tourSteps.length}</p>
+                <p className="text-xs text-muted-foreground">Step {tourStep + 1} of {tourSteps.length}</p>
               </div>
               <h3 className="font-display text-xl text-text mb-1">{tourSteps[tourStep].title}</h3>
-              <p className="text-sm text-muted mb-5">{tourSteps[tourStep].desc}</p>
+              <p className="text-sm text-muted-foreground mb-5">{tourSteps[tourStep].desc}</p>
               <div className="flex gap-2">
-                <button onClick={finishTour} className="flex-1 h-10 rounded-2xl text-sm font-medium text-muted border border-border hover:bg-rose-50 transition-all">
+                <button onClick={finishTour} className="flex-1 h-10 rounded-2xl text-sm font-medium text-muted-foreground border border-border hover:bg-secondary transition-all">
                   Skip tour
                 </button>
                 <button
@@ -946,7 +946,7 @@ export default function CameraPage() {
               if (capturedPhotos.length > 0) navigate('/preview')
               else clearPhotos()
             }}
-            className="h-8 px-3 rounded-full text-xs font-medium border border-border/50 bg-white text-muted hover:text-primary hover:border-primary/30 transition-all flex items-center gap-1.5"
+            className="h-8 px-3 rounded-full text-xs font-medium border border-border/50 bg-white text-muted-foreground hover:text-primary hover:border-primary/30 transition-all flex items-center gap-1.5"
           >
             <ChevronLeft className="h-3.5 w-3.5" />
             {capturedPhotos.length > 0 ? 'Preview' : 'Back'}
@@ -957,7 +957,7 @@ export default function CameraPage() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => uploadRef.current?.click()}
-            className="h-8 px-3 rounded-full text-xs font-medium border border-border/50 bg-white text-muted hover:text-primary hover:border-primary/30 transition-all flex items-center gap-1.5"
+            className="h-8 px-3 rounded-full text-xs font-medium border border-border/50 bg-white text-muted-foreground hover:text-primary hover:border-primary/30 transition-all flex items-center gap-1.5"
           >
             <Upload className="h-3.5 w-3.5" />
             Upload
@@ -994,7 +994,7 @@ export default function CameraPage() {
                   'w-8 h-8 rounded-xl text-[10px] font-bold transition-all',
                   cameraSettings.countdown === t
                     ? 'bg-primary text-white shadow-sm'
-                    : 'text-muted hover:text-primary hover:bg-rose-50'
+                    : 'text-muted-foreground hover:text-primary hover:bg-secondary'
                 )}
               >
                 {t}s
@@ -1095,7 +1095,7 @@ export default function CameraPage() {
               'px-4 py-1.5 rounded-full text-xs font-medium transition-all',
               bottomTab === 'filters'
                 ? 'bg-primary text-white shadow-sm'
-                : 'text-muted hover:text-primary bg-rose-50/50'
+                : 'text-muted-foreground hover:text-primary bg-secondary/50'
             )}
           >
             Filters
@@ -1106,7 +1106,7 @@ export default function CameraPage() {
               'px-4 py-1.5 rounded-full text-xs font-medium transition-all',
               bottomTab === 'frames'
                 ? 'bg-primary text-white shadow-sm'
-                : 'text-muted hover:text-primary bg-rose-50/50'
+                : 'text-muted-foreground hover:text-primary bg-secondary/50'
             )}
           >
             Frames
@@ -1137,7 +1137,7 @@ export default function CameraPage() {
                     'flex-shrink-0 h-10 px-3.5 rounded-2xl text-xs font-medium border transition-all flex items-center gap-1.5',
                     selectedFrame === frame.id
                       ? 'bg-primary text-white border-primary shadow-sm'
-                      : 'bg-white text-muted border-border/60 hover:border-primary/40 hover:text-primary'
+                      : 'bg-white text-muted-foreground border-border/60 hover:border-primary/40 hover:text-primary'
                   )}
                 >
                   <span className="text-base">{frame.emoji}</span>
@@ -1152,8 +1152,8 @@ export default function CameraPage() {
         <div className="flex items-center justify-center gap-3 px-4 py-1.5 border-t border-border/30">
           {/* Timer */}
           <div className="flex items-center gap-1.5">
-            <Timer className="h-3.5 w-3.5 text-muted" />
-            <div className="flex items-center bg-rose-50 border border-border/50 rounded-full p-0.5">
+            <Timer className="h-3.5 w-3.5 text-muted-foreground" />
+            <div className="flex items-center bg-secondary border border-border/50 rounded-full p-0.5">
               {[3, 5, 10].map(t => (
                 <button
                   key={t}
@@ -1162,7 +1162,7 @@ export default function CameraPage() {
                     'h-7 px-2.5 rounded-full text-[10px] font-medium transition-all',
                     cameraSettings.countdown === t
                       ? 'bg-primary text-white shadow-sm'
-                      : 'text-muted hover:text-primary'
+                      : 'text-muted-foreground hover:text-primary'
                   )}
                 >
                   {t}s
@@ -1182,7 +1182,7 @@ export default function CameraPage() {
               'h-7 px-3 rounded-full text-[10px] font-medium border flex items-center gap-1.5 transition-all',
               burstMode
                 ? 'bg-primary text-white border-primary shadow-sm'
-                : 'bg-white text-muted border-border/60 hover:text-primary'
+                : 'bg-white text-muted-foreground border-border/60 hover:text-primary'
             )}
           >
             <Repeat2 className="h-3 w-3" />
@@ -1211,10 +1211,10 @@ export default function CameraPage() {
                     </button>
                   </div>
                 ))}
-                <span className="text-[10px] text-muted font-medium ml-0.5">{capturedPhotos.length}/{photosNeeded}</span>
+                <span className="text-[10px] text-muted-foreground font-medium ml-0.5">{capturedPhotos.length}/{photosNeeded}</span>
               </div>
             ) : (
-              <div className="text-[10px] text-muted/40">No shots yet</div>
+              <div className="text-[10px] text-muted-foreground/40">No shots yet</div>
             )}
           </div>
 
@@ -1246,7 +1246,7 @@ export default function CameraPage() {
               'h-2 w-2 rounded-full',
               isStreaming ? 'bg-green-400' : 'bg-border'
             )} />
-            <span className="text-[10px] text-muted">
+            <span className="text-[10px] text-muted-foreground">
               {isStreaming ? 'Ready' : cameraError ? 'Offline' : '...'}
             </span>
           </div>

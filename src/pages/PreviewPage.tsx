@@ -210,7 +210,7 @@ export default function PreviewPage() {
             <ImageIcon className="h-12 w-12 text-primary" />
           </div>
           <h2 className="font-display text-2xl text-text">No photos yet ♡</h2>
-          <p className="text-muted text-sm">
+          <p className="text-muted-foreground font-body text-sm">
             Head to the camera and capture your shots. Your composite strip will
             appear here.
           </p>
@@ -235,7 +235,7 @@ export default function PreviewPage() {
           <h1 className="text-lg font-semibold text-text leading-none">
             Your result
           </h1>
-          <p className="text-xs text-muted mt-0.5">
+          <p className="text-xs text-muted-foreground font-body mt-0.5">
             {photosHave} of {photosNeeded} photo{photosNeeded > 1 ? 's' : ''}{' '}
             captured
             {currentSession?.template?.name
@@ -283,7 +283,7 @@ export default function PreviewPage() {
             <motion.div
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex items-center gap-2 bg-white border border-border rounded-xl px-4 py-2 text-sm text-muted shadow-sm"
+              className="flex items-center gap-2 bg-white border border-border rounded-xl px-4 py-2 text-sm text-muted-foreground font-body shadow-sm"
             >
               <Camera className="h-4 w-4 text-primary flex-shrink-0" />
               <span>
@@ -326,7 +326,7 @@ export default function PreviewPage() {
               animate={{ opacity: 1, y: 0 }}
               className="w-full max-w-sm"
             >
-              <label className="block text-xs text-muted text-center mb-1.5">
+              <label className="block text-xs text-muted-foreground font-body text-center mb-1.5">
                 Polaroid caption — appears in the white strip ✦
               </label>
               <input
@@ -337,7 +337,7 @@ export default function PreviewPage() {
                 maxLength={40}
                 className={cn(
                   'w-full text-center rounded-xl border border-border bg-white px-4 py-2.5 text-sm text-text',
-                  'placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-primary/40',
+                  'placeholder:text-muted-foreground font-body/50 focus:outline-none focus:ring-2 focus:ring-primary/40',
                   'font-[Dancing_Script,cursive] italic'
                 )}
               />
@@ -433,7 +433,7 @@ export default function PreviewPage() {
               variant="ghost"
               onClick={() => navigate('/camera')}
               icon={<Camera className="h-4 w-4" />}
-              className="w-full justify-start text-muted"
+              className="w-full justify-start text-muted-foreground font-body"
             >
               Back to Camera
             </Button>
@@ -443,7 +443,7 @@ export default function PreviewPage() {
           <div className="flex-1 overflow-auto p-5">
             <h3 className="font-display text-base text-text mb-3 flex items-center justify-between">
               Photos
-              <span className="text-xs text-muted font-normal">
+              <span className="text-xs text-muted-foreground font-body font-normal">
                 {photosHave}/{photosNeeded}
               </span>
             </h3>
@@ -525,8 +525,8 @@ export default function PreviewPage() {
                   onClick={() => navigate('/camera')}
                   className={cn(
                     'w-full h-20 rounded-xl border-2 border-dashed border-border',
-                    'flex flex-col items-center justify-center gap-1 text-muted',
-                    'hover:border-primary/40 hover:text-primary hover:bg-rose-50/50 transition-all'
+                    'flex flex-col items-center justify-center gap-1 text-muted-foreground font-body',
+                    'hover:border-primary/40 hover:text-primary hover:bg-secondary/50 transition-all'
                   )}
                 >
                   <Camera className="h-4 w-4" />
@@ -580,7 +580,7 @@ export default function PreviewPage() {
 
           {/* Session info footer */}
           {currentSession && (
-            <div className="px-5 py-3 border-t border-border text-xs text-muted space-y-0.5">
+            <div className="px-5 py-3 border-t border-border text-xs text-muted-foreground font-body space-y-0.5">
               <div className="flex justify-between">
                 <span>Template</span>
                 <span className="text-text">
@@ -617,7 +617,7 @@ export default function PreviewPage() {
               <h3 className="font-display text-xl text-text text-center mb-2">
                 Scan to view strip
               </h3>
-              <p className="text-muted text-sm text-center mb-4">
+              <p className="text-muted-foreground font-body text-sm text-center mb-4">
                 Scan this QR code or copy the link to share your photo strip
               </p>
 
@@ -672,7 +672,7 @@ export default function PreviewPage() {
               <h3 className="font-display text-xl text-text text-center mb-2">
                 Print-Ready PDF
               </h3>
-              <p className="text-muted text-sm text-center mb-4">
+              <p className="text-muted-foreground font-body text-sm text-center mb-4">
                 Choose a print size for your photo strip
               </p>
 
@@ -685,7 +685,7 @@ export default function PreviewPage() {
                       'w-full text-left px-4 py-3 rounded-xl border-2 transition-all text-sm',
                       printSize === size.value
                         ? 'border-primary bg-primary/5 text-text font-medium'
-                        : 'border-border hover:border-primary/40 text-muted'
+                        : 'border-border hover:border-primary/40 text-muted-foreground font-body'
                     )}
                   >
                     <div className="flex items-center justify-between">

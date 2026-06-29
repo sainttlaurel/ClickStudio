@@ -82,7 +82,7 @@ export default function GalleryPage() {
             <Grid3X3 className="h-12 w-12 text-primary" />
           </div>
           <h2 className="font-display text-2xl text-text">No photos yet ♡</h2>
-          <p className="text-muted">
+          <p className="text-muted-foreground font-body">
             Your captured photos will appear here. Start taking photos to build
             your gallery!
           </p>
@@ -98,7 +98,7 @@ export default function GalleryPage() {
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="font-display text-3xl text-text">Gallery</h1>
-            <p className="text-muted">
+            <p className="text-muted-foreground font-body">
               {filteredPhotos.length} of {capturedPhotos.length} photos
             </p>
           </div>
@@ -210,7 +210,7 @@ export default function GalleryPage() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.2, delay: index * 0.02 }}
-                className="flex items-center gap-4 p-4 rounded-lg hover:bg-rose-50 transition-colors group"
+                className="flex items-center gap-4 p-4 rounded-lg hover:bg-secondary transition-colors group"
               >
                 <img
                   src={photo.url}
@@ -223,7 +223,7 @@ export default function GalleryPage() {
                   <h3 className="font-medium text-text truncate">
                     Photo {index + 1}
                   </h3>
-                  <div className="flex items-center gap-4 text-sm text-muted">
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground font-body">
                     <span className="flex items-center gap-1">
                       <Calendar className="h-3 w-3" />
                       {new Date(photo.timestamp).toLocaleString()}
@@ -281,14 +281,14 @@ export default function GalleryPage() {
 
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <label className="block text-muted mb-1">Captured</label>
+                <label className="block text-muted-foreground font-body mb-1">Captured</label>
                 <div className="text-text">
                   {new Date(selectedPhotoData.timestamp).toLocaleString()}
                 </div>
               </div>
 
               <div>
-                <label className="block text-muted mb-1">Size</label>
+                <label className="block text-muted-foreground font-body mb-1">Size</label>
                 <div className="text-text">
                   {selectedPhotoData.metadata?.width}×
                   {selectedPhotoData.metadata?.height}
@@ -296,14 +296,14 @@ export default function GalleryPage() {
               </div>
 
               <div>
-                <label className="block text-muted mb-1">Format</label>
+                <label className="block text-muted-foreground font-body mb-1">Format</label>
                 <div className="text-text">
                   {selectedPhotoData.metadata?.format?.toUpperCase() || 'PNG'}
                 </div>
               </div>
 
               <div>
-                <label className="block text-muted mb-1">File Size</label>
+                <label className="block text-muted-foreground font-body mb-1">File Size</label>
                 <div className="text-text">
                   {selectedPhotoData.metadata?.size
                     ? Math.round(selectedPhotoData.metadata.size / 1024) + ' KB'

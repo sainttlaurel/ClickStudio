@@ -91,10 +91,10 @@ export default function SharePage() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-rose-50 to-white flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center space-y-4">
           <Loader2 className="h-12 w-12 text-primary animate-spin mx-auto" />
-          <p className="text-muted">Loading your photo strip...</p>
+          <p className="text-muted-foreground font-body">Loading your photo strip...</p>
         </div>
       </div>
     )
@@ -103,13 +103,13 @@ export default function SharePage() {
   // Error state
   if (error || !session) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-rose-50 to-white flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center space-y-4 max-w-sm mx-auto px-4">
           <div className="h-24 w-24 rounded-full bg-white border border-border flex items-center justify-center mx-auto">
-            <Camera className="h-12 w-12 text-muted" />
+            <Camera className="h-12 w-12 text-muted-foreground" />
           </div>
           <h1 className="font-display text-3xl text-text">Session not found</h1>
-          <p className="text-muted text-sm">
+          <p className="text-muted-foreground text-sm font-body">
             {error || 'This photo strip may have been removed or the link is incorrect.'}
           </p>
           <a href="/">
@@ -123,7 +123,7 @@ export default function SharePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-rose-50 to-white">
+    <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-white/80 backdrop-blur-xl sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
@@ -163,7 +163,7 @@ export default function SharePage() {
             <h1 className="font-display text-3xl text-text mb-2">
               {session.template.name}
             </h1>
-            <div className="flex items-center justify-center gap-4 text-sm text-muted">
+            <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground font-body">
               <span className="flex items-center gap-1">
                 <Camera className="h-4 w-4" />
                 {session.photo_count} photos
@@ -219,7 +219,7 @@ export default function SharePage() {
             >
               Download Your Strip
             </Button>
-            <p className="text-xs text-muted mt-3">
+            <p className="text-xs text-muted-foreground mt-3 font-body">
               Made with <span className="text-primary">♡</span> by ClickStudio
             </p>
           </div>
