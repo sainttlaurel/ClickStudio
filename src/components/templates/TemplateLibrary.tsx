@@ -188,10 +188,10 @@ export default function TemplateLibrary({ isOpen, onClose, onSelect }: TemplateL
             </div>
 
             {/* ── Category chips ── */}
-            <div className="relative px-8 pb-2">
+            <div className="px-8 pb-2">
               <div
                 className="flex gap-2.5 overflow-x-auto snap-x snap-mandatory py-1 pb-2"
-                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
               >
                 {TEMPLATE_CATEGORIES.map(cat => (
                   <button
@@ -209,7 +209,6 @@ export default function TemplateLibrary({ isOpen, onClose, onSelect }: TemplateL
                   </button>
                 ))}
               </div>
-              <div className="absolute right-0 top-0 bottom-0 w-10 bg-gradient-to-l from-white/95 to-transparent pointer-events-none md:hidden" />
             </div>
 
             {/* ── Result count ── */}
