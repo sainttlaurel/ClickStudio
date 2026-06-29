@@ -68,7 +68,6 @@ export const Canvas = ({
 
   const handleCanvasClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!onClick || dragId) return
-    if (e.target !== e.currentTarget && !(e.target as HTMLElement).closest('.overlay-layer')) return
     const rect = e.currentTarget.getBoundingClientRect()
     const x = ((e.clientX - rect.left) / rect.width) * 100
     const y = ((e.clientY - rect.top) / rect.height) * 100
