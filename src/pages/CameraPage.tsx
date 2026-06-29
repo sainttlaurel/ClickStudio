@@ -674,11 +674,11 @@ export default function CameraPage() {
           </div>
 
           {/* ── Carousel ── */}
-          <div className="relative flex-1 flex items-center px-4 md:px-14 min-h-0">
+          <div className="relative flex-1 flex items-center px-4 md:px-14 min-h-0 overflow-hidden">
             {/* Left arrow */}
             <button
               onClick={() => scrollCarousel('left')}
-              className="hidden md:flex absolute left-0 md:left-2 z-10 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md border border-border/40 shadow-lg items-center justify-center hover:bg-white hover:shadow-xl transition-all"
+              className="flex absolute left-1 md:left-2 z-10 w-9 h-9 md:w-10 md:h-10 rounded-full bg-white/80 backdrop-blur-md border border-border/40 shadow-lg items-center justify-center hover:bg-white hover:shadow-xl transition-all"
             >
               <ChevronLeft className="h-5 w-5 text-text" />
             </button>
@@ -686,8 +686,8 @@ export default function CameraPage() {
             {/* Carousel track */}
             <div
               ref={carouselRef}
-              className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2 px-6 w-full items-stretch justify-center"
-              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2 px-12 w-full items-stretch justify-center"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
             >
               {templates.map((template, idx) => {
                 const count = photoCounts[template.layout]
@@ -800,7 +800,7 @@ export default function CameraPage() {
             {/* Right arrow */}
             <button
               onClick={() => scrollCarousel('right')}
-              className="hidden md:flex absolute right-0 md:right-2 z-10 w-10 h-10 rounded-full bg-white/80 backdrop-blur-md border border-border/40 shadow-lg items-center justify-center hover:bg-white hover:shadow-xl transition-all"
+              className="flex absolute right-1 md:right-2 z-10 w-9 h-9 md:w-10 md:h-10 rounded-full bg-white/80 backdrop-blur-md border border-border/40 shadow-lg items-center justify-center hover:bg-white hover:shadow-xl transition-all"
             >
               <ChevronLeft className="h-5 w-5 text-text rotate-180" />
             </button>
