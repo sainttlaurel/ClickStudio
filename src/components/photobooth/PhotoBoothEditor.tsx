@@ -7,6 +7,7 @@ import { usePhotoStore } from '@/store/usePhotoStore'
 import type { PhotoAdjustments } from '@/types'
 import { bakePhotoEdits } from '@/utils/bakeEdits'
 import { FILTERS } from '@/constants/filters'
+import { calcFrameHeight } from '@/constants/frames'
 
 type Screen = 'capture' | 'edit' | 'preview'
 
@@ -205,7 +206,7 @@ export const PhotoBoothEditor = () => {
             <CaptureScreen onCapture={handleCapture} frameId={activeFrame} onFrameChange={setActiveFrame} />
           ) : currentScreen === 'preview' ? (
             <div className="flex-1 flex flex-col items-center justify-center p-6">
-              <div className="relative w-[300px] h-[300px] rounded-2xl overflow-hidden shadow-lg mb-6">
+              <div className="relative w-[300px] rounded-2xl overflow-hidden shadow-lg mb-6" style={{ height: calcFrameHeight(300, activeFrame) }}>
                 <img src={bakedImage || capturedImage || ''} alt="Result" className="w-full h-full object-cover" />
               </div>
               <div className="text-center">

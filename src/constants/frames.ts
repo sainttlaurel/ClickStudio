@@ -1,9 +1,28 @@
-export const FRAMES = [
-  { id: 'none', name: 'Clean', emoji: '✦' },
-  { id: 'film', name: 'Film', emoji: '🎞️' },
-  { id: 'blush', name: 'Blush', emoji: '🌸' },
-  { id: 'minimal', name: 'Minimal', emoji: '⬜' },
-  { id: 'polaroid', name: 'Polaroid', emoji: '🖼️' },
+export interface FrameConfig {
+  id: string
+  name: string
+  emoji: string
+  aspectRatio: string
+  frameImage?: string
+}
+
+export const FRAMES: FrameConfig[] = [
+  { id: 'none', name: 'Clean', emoji: '✦', aspectRatio: '1/1' },
+  { id: 'film', name: 'Film', emoji: '🎞️', aspectRatio: '3/2' },
+  { id: 'blush', name: 'Blush', emoji: '🌸', aspectRatio: '4/5' },
+  { id: 'minimal', name: 'Minimal', emoji: '⬜', aspectRatio: '1/1' },
+  { id: 'polaroid', name: 'Polaroid', emoji: '🖼️', aspectRatio: '4/5' },
 ] as const
 
 export type FrameId = (typeof FRAMES)[number]['id']
+
+export function getFrameAspectRatio(frameId: string): string {
+  const frame = FRAMES.find(f => f.id === frameId)
+  return frame?.aspectRatio || '1/1'
+}
+
+export function calcFrameHeight(width: number, frameId: string): number {
+  const ratio = getFrameAspectRatio(frameId)
+  const [w, h] = ratio.split('/').map(Number)
+  return Math.round(width * h / w)
+}

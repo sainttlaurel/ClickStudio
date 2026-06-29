@@ -2,7 +2,7 @@ import { useEffect, useRef, useCallback, useState } from 'react'
 import { cameraManager } from '@/utils/camera'
 import { usePhotoStore } from '@/store/usePhotoStore'
 import { cn } from '@/utils/cn'
-import { FRAMES } from '@/constants/frames'
+import { FRAMES, calcFrameHeight } from '@/constants/frames'
 import { FrameOverlay } from './FrameOverlay'
 
 const COLOR_SWATCHES_ROW1 = [
@@ -92,13 +92,14 @@ export const CaptureScreen = ({ onCapture, frameId = 'none', onFrameChange }: Ca
   }, [cameraReady, capturing, doCapture])
 
   const selectedSwatch = [...COLOR_SWATCHES_ROW1, ...COLOR_SWATCHES_ROW2].find(s => s.id === selectedColor)
+  const viewportHeight = calcFrameHeight(300, frameId)
 
   return (
     <div className="flex-1 flex flex-col items-center justify-center p-6">
       <canvas ref={canvasRef} className="hidden" />
       
       {/* Camera viewport */}
-      <div className="w-[300px] h-[300px] rounded-2xl overflow-hidden bg-[#0F172A] relative mb-8">
+      <div className="w-[300px] rounded-2xl overflow-hidden bg-[#0F172A] relative mb-8" style={{ height: viewportHeight }}>
         <video
           ref={videoRef}
           autoPlay

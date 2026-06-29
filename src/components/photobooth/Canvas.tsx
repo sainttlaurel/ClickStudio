@@ -1,5 +1,6 @@
 import { cn } from '@/utils/cn'
 import { FILTERS } from '@/constants/filters'
+import { calcFrameHeight } from '@/constants/frames'
 import { FrameOverlay } from './FrameOverlay'
 
 interface StickerOverlay {
@@ -41,13 +42,15 @@ export const Canvas = ({
   imageUrl, 
   isEditing = false, 
   filterId = 'none',
-  frameId,
+  frameId = 'none',
   stickers = [],
   texts = [],
   onClick,
   selectedStickerEmoji
 }: CanvasProps) => {
   const filterCss = selectFilterCss(filterId)
+  const canvasWidth = isEditing ? 208 : 300
+  const canvasHeight = calcFrameHeight(canvasWidth, frameId)
 
   const handleCanvasClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!onClick) return
@@ -62,10 +65,10 @@ export const Canvas = ({
       <div 
         className={cn(
           'relative rounded-2xl overflow-hidden shadow-lg',
-          isEditing ? 'w-[208px] h-[208px]' : 'w-[300px] h-[300px]',
           isEditing && 'border-2 border-dashed border-gray-300',
           isEditing && selectedStickerEmoji && 'cursor-crosshair'
         )}
+        style={{ width: canvasWidth, height: canvasHeight }}
         onClick={handleCanvasClick}
       >
         {imageUrl ? (

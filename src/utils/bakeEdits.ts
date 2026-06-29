@@ -1,4 +1,5 @@
 import { bakeFrameOverlay } from './frameOverlay'
+import { calcFrameHeight } from '@/constants/frames'
 import type { PhotoAdjustments } from '@/types'
 
 function loadImage(url: string): Promise<HTMLImageElement> {
@@ -43,7 +44,9 @@ export interface BakeOptions {
 }
 
 export async function bakePhotoEdits(options: BakeOptions): Promise<string> {
-  const size = options.size || { w: 640, h: 640 }
+  const defaultW = 640
+  const defaultH = calcFrameHeight(defaultW, options.frameId || 'none')
+  const size = options.size || { w: defaultW, h: defaultH }
   const canvas = document.createElement('canvas')
   canvas.width = size.w
   canvas.height = size.h
