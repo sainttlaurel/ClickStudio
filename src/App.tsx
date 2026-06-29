@@ -1,4 +1,6 @@
+import { useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
+import { useRegisterSW } from 'virtual:pwa-register/react'
 import { Toaster } from '@/components/ui/toaster'
 import ChangelogModal from '@/components/ui/changelog-modal'
 import Layout from '@/components/layout/Layout'
@@ -14,6 +16,26 @@ import AboutPage from '@/pages/AboutPage'
 import SharePage from '@/pages/SharePage'
 
 function App() {
+  const {
+    needRefresh: [needRefresh],
+    updateServiceWorker,
+  } = useRegisterSW({
+    onRegisteredSW(_swUrl, registration) {
+      // Check for updates every hour
+      if (registration) {
+        setInterval(() => { registration.update() }, 60 * 60 * 1000)
+      }
+    },
+  })
+
+  useEffect(() => {
+    if (needRefresh) {
+      // Small delay so the toast is visible, then auto-update
+      const t = setTimeout(() => { updateServiceWorker(true) }, 2500)
+      return () => clearTimeout(t)
+    }
+  }, [needRefresh, updateServiceWorker])
+
   return (
     <>
       <Routes>
