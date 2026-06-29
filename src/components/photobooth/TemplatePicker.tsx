@@ -21,7 +21,9 @@ export const TemplatePicker = ({ open, onClose, onSelect }: TemplatePickerProps)
 
   if (!open) return null
 
-  const filtered = TEMPLATE_LIBRARY.filter(t => activeCategory === 'all' || t.categories.includes(activeCategory))
+  const filtered = TEMPLATE_LIBRARY
+    .filter(t => t.layout === 'single')
+    .filter(t => activeCategory === 'all' || t.categories.includes(activeCategory))
 
   return (
     <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4" onClick={onClose}>
@@ -30,7 +32,7 @@ export const TemplatePicker = ({ open, onClose, onSelect }: TemplatePickerProps)
         <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-gray-100">
           <div>
             <h2 className="font-bold text-gray-900 text-lg">Choose Template</h2>
-            <p className="text-xs text-gray-400 mt-0.5">{TEMPLATE_LIBRARY.length} templates</p>
+            <p className="text-xs text-gray-400 mt-0.5">{TEMPLATE_LIBRARY.filter(t => t.layout === 'single').length} single-photo templates</p>
           </div>
           <button onClick={onClose} className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 hover:bg-gray-200 transition-all">
             <span className="text-lg leading-none">✕</span>
