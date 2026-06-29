@@ -545,10 +545,10 @@ export default function LandingPage() {
               </div>
               <div>
                 <label className="block text-sm text-text font-medium mb-2">Pick an emoji</label>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex gap-1.5">
                   {emojiOptions.map(emoji => (
                     <button key={emoji} type="button" onClick={() => setFeedbackEmoji(emoji)}
-                      className={cn('w-10 h-10 rounded-xl text-lg flex items-center justify-center transition-all focus:outline-none focus:ring-2 focus:ring-primary/40',
+                      className={cn('w-9 h-9 rounded-xl text-base flex items-center justify-center transition-all focus:outline-none focus:ring-2 focus:ring-primary/40',
                         feedbackEmoji === emoji ? 'bg-primary/10 border-2 border-primary scale-110' : 'bg-rose-50 border border-border hover:border-primary/40'
                       )} aria-label={`Select emoji ${emoji}`}>
                       {emoji}
@@ -611,12 +611,12 @@ export default function LandingPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0 }}
-              className="bg-white rounded-2xl p-2 border border-border shadow-card hover:shadow-polaroid hover:-translate-y-1 transition-all duration-300"
+              className="bg-white rounded-2xl p-2 border border-border shadow-card hover:shadow-polaroid hover:-translate-y-1 transition-all duration-300 flex flex-col"
             >
-              <div className="bg-gray-900 rounded-xl overflow-hidden">
-                <div className="p-1 space-y-1">
+              <div className="bg-gray-900 rounded-xl overflow-hidden flex-1 flex flex-col">
+                <div className="p-1 flex-1 flex flex-col gap-1">
                   {['bg-rose-200', 'bg-amber-100', 'bg-rose-100', 'bg-gray-200'].map((c, i) => (
-                    <div key={i} className={`h-14 ${c} rounded-sm`} />
+                    <div key={i} className={`flex-1 ${c} rounded-sm`} />
                   ))}
                 </div>
               </div>
@@ -629,12 +629,12 @@ export default function LandingPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.08 }}
-              className="bg-white rounded-2xl p-2 border border-border shadow-card hover:shadow-polaroid hover:-translate-y-1 transition-all duration-300"
+              className="bg-white rounded-2xl p-2 border border-border shadow-card hover:shadow-polaroid hover:-translate-y-1 transition-all duration-300 flex flex-col"
             >
-              <div className="bg-white rounded-xl overflow-hidden border border-gray-100">
-                <div className="p-1.5 space-y-1">
-                  <div className="h-12 bg-pink-100 rounded-sm" />
-                  <div className="h-12 bg-sky-100 rounded-sm" />
+              <div className="bg-white rounded-xl overflow-hidden border border-gray-100 flex-1 flex flex-col">
+                <div className="p-1.5 flex-1 flex flex-col gap-1">
+                  <div className="flex-1 bg-pink-100 rounded-sm" />
+                  <div className="flex-1 bg-sky-100 rounded-sm" />
                 </div>
                 <div className="h-4 bg-white flex items-center justify-center">
                   <div className="w-10 h-0.5 bg-gray-200 rounded-full" />
@@ -649,14 +649,14 @@ export default function LandingPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.16 }}
-              className="bg-white rounded-2xl p-2 border border-border shadow-card hover:shadow-polaroid hover:-translate-y-1 transition-all duration-300"
+              className="bg-white rounded-2xl p-2 border border-border shadow-card hover:shadow-polaroid hover:-translate-y-1 transition-all duration-300 flex flex-col"
             >
-              <div className="bg-rose-50 rounded-xl overflow-hidden border border-rose-200">
-                <div className="p-1 space-y-1">
-                  <div className="h-14 bg-rose-200 rounded-sm flex items-center justify-center">
+              <div className="bg-rose-50 rounded-xl overflow-hidden border border-rose-200 flex-1 flex flex-col">
+                <div className="p-1 flex-1 flex flex-col gap-1">
+                  <div className="flex-1 bg-rose-200 rounded-sm flex items-center justify-center">
                     <span className="text-rose-400 text-lg">♡</span>
                   </div>
-                  <div className="h-14 bg-rose-300 rounded-sm flex items-center justify-center">
+                  <div className="flex-1 bg-rose-300 rounded-sm flex items-center justify-center">
                     <span className="text-white text-lg">♡</span>
                   </div>
                 </div>
@@ -670,12 +670,12 @@ export default function LandingPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.24 }}
-              className="bg-white rounded-2xl p-2 border border-border shadow-card hover:shadow-polaroid hover:-translate-y-1 transition-all duration-300"
+              className="bg-white rounded-2xl p-2 border border-border shadow-card hover:shadow-polaroid hover:-translate-y-1 transition-all duration-300 flex flex-col"
             >
-              <div className="bg-gray-900 rounded-xl overflow-hidden">
-                <div className="p-1 space-y-1">
-                  <div className="h-20 bg-gray-700 rounded-sm" />
-                  <div className="h-20 bg-gray-600 rounded-sm" />
+              <div className="bg-gray-900 rounded-xl overflow-hidden flex-1 flex flex-col">
+                <div className="p-1 flex-1 flex flex-col gap-1">
+                  <div className="flex-1 bg-gray-700 rounded-sm" />
+                  <div className="flex-1 bg-gray-600 rounded-sm" />
                 </div>
               </div>
               <p className="text-[10px] text-muted text-center mt-1.5 font-medium">Mono</p>
@@ -687,18 +687,18 @@ export default function LandingPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.32 }}
-              className="bg-white rounded-2xl p-2 border border-border shadow-card hover:shadow-polaroid hover:-translate-y-1 transition-all duration-300"
+              className="bg-white rounded-2xl p-2 border border-border shadow-card hover:shadow-polaroid hover:-translate-y-1 transition-all duration-300 flex flex-col"
             >
-              <div className="bg-gray-800 rounded-xl overflow-hidden">
+              <div className="bg-gray-800 rounded-xl overflow-hidden flex-1 flex flex-col">
                 {/* Sprocket holes */}
                 <div className="flex justify-between px-0.5 py-0.5">
                   {Array.from({ length: 6 }).map((_, i) => (
                     <div key={i} className="w-1 h-1 bg-gray-600 rounded-sm" />
                   ))}
                 </div>
-                <div className="px-1.5 pb-1 space-y-0.5">
-                  <div className="h-8 bg-amber-100/80 rounded-sm" />
-                  <div className="h-8 bg-amber-200/80 rounded-sm" />
+                <div className="px-1.5 pb-1 flex-1 flex flex-col gap-0.5">
+                  <div className="flex-1 bg-amber-100/80 rounded-sm" />
+                  <div className="flex-1 bg-amber-200/80 rounded-sm" />
                 </div>
                 <div className="flex justify-between px-0.5 py-0.5">
                   {Array.from({ length: 6 }).map((_, i) => (
