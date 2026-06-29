@@ -31,7 +31,7 @@ interface CanvasProps {
   stickers?: StickerOverlay[]
   texts?: TextOverlay[]
   onClick?: (x: number, y: number) => void
-  selectedStickerEmoji?: string | null
+  placementActive?: boolean
 }
 
 const selectFilterCss = (filterId: string): string => {
@@ -48,7 +48,7 @@ export const Canvas = ({
   stickers = [],
   texts = [],
   onClick,
-  selectedStickerEmoji
+  placementActive = false
 }: CanvasProps) => {
   const filterCss = selectFilterCss(filterId)
   const canvasWidth = isEditing ? 208 : 300
@@ -68,7 +68,7 @@ export const Canvas = ({
         className={cn(
           'relative rounded-2xl overflow-hidden shadow-lg',
           isEditing && 'border-2 border-dashed border-gray-300',
-          isEditing && selectedStickerEmoji && 'cursor-crosshair'
+          isEditing && placementActive && 'cursor-crosshair'
         )}
         style={{ width: canvasWidth, height: canvasHeight }}
         onClick={handleCanvasClick}

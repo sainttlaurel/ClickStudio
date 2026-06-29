@@ -43,7 +43,7 @@ All notable changes to ClickStudio are documented here.
 * **Frame library connected** — `TEMPLATE_LIBRARY` (28 templates, 9 with PNG frame backgrounds) now accessible via `TemplatePicker` modal on camera screen; selecting a template sets frame style + aspect ratio + frameImage
 * **TemplatePicker component** — modal with category filter + grid of templates showing emoji, name, description, layout, aspect ratio, badges
 * **PNG frame template compositing** — `FrameOverlay` renders `frameImage` as `<img>` overlay on camera + canvas; `bakeEdits` loads and composites PNG frame background with photo on top
-* **Dynamic frame-to-template mapping** — templates with CSS compositeStyle (clean/polaroid/film/blush/minimal) use existing CSS frames; templates with `compositeStyle: 'frame'` use PNG image; switching between CSS frames and templates clears the other
+* **Click-to-place text** — "Add to Photo" now enters placement mode (crosshair cursor), click canvas to place text at exact position (instead of always centering); `pendingTextConfig` state in EditScreen, unified `placementActive` prop on Canvas for sticker + text placement; works correctly on polaroid and all frame aspect ratios
 * Duplicate emoji removed from sticker packs; `墨镜` replaced with emoji
 * Date formatting standardized to `en-US` locale
 * Breadcrumb text simplified (removed confusing "Preview ›" prefix)

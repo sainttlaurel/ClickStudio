@@ -57,22 +57,34 @@ export const EditScreen = ({
   onCanvasClick
 }: EditScreenProps) => {
   const [activeTab, setActiveTab] = useState<EditorTab>('adjust')
+  const [pendingTextConfig, setPendingTextConfig] = useState<{ text: string; color: string; fontSize: number; font: string } | null>(null)
 
   const handleTextAdd = (text: string, color: string, fontSize: number, font?: string) => {
-    onTextsChange([...placedTexts, {
-      id: `text-${Date.now()}`,
-      text,
-      color,
-      fontSize,
-      x: 50,
-      y: 50,
-      font: font || 'sans-serif'
-    }])
+    setPendingTextConfig({ text, color, fontSize, font: font || 'sans-serif' })
     onStickerSelect(null)
   }
 
   const handleStickerSelect = (emoji: string) => {
     onStickerSelect(selectedStickerEmoji === emoji ? null : emoji)
+    setPendingTextConfig(null)
+  }
+
+  const placementActive = !!(selectedStickerEmoji || pendingTextConfig)
+
+  const handleCanvasClickWrapper = (x: number, y: number) => {
+    if (pendingTextConfig) {
+      onTextsChange([...placedTexts, {
+        id: `text-${Date.now()}`,
+        text: pendingTextConfig.text,
+        color: pendingTextConfig.color,
+        fontSize: pendingTextConfig.fontSize,
+        font: pendingTextConfig.font,
+        x, y
+      }])
+      setPendingTextConfig(null)
+    } else if (selectedStickerEmoji) {
+      onCanvasClick(x, y)
+    }
   }
 
   return (
@@ -85,8 +97,8 @@ export const EditScreen = ({
         frameImage={frameImage}
         stickers={placedStickers}
         texts={placedTexts}
-        onClick={(x, y) => { if (selectedStickerEmoji) { onCanvasClick(x, y) } }}
-        selectedStickerEmoji={selectedStickerEmoji}
+        onClick={handleCanvasClickWrapper}
+        placementActive={placementActive}
       />
       
       <RightPanel
