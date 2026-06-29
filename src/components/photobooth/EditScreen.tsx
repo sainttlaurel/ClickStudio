@@ -32,6 +32,7 @@ interface EditScreenProps {
   activeFrame: string
   onFrameChange: (id: string) => void
   frameImage?: string
+  templateAspectRatio?: string
   placedStickers: StickerData[]
   placedTexts: TextData[]
   onTextsChange: (texts: TextData[]) => void
@@ -51,6 +52,7 @@ export const EditScreen = ({
   activeFrame,
   onFrameChange,
   frameImage,
+  templateAspectRatio,
   placedStickers,
   placedTexts,
   onTextsChange,
@@ -99,6 +101,7 @@ export const EditScreen = ({
         filterId={activeFilter}
         frameId={activeFrame}
         frameImage={frameImage}
+        templateAspectRatio={templateAspectRatio}
         stickers={placedStickers}
         texts={placedTexts}
         onClick={handleCanvasClickWrapper}

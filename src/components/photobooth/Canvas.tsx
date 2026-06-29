@@ -29,6 +29,7 @@ interface CanvasProps {
   filterId?: string
   frameId?: string
   frameImage?: string
+  templateAspectRatio?: string
   stickers?: StickerOverlay[]
   texts?: TextOverlay[]
   onClick?: (x: number, y: number) => void
@@ -49,6 +50,7 @@ export const Canvas = ({
   filterId = 'none',
   frameId = 'none',
   frameImage,
+  templateAspectRatio,
   stickers = [],
   texts = [],
   onClick,
@@ -59,7 +61,8 @@ export const Canvas = ({
 }: CanvasProps) => {
   const filterCss = selectFilterCss(filterId)
   const baseWidth = isEditing ? 208 : 300
-  const baseHeight = calcFrameHeight(baseWidth, frameId)
+  const effectiveRatio = frameImage ? templateAspectRatio : undefined
+  const baseHeight = calcFrameHeight(baseWidth, frameId, effectiveRatio)
   const canvasWidth = Math.round(baseWidth * scale)
   const canvasHeight = Math.round(baseHeight * scale)
   const containerRef = useRef<HTMLDivElement>(null)

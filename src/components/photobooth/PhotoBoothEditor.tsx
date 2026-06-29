@@ -39,6 +39,7 @@ export const PhotoBoothEditor = () => {
   const [activeFilter, setActiveFilter] = useState('none')
   const [activeFrame, setActiveFrame] = useState('none')
   const [activeFrameImage, setActiveFrameImage] = useState<string | undefined>(undefined)
+  const [templateAspectRatio, setTemplateAspectRatio] = useState<string | undefined>(undefined)
   const [selectedStickerEmoji, setSelectedStickerEmoji] = useState<string | null>(null)
   const [placedStickers, setPlacedStickers] = useState<StickerData[]>([])
   const [placedTexts, setPlacedTexts] = useState<TextData[]>([])
@@ -71,14 +72,17 @@ export const PhotoBoothEditor = () => {
   const handleTemplateSelect = useCallback((template: TemplateLibraryItem | null) => {
     if (!template) {
       setActiveFrameImage(undefined)
+      setTemplateAspectRatio(undefined)
       return
     }
     if (template.compositeStyle === 'frame' && template.frameImage) {
       setActiveFrame('none')
       setActiveFrameImage(template.frameImage)
+      setTemplateAspectRatio(template.aspectRatio)
     } else {
       setActiveFrame(COMPOSITE_TO_FRAME[template.compositeStyle] || 'none')
       setActiveFrameImage(undefined)
+      setTemplateAspectRatio(template.aspectRatio)
     }
   }, [])
 
@@ -99,7 +103,7 @@ export const PhotoBoothEditor = () => {
 
   const handleReset = () => {
     setAdjustments({ brightness: 0, contrast: 0, saturation: 0, exposure: 0, shadows: 0, highlights: 0, temperature: 0, tint: 0 })
-    setActiveFilter('none'); setActiveFrame('none'); setActiveFrameImage(undefined); setSelectedStickerEmoji(null); setPlacedStickers([]); setPlacedTexts([])
+    setActiveFilter('none'); setActiveFrame('none'); setActiveFrameImage(undefined); setTemplateAspectRatio(undefined); setSelectedStickerEmoji(null); setPlacedStickers([]); setPlacedTexts([])
   }
 
   const handleCanvasClick = (x: number, y: number) => {
@@ -123,6 +127,7 @@ export const PhotoBoothEditor = () => {
       texts: placedTexts,
       frameId: activeFrame,
       frameImage: activeFrameImage,
+      templateAspectRatio,
     })
     addPhoto({
       id: `photo-${Date.now()}`,
@@ -233,10 +238,10 @@ export const PhotoBoothEditor = () => {
 
           {/* Content */}
           {currentScreen === 'capture' ? (
-            <CaptureScreen onCapture={handleCapture} frameId={activeFrame} onFrameChange={(id) => { setActiveFrame(id); setActiveFrameImage(undefined) }} frameImage={activeFrameImage} onTemplateSelect={handleTemplateSelect} />
+            <CaptureScreen onCapture={handleCapture} frameId={activeFrame} onFrameChange={(id) => { setActiveFrame(id); setActiveFrameImage(undefined) }} frameImage={activeFrameImage} templateAspectRatio={templateAspectRatio} onTemplateSelect={handleTemplateSelect} />
           ) : currentScreen === 'preview' ? (
             <div className="flex-1 flex flex-col items-center justify-center p-6">
-              <div className="relative w-[300px] rounded-2xl overflow-hidden shadow-lg mb-6" style={{ height: calcFrameHeight(300, activeFrameImage ? 'none' : activeFrame) }}>
+              <div className="relative w-[300px] rounded-2xl overflow-hidden shadow-lg mb-6" style={{ height: calcFrameHeight(300, activeFrameImage ? 'none' : activeFrame, activeFrameImage ? templateAspectRatio : undefined) }}>
                 <img src={bakedImage || capturedImage || ''} alt="Result" className="w-full h-full object-cover" />
               </div>
               <div className="text-center">
@@ -254,6 +259,7 @@ export const PhotoBoothEditor = () => {
               activeFrame={activeFrame}
               onFrameChange={(id) => { pushUndo(); setActiveFrame(id); setActiveFrameImage(undefined) }}
               frameImage={activeFrameImage}
+              templateAspectRatio={templateAspectRatio}
               placedStickers={placedStickers}
               placedTexts={placedTexts}
               onTextsChange={(t) => { pushUndo(); setPlacedTexts(t) }}

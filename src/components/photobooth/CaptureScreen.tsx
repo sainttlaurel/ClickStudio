@@ -30,10 +30,11 @@ interface CaptureScreenProps {
   frameId?: string
   onFrameChange?: (id: string) => void
   frameImage?: string
+  templateAspectRatio?: string
   onTemplateSelect?: (template: TemplateLibraryItem | null) => void
 }
 
-export const CaptureScreen = ({ onCapture, frameId = 'none', onFrameChange, frameImage, onTemplateSelect }: CaptureScreenProps) => {
+export const CaptureScreen = ({ onCapture, frameId = 'none', onFrameChange, frameImage, templateAspectRatio, onTemplateSelect }: CaptureScreenProps) => {
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [selectedColor, setSelectedColor] = useState(COLOR_SWATCHES_ROW1[0].id)
@@ -97,7 +98,7 @@ export const CaptureScreen = ({ onCapture, frameId = 'none', onFrameChange, fram
   }, [cameraReady, capturing, doCapture])
 
   const selectedSwatch = [...COLOR_SWATCHES_ROW1, ...COLOR_SWATCHES_ROW2].find(s => s.id === selectedColor)
-  const viewportHeight = calcFrameHeight(300, frameId)
+  const viewportHeight = calcFrameHeight(300, frameId, frameImage ? templateAspectRatio : undefined)
 
   return (
     <div className="flex-1 flex flex-col items-center justify-center p-6">

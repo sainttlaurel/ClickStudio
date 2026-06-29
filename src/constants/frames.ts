@@ -21,8 +21,13 @@ export function getFrameAspectRatio(frameId: string): string {
   return frame?.aspectRatio || '1/1'
 }
 
-export function calcFrameHeight(width: number, frameId: string): number {
-  const ratio = getFrameAspectRatio(frameId)
+export function calcFrameHeight(width: number, frameId: string, templateRatio?: string): number {
+  if (templateRatio) {
+    const [w, h] = templateRatio.split(/[:/]/).map(Number)
+    return Math.round(width * h / w)
+  }
+  const frame = FRAMES.find(f => f.id === frameId)
+  const ratio = frame?.aspectRatio || '1/1'
   const [w, h] = ratio.split('/').map(Number)
   return Math.round(width * h / w)
 }

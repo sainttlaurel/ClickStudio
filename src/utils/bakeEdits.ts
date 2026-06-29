@@ -41,12 +41,13 @@ export interface BakeOptions {
   texts: TextData[]
   frameId?: string
   frameImage?: string
+  templateAspectRatio?: string
   size?: { w: number; h: number }
 }
 
 export async function bakePhotoEdits(options: BakeOptions): Promise<string> {
   const defaultW = 640
-  const defaultH = calcFrameHeight(defaultW, options.frameId || 'none')
+  const defaultH = calcFrameHeight(defaultW, options.frameId || 'none', options.frameImage ? options.templateAspectRatio : undefined)
   const size = options.size || { w: defaultW, h: defaultH }
   const canvas = document.createElement('canvas')
   canvas.width = size.w
