@@ -10,7 +10,7 @@ import { FILTERS } from '@/constants/filters'
 import { calcFrameHeight } from '@/constants/frames'
 import type { TemplateLibraryItem } from '@/constants/templates'
 
-type Screen = 'capture' | 'edit' | 'preview'
+type Screen = 'capture' | 'edit'
 
 interface StickerData {
   id: string; emoji: string; x: number; y: number; scale?: number; rotation?: number
@@ -97,8 +97,8 @@ export const PhotoBoothEditor = () => {
   }
 
   const handleBack = () => {
+    if (bakedImage) { setBakedImage(null); return }
     if (currentScreen === 'edit') { setCurrentScreen('capture'); setBakedImage(null) }
-    if (currentScreen === 'preview') setCurrentScreen('edit')
   }
 
   const handleReset = () => {
@@ -139,8 +139,11 @@ export const PhotoBoothEditor = () => {
         adjustments
       }
     })
-    setCurrentScreen('preview')
     setBakedImage(bakedUrl)
+  }
+
+  const handleContinueEditing = () => {
+    setBakedImage(null) // dismiss overlay, stay on edit
   }
 
   const handleDownload = () => {
@@ -153,6 +156,7 @@ export const PhotoBoothEditor = () => {
 
   const breadcrumb = () => {
     if (currentScreen === 'capture') return 'Capture'
+    if (currentScreen === 'edit' && bakedImage) return 'Saved!'
     if (currentScreen === 'edit') return 'Edit photo'
     return 'Saved!'
   }
@@ -164,30 +168,30 @@ export const PhotoBoothEditor = () => {
         <div className="w-16 h-full bg-white border-r border-gray-200 flex flex-col items-center py-4">
           <div className="w-10 h-10 rounded-full bg-studio text-white font-bold flex items-center justify-center text-sm mb-12">S</div>
           <div className="flex flex-col gap-4 items-center flex-1">
-            <button onClick={() => navigate('/')} className="w-10 h-10 rounded-full flex items-center justify-center text-gray-400 hover:bg-gray-50">
+            <button onClick={() => navigate('/')} title="Home" className="w-10 h-10 rounded-full flex items-center justify-center text-gray-400 hover:bg-gray-50">
               <Home className="w-5 h-5" />
             </button>
-            <button onClick={() => { setCurrentScreen('capture'); setCaptureCount(0) }} className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${currentScreen === 'capture' ? 'bg-studio text-white' : 'text-gray-400 hover:bg-gray-50'}`}>
+            <button onClick={() => { setCurrentScreen('capture'); setCaptureCount(0) }} title="Camera" className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${currentScreen === 'capture' ? 'bg-studio text-white' : 'text-gray-400 hover:bg-gray-50'}`}>
               <Camera className="w-5 h-5" />
             </button>
-            <button onClick={() => navigate('/gallery')} className="w-10 h-10 rounded-full flex items-center justify-center text-gray-400 hover:bg-gray-50">
+            <button onClick={() => navigate('/gallery')} title="Gallery" className="w-10 h-10 rounded-full flex items-center justify-center text-gray-400 hover:bg-gray-50">
               <Image className="w-5 h-5" />
             </button>
-            <button onClick={() => setCurrentScreen('edit')} className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${currentScreen === 'edit' || currentScreen === 'preview' ? 'bg-studio text-white' : 'text-gray-400 hover:bg-gray-50'}`}>
+            <button onClick={() => setCurrentScreen('edit')} title="Editor" className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${currentScreen === 'edit' ? 'bg-studio text-white' : 'text-gray-400 hover:bg-gray-50'}`}>
               <Edit3 className="w-5 h-5" />
             </button>
-            <button onClick={() => navigate('/history')} className="w-10 h-10 rounded-full flex items-center justify-center text-gray-400 hover:bg-gray-50">
+            <button onClick={() => navigate('/history')} title="History" className="w-10 h-10 rounded-full flex items-center justify-center text-gray-400 hover:bg-gray-50">
               <Clock className="w-5 h-5" />
             </button>
           </div>
           <div className="flex flex-col gap-4 items-center mt-auto">
-            <button onClick={() => navigate('/settings')} className="w-5 h-5 text-gray-400 opacity-60 hover:text-gray-500">
+            <button onClick={() => navigate('/settings')} title="Settings" className="w-5 h-5 text-gray-400 opacity-60 hover:text-gray-500">
               <Settings className="w-5 h-5" />
             </button>
-            <button onClick={() => navigate('/help')} className="w-5 h-5 text-gray-400 opacity-60 hover:text-gray-500">
+            <button onClick={() => navigate('/help')} title="Help" className="w-5 h-5 text-gray-400 opacity-60 hover:text-gray-500">
               <HelpCircle className="w-5 h-5" />
             </button>
-            <button onClick={() => navigate('/about')} className="w-5 h-5 text-gray-400 opacity-60 hover:text-gray-500">
+            <button onClick={() => navigate('/about')} title="About" className="w-5 h-5 text-gray-400 opacity-60 hover:text-gray-500">
               <Info className="w-5 h-5" />
             </button>
           </div>
@@ -198,36 +202,39 @@ export const PhotoBoothEditor = () => {
           {/* Top bar */}
           <div className="h-14 bg-white border-b border-gray-200 flex items-center px-6 justify-between flex-shrink-0">
             <div className="flex items-center gap-2 text-sm">
-              <button onClick={currentScreen === 'capture' ? undefined : handleBack} className={`flex items-center gap-1 ${currentScreen === 'capture' ? 'text-gray-300' : 'text-gray-400 hover:text-gray-600'} transition-colors`}>
-                <span>‹</span>
-                <span>Back</span>
+              <button onClick={currentScreen === 'capture' ? undefined : handleBack} className={`flex items-center gap-1.5 ${currentScreen === 'capture' ? 'text-gray-300' : 'text-gray-400 hover:text-gray-600'} transition-colors text-sm`}>
+                <span>←</span>
+                <span>{bakedImage ? 'Back to Editor' : 'Back'}</span>
               </button>
               <span className="text-gray-400 text-xs">·</span>
               <span className={currentScreen === 'capture' ? 'text-gray-900 font-medium' : 'text-gray-400'}>{breadcrumb()}</span>
             </div>
 
-            {currentScreen === 'edit' && (
-              <div className="flex items-center gap-1">
-                <button onClick={() => setZoom(z => zoomLevels[Math.max(0, zoomLevels.indexOf(z) - 1)])} disabled={zoomIndex <= 0} className="px-2 py-1 rounded-lg border border-gray-200 text-xs text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all">−</button>
-                <span className="text-xs text-gray-500 w-10 text-center font-mono">{Math.round(zoom * 100)}%</span>
-                <button onClick={() => setZoom(z => zoomLevels[Math.min(zoomLevels.length - 1, zoomLevels.indexOf(z) + 1)])} disabled={zoomIndex >= zoomLevels.length - 1} className="px-2 py-1 rounded-lg border border-gray-200 text-xs text-gray-600 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all">+</button>
-                <button onClick={() => setZoom(1)} className="ml-1 px-2 py-1 rounded-lg border border-gray-200 text-xs text-gray-500 hover:bg-gray-50 transition-all">Fit</button>
+            {currentScreen === 'edit' && !bakedImage && (
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-0.5 rounded-lg border border-gray-200 px-1.5 py-1">
+                  <button onClick={() => setZoom(z => zoomLevels[Math.max(0, zoomLevels.indexOf(z) - 1)])} disabled={zoomIndex <= 0} className="px-1.5 py-0.5 rounded text-xs text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all">−</button>
+                  <span className="text-xs text-gray-500 w-10 text-center font-mono">{Math.round(zoom * 100)}%</span>
+                  <button onClick={() => setZoom(z => zoomLevels[Math.min(zoomLevels.length - 1, zoomLevels.indexOf(z) + 1)])} disabled={zoomIndex >= zoomLevels.length - 1} className="px-1.5 py-0.5 rounded text-xs text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all">+</button>
+                </div>
+                <button onClick={() => setZoom(1)} className="px-2.5 py-1 rounded-lg border border-gray-200 text-xs text-gray-500 hover:bg-gray-50 transition-all">Fit</button>
               </div>
             )}
 
-            {currentScreen === 'edit' && (
-              <div className="flex gap-2">
-                <button onClick={handleReset} className="px-4 py-1.5 rounded-full border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all">Reset</button>
-                <button onClick={handleUndo} className={`px-4 py-1.5 rounded-full border text-sm font-medium transition-all ${undoStack.length > 0 ? 'border-gray-200 text-gray-700 hover:bg-gray-50' : 'border-gray-100 text-gray-300 cursor-not-allowed'}`}>Undo</button>
-                <button onClick={handleSave} className="px-4 py-1.5 rounded-full bg-studio text-white font-medium text-sm hover:bg-studio/90 transition-all">Save</button>
+            {currentScreen === 'edit' && !bakedImage && (
+              <div className="flex gap-2 items-center">
+                <button onClick={handleUndo} disabled={undoStack.length === 0} className={`px-3 py-1.5 rounded-lg border text-sm font-medium transition-all ${undoStack.length > 0 ? 'border-gray-200 text-gray-700 hover:bg-gray-50' : 'border-gray-100 text-gray-300 cursor-not-allowed'}`}>Undo</button>
+                <button onClick={handleReset} className="px-3 py-1.5 rounded-lg border border-gray-200 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all">Reset</button>
+                <div className="w-px h-6 bg-gray-200 mx-1" />
+                <button onClick={handleSave} className="px-5 py-1.5 rounded-lg bg-studio text-white font-medium text-sm hover:bg-studio/90 transition-all shadow-sm">Save</button>
               </div>
             )}
 
-            {currentScreen === 'preview' && (
+            {currentScreen === 'edit' && bakedImage && (
               <div className="flex gap-2">
-                <button onClick={handleBack} className="px-4 py-1.5 rounded-full border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all">Edit Again</button>
-                <button onClick={handleDownload} className="px-4 py-1.5 rounded-full bg-studio text-white font-medium text-sm hover:bg-studio/90 transition-all">Download</button>
-                <button onClick={() => navigate('/gallery')} className="px-4 py-1.5 rounded-full bg-gray-800 text-white font-medium text-sm hover:bg-gray-700 transition-all">Gallery</button>
+                <button onClick={handleContinueEditing} className="px-4 py-1.5 rounded-lg border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all">Edit</button>
+                <button onClick={handleDownload} className="px-5 py-1.5 rounded-lg bg-studio text-white font-medium text-sm hover:bg-studio/90 transition-all shadow-sm">Download</button>
+                <button onClick={() => navigate('/gallery')} className="px-4 py-1.5 rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all">Gallery</button>
               </div>
             )}
 
@@ -239,36 +246,45 @@ export const PhotoBoothEditor = () => {
           {/* Content */}
           {currentScreen === 'capture' ? (
             <CaptureScreen onCapture={handleCapture} frameId={activeFrame} onFrameChange={(id) => { setActiveFrame(id); setActiveFrameImage(undefined) }} frameImage={activeFrameImage} templateAspectRatio={templateAspectRatio} onTemplateSelect={handleTemplateSelect} />
-          ) : currentScreen === 'preview' ? (
-            <div className="flex-1 flex flex-col items-center justify-center p-6">
-              <div className="relative w-[300px] rounded-2xl overflow-hidden shadow-lg mb-6" style={{ height: calcFrameHeight(300, activeFrameImage ? 'none' : activeFrame, activeFrameImage ? templateAspectRatio : undefined) }}>
-                <img src={bakedImage || capturedImage || ''} alt="Result" className="w-full h-full object-cover" />
-              </div>
-              <div className="text-center">
-                <h2 className="font-bold text-gray-900 text-xl mb-1">Saved! ✦</h2>
-                <p className="text-sm text-gray-400 mb-6">Your photo has been saved to the gallery</p>
-              </div>
-            </div>
           ) : (
-            <EditScreen
-              imageUrl={capturedImage}
-              adjustments={adjustments}
-              onAdjustmentsChange={(val) => { pushUndo(); setAdjustments(val) }}
-              activeFilter={activeFilter}
-              onFilterChange={(id) => { pushUndo(); setActiveFilter(id) }}
-              activeFrame={activeFrame}
-              onFrameChange={(id) => { pushUndo(); setActiveFrame(id); setActiveFrameImage(undefined) }}
-              frameImage={activeFrameImage}
-              templateAspectRatio={templateAspectRatio}
-              placedStickers={placedStickers}
-              placedTexts={placedTexts}
-              onTextsChange={(t) => { pushUndo(); setPlacedTexts(t) }}
-              onStickersChange={(s) => { pushUndo(); setPlacedStickers(s) }}
-              selectedStickerEmoji={selectedStickerEmoji}
-              onStickerSelect={setSelectedStickerEmoji}
-              onCanvasClick={handleCanvasClick}
-              scale={zoom}
-            />
+            <div className="flex-1 flex relative">
+              <EditScreen
+                imageUrl={capturedImage}
+                adjustments={adjustments}
+                onAdjustmentsChange={(val) => { pushUndo(); setAdjustments(val) }}
+                activeFilter={activeFilter}
+                onFilterChange={(id) => { pushUndo(); setActiveFilter(id) }}
+                activeFrame={activeFrame}
+                onFrameChange={(id) => { pushUndo(); setActiveFrame(id); setActiveFrameImage(undefined) }}
+                frameImage={activeFrameImage}
+                templateAspectRatio={templateAspectRatio}
+                placedStickers={placedStickers}
+                placedTexts={placedTexts}
+                onTextsChange={(t) => { pushUndo(); setPlacedTexts(t) }}
+                onStickersChange={(s) => { pushUndo(); setPlacedStickers(s) }}
+                selectedStickerEmoji={selectedStickerEmoji}
+                onStickerSelect={setSelectedStickerEmoji}
+                onCanvasClick={handleCanvasClick}
+                scale={zoom}
+              />
+
+              {bakedImage && (
+                <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+                  <div className="bg-white rounded-2xl shadow-2xl p-8 flex flex-col items-center w-[340px]">
+                    <div className="w-[180px] rounded-xl overflow-hidden shadow-md mb-5" style={{ height: calcFrameHeight(180, activeFrameImage ? 'none' : activeFrame, activeFrameImage ? templateAspectRatio : undefined) }}>
+                      <img src={bakedImage} alt="Saved" className="w-full h-full object-cover" />
+                    </div>
+                    <h2 className="font-bold text-gray-900 text-lg mb-1">✨ Saved</h2>
+                    <p className="text-sm text-gray-400 mb-5 text-center">Your photo is now in Gallery</p>
+                    <div className="flex flex-col gap-2 w-full">
+                      <button onClick={handleDownload} className="w-full py-2.5 rounded-xl bg-studio text-white font-medium text-sm hover:bg-studio/90 transition-all shadow-sm">Download</button>
+                      <button onClick={handleContinueEditing} className="w-full py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all">Continue Editing</button>
+                      <button onClick={() => navigate('/gallery')} className="w-full py-2.5 rounded-xl border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all">Open Gallery</button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           )}
         </div>
       </div>

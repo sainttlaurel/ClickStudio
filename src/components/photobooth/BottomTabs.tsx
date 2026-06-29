@@ -23,21 +23,21 @@ const TABS: Array<{
 export const BottomTabs = ({ activeTab, onTabChange }: BottomTabsProps) => {
   return (
     <div className="h-14 bg-white border-t border-gray-200 flex">
-      {TABS.map((tab) => (
+      {      TABS.map((tab) => (
         <button
           key={tab.key}
           onClick={() => onTabChange(tab.key)}
           className={cn(
             'flex-1 flex flex-col items-center justify-center gap-0.5 transition-all',
             activeTab === tab.key 
-              ? 'text-studio border-t-2 border-studio' 
-              : 'text-gray-400 hover:text-gray-500'
+              ? 'bg-white text-studio shadow-[0_6px_18px_rgba(0,0,0,0.08)] rounded-t-lg' 
+              : 'text-gray-400 hover:text-gray-500 hover:bg-gray-50/50'
           )}
         >
           {tab.icon}
           <span className={cn(
             'text-[10px] uppercase tracking-wider',
-            activeTab === tab.key ? 'font-medium' : ''
+            activeTab === tab.key ? 'font-semibold' : ''
           )}>
             {tab.label}
           </span>

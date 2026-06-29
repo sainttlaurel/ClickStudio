@@ -38,7 +38,7 @@ export const RightPanel = ({
   placedTexts
 }: RightPanelProps) => {
   return (
-    <div className="w-[240px] bg-white border-l border-gray-200 flex flex-col">
+    <div className="w-[35%] max-w-[360px] min-w-[240px] bg-white border-l border-gray-200 flex flex-col">
       <div className="flex-1 overflow-y-auto">
         {activeTab === 'adjust' && (
           <AdjustPanel value={adjustments} onChange={onAdjustmentsChange} />

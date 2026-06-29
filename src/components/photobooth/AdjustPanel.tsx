@@ -1,3 +1,6 @@
+import { useState } from 'react'
+import { ChevronDown } from 'lucide-react'
+import { cn } from '@/utils/cn'
 import type { PhotoAdjustments } from '@/types'
 
 export interface AdjustPanelProps {
@@ -25,8 +28,26 @@ const RESET_VALUE: PhotoAdjustments = {
   temperature: 0, tint: 0
 }
 
+function Section({
+  label, open, onToggle, children
+}: {
+  label: string; open: boolean; onToggle: () => void; children: React.ReactNode
+}) {
+  return (
+    <div className="mb-4">
+      <button onClick={onToggle} className="flex items-center gap-1.5 text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2 hover:text-gray-600 transition-colors w-full text-left">
+        <ChevronDown className={cn('w-3.5 h-3.5 transition-transform', open ? 'rotate-0' : '-rotate-90')} />
+        {label}
+      </button>
+      {open && <div className="space-y-3">{children}</div>}
+    </div>
+  )
+}
+
 export const AdjustPanel = ({ value, onChange }: AdjustPanelProps) => {
   const adjustments = value || RESET_VALUE
+  const [lightOpen, setLightOpen] = useState(true)
+  const [colorOpen, setColorOpen] = useState(true)
 
   const handleSliderChange = (key: keyof PhotoAdjustments, newValue: number) => {
     onChange?.({ ...adjustments, [key]: newValue })
@@ -62,15 +83,17 @@ export const AdjustPanel = ({ value, onChange }: AdjustPanelProps) => {
         Adjustments
       </div>
 
-      <div className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Light</div>
-      <div className="space-y-3 mb-5">{renderSliders(LIGHT_SLIDERS)}</div>
+      <Section label="Light" open={lightOpen} onToggle={() => setLightOpen(!lightOpen)}>
+        {renderSliders(LIGHT_SLIDERS)}
+      </Section>
 
-      <div className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Color</div>
-      <div className="space-y-3 mb-5">{renderSliders(COLOR_SLIDERS)}</div>
+      <Section label="Color" open={colorOpen} onToggle={() => setColorOpen(!colorOpen)}>
+        {renderSliders(COLOR_SLIDERS)}
+      </Section>
 
       <button 
         onClick={handleReset}
-        className="w-full mt-4 px-4 py-2 rounded-full border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all"
+        className="w-full mt-4 px-4 py-2 rounded-lg border border-gray-200 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all"
       >
         Reset All
       </button>

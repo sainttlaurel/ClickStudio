@@ -95,21 +95,23 @@ export const EditScreen = ({
 
   return (
     <div className="flex-1 flex">
-      <Canvas 
-        imageUrl={imageUrl} 
-        isEditing 
-        filterId={activeFilter}
-        frameId={activeFrame}
-        frameImage={frameImage}
-        templateAspectRatio={templateAspectRatio}
-        stickers={placedStickers}
-        texts={placedTexts}
-        onClick={handleCanvasClickWrapper}
-        placementActive={placementActive}
-        scale={scale}
-        onStickersUpdate={onStickersChange}
-        onTextsUpdate={onTextsChange}
-      />
+      <div className="flex-1 flex items-center justify-center overflow-hidden bg-[#F0F0F2]">
+        <Canvas 
+          imageUrl={imageUrl} 
+          isEditing 
+          filterId={activeFilter}
+          frameId={activeFrame}
+          frameImage={frameImage}
+          templateAspectRatio={templateAspectRatio}
+          stickers={placedStickers}
+          texts={placedTexts}
+          onClick={handleCanvasClickWrapper}
+          placementActive={placementActive}
+          scale={scale}
+          onStickersUpdate={onStickersChange}
+          onTextsUpdate={onTextsChange}
+        />
+      </div>
       
       <RightPanel
         activeTab={activeTab}
