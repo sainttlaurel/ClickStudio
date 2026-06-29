@@ -202,7 +202,7 @@ export const PhotoBoothEditor = () => {
 
           {/* Content */}
           {currentScreen === 'capture' ? (
-            <CaptureScreen onCapture={handleCapture} />
+            <CaptureScreen onCapture={handleCapture} frameId={activeFrame} onFrameChange={setActiveFrame} />
           ) : currentScreen === 'preview' ? (
             <div className="flex-1 flex flex-col items-center justify-center p-6">
               <div className="relative w-[300px] h-[300px] rounded-2xl overflow-hidden shadow-lg mb-6">

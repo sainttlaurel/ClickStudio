@@ -2,6 +2,8 @@ import { useEffect, useRef, useCallback, useState } from 'react'
 import { cameraManager } from '@/utils/camera'
 import { usePhotoStore } from '@/store/usePhotoStore'
 import { cn } from '@/utils/cn'
+import { FRAMES } from '@/constants/frames'
+import { FrameOverlay } from './FrameOverlay'
 
 const COLOR_SWATCHES_ROW1 = [
   { id: 'pink', color: '#EC1A66' },
@@ -23,9 +25,11 @@ const COLOR_SWATCHES_ROW2 = [
 
 interface CaptureScreenProps {
   onCapture: (imageUrl: string) => void
+  frameId?: string
+  onFrameChange?: (id: string) => void
 }
 
-export const CaptureScreen = ({ onCapture }: CaptureScreenProps) => {
+export const CaptureScreen = ({ onCapture, frameId = 'none', onFrameChange }: CaptureScreenProps) => {
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [selectedColor, setSelectedColor] = useState(COLOR_SWATCHES_ROW1[0].id)
@@ -111,6 +115,9 @@ export const CaptureScreen = ({ onCapture }: CaptureScreenProps) => {
           />
         )}
 
+        {/* Frame overlay on live view */}
+        <FrameOverlay frameId={frameId} />
+
         {/* Corner guides */}
         <div className="absolute top-3 left-3 w-5 h-5 border-t-2 border-l-2 border-white/40 rounded-tl-sm" />
         <div className="absolute top-3 right-3 w-5 h-5 border-t-2 border-r-2 border-white/40 rounded-tr-sm" />
@@ -164,7 +171,7 @@ export const CaptureScreen = ({ onCapture }: CaptureScreenProps) => {
       </div>
       
       {/* Color swatches - Row 2 */}
-      <div className="flex gap-2 mb-8">
+      <div className="flex gap-2 mb-4">
         {COLOR_SWATCHES_ROW2.map((swatch) => (
           <button
             key={swatch.id}
@@ -177,6 +184,24 @@ export const CaptureScreen = ({ onCapture }: CaptureScreenProps) => {
             )}
             style={{ backgroundColor: swatch.color }}
           />
+        ))}
+      </div>
+
+      {/* Frame selector */}
+      <div className="flex gap-1 mb-6">
+        {FRAMES.map((frame) => (
+          <button
+            key={frame.id}
+            onClick={() => onFrameChange?.(frame.id)}
+            className={cn(
+              'px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all',
+              frameId === frame.id
+                ? 'bg-studio text-white'
+                : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+            )}
+          >
+            {frame.emoji} {frame.name}
+          </button>
         ))}
       </div>
       
