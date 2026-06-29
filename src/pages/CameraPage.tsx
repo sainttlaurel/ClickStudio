@@ -15,7 +15,6 @@ import {
   X,
   Upload,
   Plus,
-  LayoutGrid,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
@@ -26,7 +25,6 @@ import { cn } from '@/utils/cn'
 import { FILTERS, FRAMES } from '@/constants'
 import type { FilterId, FrameId } from '@/constants'
 import type { Template, CameraError } from '@/types'
-import TemplateLibrary from '@/components/templates/TemplateLibrary'
 import { playCountdownTick, playCaptureSound } from '@/utils/sounds'
 
 /* ─── Template data ──────────────────────────────────── */
@@ -619,7 +617,6 @@ export default function CameraPage() {
 
   // ── Template preview modal state ──
   const [previewTemplate, setPreviewTemplate] = useState<TemplateCard | null>(null)
-  const [showLibrary, setShowLibrary] = useState(false)
   const carouselRef = useRef<HTMLDivElement>(null)
   const [bottomTab, setBottomTab] = useState<'filters' | 'frames'>('filters')
 
@@ -808,18 +805,11 @@ export default function CameraPage() {
 
           {/* ── Bottom hint ── */}
           <div className="flex-shrink-0 text-center pb-6">
-            <p className="text-xs text-muted/40 flex items-center justify-center gap-1.5 mb-3">
+            <p className="text-xs text-muted/40 flex items-center justify-center gap-1.5">
               <span>←</span>
               <span>Scroll to browse</span>
               <span>→</span>
             </p>
-            <button
-              onClick={() => setShowLibrary(true)}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium border border-border/50 bg-white/80 text-muted hover:text-primary hover:border-primary/30 transition-all shadow-sm"
-            >
-              <LayoutGrid className="h-3.5 w-3.5" />
-              Browse All Templates
-            </button>
           </div>
         </div>
 
@@ -906,17 +896,6 @@ export default function CameraPage() {
             </motion.div>
           </div>
         )}
-
-        {/* ── Template Library ── */}
-        <TemplateLibrary
-          isOpen={showLibrary}
-          onClose={() => setShowLibrary(false)}
-          onSelect={(t) => {
-            startNewSession(t)
-            setShowLibrary(false)
-            success('Template selected ✨', `"${t.name}"`)
-          }}
-        />
       </>
     )
   }
