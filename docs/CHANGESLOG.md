@@ -10,9 +10,10 @@ All notable changes to ClickStudio are documented here.
 
 ### Fixed
 * Gallery preview strips — uniform height, all cards fill available space
-* Feedback emoji picker — removed picker entirely, feedback form simplified
+* Feedback form — removed emoji picker, simplified form
 * Template Library — sort dropdown alignment, scrollable grid
-* Frame Styles carousel — unified pink background to match Classic card style
+* Frame Styles carousel — unified backgrounds to match Classic card style
+* Version bump to 1.7.9 to force PWA service worker cache refresh
 * Editor build — removed broken duplicate layout, restored clean build
 
 ---

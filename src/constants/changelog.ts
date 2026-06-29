@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.7.8'
+export const APP_VERSION = '1.7.9'
 
 const LS_KEY = `cs_changelog_v${APP_VERSION}`
 export const isChangelogSeen = (): boolean =>
