@@ -36,6 +36,7 @@ All notable changes to ClickStudio are documented here.
 * Raw `<svg>` replaced with `lucide-react` icons in PhotoBoothEditor sidebar nav and BottomTabs (8 icons) — removes 2KB of inline SVG strings
 * `#EC1A66` hardcoded color replaced with `studio` Tailwind color token across all 11 photobooth components — centralized color management
 * **Frame live preview on camera** — CaptureScreen now shows frame overlay on camera viewport with frame selector row (Clean, Film, Blush, Minimal, Polaroid); selected frame carries through to editor after capture
+* **Realistic frame visuals** — Film (10% black bars + repeating sprocket holes), Blush (stronger gradient + corner sparkles + inner border), Minimal (thick white border + soft shadow + corner accents), Polaroid (thick white frame + outer shadow + serif caption); aligned `bakeFrameOverlay` canvas version to match CSS overlays
 * Duplicate emoji removed from sticker packs; `墨镜` replaced with emoji
 * Date formatting standardized to `en-US` locale
 * Breadcrumb text simplified (removed confusing "Preview ›" prefix)
