@@ -59,11 +59,11 @@ const photoCounts: Record<string, number> = { single: 1, double: 2, quad: 4, six
 
 const styleConfig: Record<string, { bg: string; cardBg: string; emoji: string }> = {
   clean: { bg: 'bg-rose-50', cardBg: 'bg-white', emoji: '🤍' },
-  polaroid: { bg: 'bg-amber-50', cardBg: 'bg-amber-50/60', emoji: '📷' },
-  film: { bg: 'bg-gray-800', cardBg: 'bg-gray-900/10', emoji: '🎞️' },
-  blush: { bg: 'bg-rose-100', cardBg: 'bg-rose-50/60', emoji: '🌸' },
-  minimal: { bg: 'bg-white', cardBg: 'bg-gray-50', emoji: '◻️' },
-  frame: { bg: 'bg-stone-50', cardBg: 'bg-stone-50/60', emoji: '🖼️' },
+  polaroid: { bg: 'bg-rose-50', cardBg: 'bg-white', emoji: '📷' },
+  film: { bg: 'bg-rose-50', cardBg: 'bg-white', emoji: '🎞️' },
+  blush: { bg: 'bg-rose-50', cardBg: 'bg-white', emoji: '🌸' },
+  minimal: { bg: 'bg-rose-50', cardBg: 'bg-white', emoji: '◻️' },
+  frame: { bg: 'bg-rose-50', cardBg: 'bg-white', emoji: '🖼️' },
 }
 
 const badgeStyles: Record<string, string> = {

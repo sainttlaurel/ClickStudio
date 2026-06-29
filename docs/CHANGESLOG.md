@@ -12,6 +12,7 @@ All notable changes to ClickStudio are documented here.
 * Gallery preview strips — uniform height, all cards fill available space
 * Feedback emoji picker — removed picker entirely, feedback form simplified
 * Template Library — sort dropdown alignment, scrollable grid
+* Frame Styles carousel — unified pink background to match Classic card style
 * Editor build — removed broken duplicate layout, restored clean build
 
 ---
