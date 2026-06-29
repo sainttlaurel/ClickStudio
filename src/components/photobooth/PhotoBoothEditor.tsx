@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CaptureScreen } from './CaptureScreen'
 import { EditScreen } from './EditScreen'
@@ -20,6 +20,34 @@ export const PhotoBoothEditor = () => {
   const [activeFrame, setActiveFrame] = useState('none')
   const [placedStickers, setPlacedStickers] = useState<Array<{ id: string; emoji: string; x: number; y: number; scale?: number; rotation?: number }>>([])
   const [placedTexts, setPlacedTexts] = useState<Array<{ id: string; text: string; color: string; fontSize: number; x: number; y: number; font?: string }>>([])
+  const [undoStack, setUndoStack] = useState<Array<{
+    adjustments: PhotoAdjustments
+    activeFilter: string
+    activeFrame: string
+    placedStickers: typeof placedStickers
+    placedTexts: typeof placedTexts
+  }>>([])
+
+  const pushUndo = useCallback(() => {
+    setUndoStack(prev => [...prev.slice(-49), {
+      adjustments,
+      activeFilter,
+      activeFrame,
+      placedStickers,
+      placedTexts
+    }])
+  }, [adjustments, activeFilter, activeFrame, placedStickers, placedTexts])
+
+  const handleUndo = useCallback(() => {
+    if (undoStack.length === 0) return
+    const prev = undoStack[undoStack.length - 1]
+    setUndoStack(prev => prev.slice(0, -1))
+    setAdjustments(prev.adjustments)
+    setActiveFilter(prev.activeFilter)
+    setActiveFrame(prev.activeFrame)
+    setPlacedStickers(prev.placedStickers)
+    setPlacedTexts(prev.placedTexts)
+  }, [undoStack])
 
   const handleCapture = (imageUrl: string) => {
     setCapturedImage(imageUrl)
@@ -179,7 +207,14 @@ export const PhotoBoothEditor = () => {
                 >
                   Reset
                 </button>
-                <button className="px-4 py-1.5 rounded-full border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all">
+                <button 
+                  onClick={handleUndo}
+                  className={`px-4 py-1.5 rounded-full border text-sm font-medium transition-all ${
+                    undoStack.length > 0
+                      ? 'border-gray-200 text-gray-700 hover:bg-gray-50' 
+                      : 'border-gray-100 text-gray-300 cursor-not-allowed'
+                  }`}
+                >
                   Undo
                 </button>
                 <button 
@@ -205,15 +240,15 @@ export const PhotoBoothEditor = () => {
             <EditScreen 
               imageUrl={capturedImage}
               adjustments={adjustments}
-              onAdjustmentsChange={setAdjustments}
+              onAdjustmentsChange={(val) => { pushUndo(); setAdjustments(val) }}
               activeFilter={activeFilter}
-              onFilterChange={setActiveFilter}
+              onFilterChange={(id) => { pushUndo(); setActiveFilter(id) }}
               activeFrame={activeFrame}
-              onFrameChange={setActiveFrame}
+              onFrameChange={(id) => { pushUndo(); setActiveFrame(id) }}
               placedStickers={placedStickers}
-              onStickersChange={setPlacedStickers}
+              onStickersChange={(s) => { pushUndo(); setPlacedStickers(s) }}
               placedTexts={placedTexts}
-              onTextsChange={setPlacedTexts}
+              onTextsChange={(t) => { pushUndo(); setPlacedTexts(t) }}
             />
           )}
         </div>

@@ -6,26 +6,23 @@ export interface AdjustPanelProps {
   onChange?: (value: PhotoAdjustments) => void
 }
 
-export const AdjustPanel = ({ value, onChange }: AdjustPanelProps) => {
-  const [adjustments, setAdjustments] = useState<PhotoAdjustments>(value || {
-    brightness: 0,
-    contrast: 0,
-    saturation: 0,
-    exposure: 0,
-    shadows: 0,
-    highlights: 0,
-    temperature: 0,
-    tint: 0
-  })
+const SLIDER_SPEC: Array<{ key: keyof PhotoAdjustments; label: string; min: number; max: number }> = [
+  { key: 'brightness', label: 'Brightness', min: -100, max: 100 },
+  { key: 'contrast', label: 'Contrast', min: -100, max: 100 },
+  { key: 'saturation', label: 'Saturation', min: -100, max: 100 },
+  { key: 'exposure', label: 'Sharpness', min: -100, max: 100 },
+  { key: 'highlights', label: 'Warmth', min: -100, max: 100 },
+  { key: 'shadows', label: 'Fade', min: 0, max: 100 },
+]
 
-  const sliders: Array<{ key: keyof PhotoAdjustments; label: string; min: number; max: number }> = [
-    { key: 'brightness', label: 'Brightness', min: -100, max: 100 },
-    { key: 'contrast', label: 'Contrast', min: -100, max: 100 },
-    { key: 'saturation', label: 'Saturation', min: -100, max: 100 },
-    { key: 'exposure', label: 'Exposure', min: -100, max: 100 },
-    { key: 'shadows', label: 'Shadows', min: -100, max: 100 },
-    { key: 'highlights', label: 'Highlights', min: -100, max: 100 }
-  ]
+const RESET_VALUE: PhotoAdjustments = {
+  brightness: 0, contrast: 0, saturation: 0,
+  exposure: 0, shadows: 0, highlights: 0,
+  temperature: 0, tint: 0
+}
+
+export const AdjustPanel = ({ value, onChange }: AdjustPanelProps) => {
+  const [adjustments, setAdjustments] = useState<PhotoAdjustments>(value || RESET_VALUE)
 
   const handleSliderChange = (key: keyof PhotoAdjustments, newValue: number) => {
     const updated = { ...adjustments, [key]: newValue }
@@ -34,18 +31,8 @@ export const AdjustPanel = ({ value, onChange }: AdjustPanelProps) => {
   }
 
   const handleReset = () => {
-    const reset: PhotoAdjustments = {
-      brightness: 0,
-      contrast: 0,
-      saturation: 0,
-      exposure: 0,
-      shadows: 0,
-      highlights: 0,
-      temperature: 0,
-      tint: 0
-    }
-    setAdjustments(reset)
-    onChange?.(reset)
+    setAdjustments(RESET_VALUE)
+    onChange?.(RESET_VALUE)
   }
 
   return (
@@ -55,7 +42,7 @@ export const AdjustPanel = ({ value, onChange }: AdjustPanelProps) => {
       </div>
       
       <div className="space-y-4">
-        {sliders.map(({ key, label, min, max }) => (
+        {SLIDER_SPEC.map(({ key, label, min, max }) => (
           <div key={key}>
             <div className="flex justify-between items-center mb-2">
               <span className="text-sm font-medium text-gray-700">{label}</span>

@@ -1,26 +1,17 @@
 import { useState } from 'react'
 import { cn } from '@/utils/cn'
+import { TEXT_PRESETS, TEXT_COLORS } from '@/constants/stickers'
 
 interface TextPanelProps {
   onTextAdd?: (text: string, color: string, fontSize: number) => void
   placedTexts?: Array<{ id: string; text: string; color: string; fontSize: number; x: number; y: number }>
 }
 
-const COLORS = [
-  { id: 'pink', value: '#EC1A66' },
-  { id: 'black', value: '#000000' },
-  { id: 'white', value: '#FFFFFF', border: true },
-  { id: 'lightPink', value: '#FBCFE8' },
-  { id: 'blue', value: '#3B82F6' },
-  { id: 'green', value: '#10B981' },
-  { id: 'yellow', value: '#F59E0B' },
-  { id: 'orange', value: '#F97316' }
-]
-
 export const TextPanel = ({ onTextAdd, placedTexts = [] }: TextPanelProps) => {
   const [textInput, setTextInput] = useState('')
-  const [textColor, setTextColor] = useState(COLORS[0].value)
+  const [textColor, setTextColor] = useState(TEXT_COLORS[0])
   const [fontSize, setFontSize] = useState(24)
+  const [fontPreset, setFontPreset] = useState(0)
 
   const handleAddText = () => {
     if (textInput.trim()) {
@@ -48,17 +39,38 @@ export const TextPanel = ({ onTextAdd, placedTexts = [] }: TextPanelProps) => {
         <div>
           <div className="text-sm font-medium text-gray-700 mb-2">Color</div>
           <div className="flex flex-wrap gap-2">
-            {COLORS.map((color) => (
+            {TEXT_COLORS.slice(0, 8).map((color, i) => (
               <button
-                key={color.id}
-                onClick={() => setTextColor(color.value)}
+                key={i}
+                onClick={() => setTextColor(color)}
                 className={cn(
                   'w-8 h-8 rounded-full transition-all',
-                  textColor === color.value ? 'ring-2 ring-offset-2 ring-[#EC1A66]' : '',
-                  color.border ? 'border-2 border-gray-300' : ''
+                  textColor === color ? 'ring-2 ring-offset-2 ring-[#EC1A66]' : '',
+                  color === '#FFFFFF' ? 'border-2 border-gray-300' : ''
                 )}
-                style={{ backgroundColor: color.value }}
+                style={{ backgroundColor: color }}
               />
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <div className="text-sm font-medium text-gray-700 mb-2">Font</div>
+          <div className="flex gap-2">
+            {TEXT_PRESETS.slice(0, 4).map((preset, i) => (
+              <button
+                key={i}
+                onClick={() => setFontPreset(i)}
+                className={cn(
+                  'flex-1 py-1 rounded-lg border text-xs transition-all',
+                  fontPreset === i 
+                    ? 'border-[#EC1A66] text-[#EC1A66] bg-pink-50' 
+                    : 'border-gray-200 text-gray-700 hover:border-gray-300'
+                )}
+                style={{ fontFamily: `"${preset.font}", serif` }}
+              >
+                {preset.name}
+              </button>
             ))}
           </div>
         </div>

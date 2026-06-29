@@ -1,27 +1,25 @@
 import { useState } from 'react'
 import { cn } from '@/utils/cn'
-import { FILTERS } from '@/constants/filters'
 
 interface FiltersPanelProps {
   value?: string
   onChange?: (filterId: string) => void
 }
 
-const FILTER_COLORS: Record<string, string> = {
-  none: 'bg-pink-200',
-  vintage: 'bg-amber-300',
-  smooth: 'bg-blue-200',
-  '70s': 'bg-orange-300',
-  '80s': 'bg-purple-400',
-  '90s:': 'bg-gray-300',
-  bw: 'bg-gray-700',
-  faded: 'bg-gray-300',
-  lomo: 'bg-teal-300',
-  cool: 'bg-blue-300',
-  warm: 'bg-amber-300',
-  film: 'bg-yellow-400',
-  dreamy: 'bg-purple-200'
-}
+const FILTER_DISPLAY = [
+  { id: 'none', name: 'Original', color: 'bg-pink-200' },
+  { id: 'vintage', name: 'Warm', color: 'bg-orange-300' },
+  { id: 'cool', name: 'Cool', color: 'bg-blue-200' },
+  { id: 'faded', name: 'Fade', color: 'bg-gray-300' },
+  { id: 'lomo', name: 'Vivid', color: 'bg-purple-400' },
+  { id: '80s', name: 'Matte', color: 'bg-amber-200' },
+  { id: 'bw', name: 'Noir', color: 'bg-gray-800' },
+  { id: 'film', name: 'Film', color: 'bg-yellow-400' },
+  { id: 'smooth', name: 'Blush', color: 'bg-pink-100' },
+  { id: 'dreamy', name: 'Mint', color: 'bg-teal-200' },
+  { id: '70s', name: 'Dreamy', color: 'bg-purple-200' },
+  { id: 'warm', name: 'Chrome', color: 'bg-gray-300' },
+] as const
 
 export const FiltersPanel = ({ value = 'none', onChange }: FiltersPanelProps) => {
   const [activeFilter, setActiveFilter] = useState(value)
@@ -38,7 +36,7 @@ export const FiltersPanel = ({ value = 'none', onChange }: FiltersPanelProps) =>
       </div>
       
       <div className="grid grid-cols-4 gap-3">
-        {FILTERS.map((filter) => (
+        {FILTER_DISPLAY.map((filter) => (
           <button
             key={filter.id}
             onClick={() => handleFilterSelect(filter.id)}
@@ -51,7 +49,7 @@ export const FiltersPanel = ({ value = 'none', onChange }: FiltersPanelProps) =>
           >
             <div className={cn(
               'w-12 h-12 rounded-xl',
-              FILTER_COLORS[filter.id] || 'bg-gray-200',
+              filter.color,
               activeFilter === filter.id && 'ring-2 ring-[#EC1A66]'
             )} />
             <span className={cn(
