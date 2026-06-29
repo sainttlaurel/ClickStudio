@@ -13,10 +13,32 @@ All notable changes to ClickStudio are documented here.
 * Feedback form — removed emoji picker, simplified form
 * Template Library — sort dropdown alignment, scrollable grid
 * Frame Styles carousel — unified backgrounds to match Classic card style
+* Polaroid caption — frameOverlay now accepts caption param, shows user text or fallback "ClickStudio"
+* Editor right panel — content centered vertically with flex justify-center
+* Preview page — composite image centered on screen
+* Camera page — carousel arrows now visible on all devices
 * Version bump to 1.7.9 to force PWA service worker cache refresh
 * Editor build — removed broken duplicate layout, restored clean build
 
+### Removed
+* "Browse All Templates" button from CameraPage — reduced bundle by ~21KB
+* "Scroll to browse" hint from CameraPage
+
 ### Improved
+* Landing page — full conversion to new UI/UX reference design:
+  - Glassmorphism fixed nav with scroll-aware background
+  - Hero section with animated photo strip visual, floating badges, radial gradient background
+  - Pink marquee ticker banner (SNAP · POSE · FILTER · SHARE...)
+  - How It Works: 4-step cards with hover reveal arrow
+  - Features: gradient preview cards with icon + tag badges
+  - Templates: horizontal scrollable carousel with active state selection
+  - Testimonials: 5 rotated review cards with alternating backgrounds
+  - Contact / Drop a note: form with Supabase integration + feedback wall
+  - CTA: pink gradient card with floating decorations
+  - Footer: clean minimal footer
+  - Film grain overlay for vintage texture
+  - Reveal-on-scroll animations with staggered delays
+  - Floating decorative elements (hearts, stars, sparkles)
 * Template Library — 10-point senior polish pass:
   - Reduced subtitle opacity for softer feel
   - Search + sort height reduced to 50px for lighter modal
