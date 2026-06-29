@@ -14,6 +14,7 @@ import SettingsPage from '@/pages/SettingsPage'
 import HelpPage from '@/pages/HelpPage'
 import AboutPage from '@/pages/AboutPage'
 import SharePage from '@/pages/SharePage'
+import StudioPage from '@/pages/StudioPage'
 
 function App() {
   const {
@@ -40,6 +41,7 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/studio" element={<StudioPage />} />
         <Route path="/share/:sessionId" element={<SharePage />} />
         <Route element={<Layout />}>
           <Route path="/camera" element={<CameraPage />} />

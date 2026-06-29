@@ -54,6 +54,11 @@ All notable changes to ClickStudio are documented here.
   - `text-muted` → `text-muted-foreground`, `bg-rose-50` → `bg-secondary` across 9 pages
   - SharePage, GalleryPage, SessionHistoryPage, SettingsPage, HelpPage, AboutPage
   - PreviewPage, EditorPage, CameraPage — full token consistency
+* New Photo Booth Editor (/studio):
+  - Full app shell with 64px sidebar, top breadcrumb bar, main canvas, right panel, bottom tabs
+  - Capture screen: camera viewport with corner guides, color swatches, shutter button
+  - Edit screen: Adjust tab (6 sliders), Filters tab (12 swatches), Stickers tab (16 emoji), Text tab (input + colors + size), Frames tab (8 options)
+  - Design system: #EC1A66 pink primary, #F7F7F8 background, gray-400 secondary text
 
 ---
 
