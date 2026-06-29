@@ -58,18 +58,32 @@ export async function bakePhotoEdits(options: BakeOptions): Promise<string> {
   const adjCss = adjustmentsToCss(options.adjustments)
   const combinedFilter = [adjCss, options.filterCss !== 'none' ? options.filterCss : ''].filter(Boolean).join(' ')
 
-  if (options.frameImage) {
-    const frameImg = await loadImage(options.frameImage)
-    ctx.drawImage(frameImg, 0, 0, size.w, size.h)
-    ctx.drawImage(img, 0, 0, size.w, size.h)
+  // object-fit: cover — crop image to fill canvas while preserving aspect ratio
+  const imgAR = img.naturalWidth / img.naturalHeight
+  const canvasAR = size.w / size.h
+  let sx: number, sy: number, sw: number, sh: number
+  if (imgAR > canvasAR) {
+    sh = img.naturalHeight
+    sw = Math.round(sh * canvasAR)
+    sx = Math.round((img.naturalWidth - sw) / 2)
+    sy = 0
   } else {
-    ctx.drawImage(img, 0, 0, size.w, size.h)
+    sw = img.naturalWidth
+    sh = Math.round(sw / canvasAR)
+    sx = 0
+    sy = Math.round((img.naturalHeight - sh) / 2)
   }
+  ctx.drawImage(img, sx, sy, sw, sh, 0, 0, size.w, size.h)
 
   if (combinedFilter) {
     ctx.filter = combinedFilter
-    ctx.drawImage(img, 0, 0, size.w, size.h)
+    ctx.drawImage(img, sx, sy, sw, sh, 0, 0, size.w, size.h)
     ctx.filter = 'none'
+  }
+
+  // CSS frame overlay BEFORE stickers/text so overlays sit on top
+  if (!options.frameImage) {
+    bakeFrameOverlay(ctx, size.w, size.h, options.frameId)
   }
 
   for (const sticker of options.stickers) {
@@ -107,8 +121,10 @@ export async function bakePhotoEdits(options: BakeOptions): Promise<string> {
     ctx.restore()
   }
 
-  if (!options.frameImage) {
-    bakeFrameOverlay(ctx, size.w, size.h, options.frameId)
+  // PNG frame template on top of photo, under stickers/text
+  if (options.frameImage) {
+    const frameImg = await loadImage(options.frameImage)
+    ctx.drawImage(frameImg, 0, 0, size.w, size.h)
   }
 
   return canvas.toDataURL('image/png', 1.0)
