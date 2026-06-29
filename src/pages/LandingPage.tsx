@@ -6,7 +6,6 @@ import { Camera, Star, Send, Loader2, Image, Share2, Printer } from 'lucide-reac
 import { Button } from '@/components/ui/button'
 import { submitFeedback, fetchApprovedFeedback, type DbFeedback } from '@/lib/supabase'
 import { useToast } from '@/store/useUIStore'
-import { cn } from '@/utils/cn'
 
 /* ─── Feature cards ─────────────────────────────────────── */
 const features = [
@@ -210,12 +209,9 @@ export default function LandingPage() {
 
   const [feedbackName, setFeedbackName] = useState('')
   const [feedbackMessage, setFeedbackMessage] = useState('')
-  const [feedbackEmoji, setFeedbackEmoji] = useState('♡')
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false)
   const [feedbackList, setFeedbackList] = useState<DbFeedback[]>([])
   const [isLoadingFeedback, setIsLoadingFeedback] = useState(true)
-
-  const emojiOptions = ['♡', '📸', '✨', '🎀', '⭐', '🌸', '💕', '🔥']
 
   useEffect(() => {
     const loadFeedback = async () => {
@@ -234,11 +230,10 @@ export default function LandingPage() {
     if (!feedbackMessage.trim()) return
     setIsSubmittingFeedback(true)
     try {
-      await submitFeedback(feedbackName || null, feedbackMessage, feedbackEmoji)
+      await submitFeedback(feedbackName || null, feedbackMessage)
       success('Thanks for your feedback! ♡', 'Your message has been added to the wall')
       setFeedbackName('')
       setFeedbackMessage('')
-      setFeedbackEmoji('♡')
       const data = await fetchApprovedFeedback()
       setFeedbackList(data)
     } catch {
@@ -542,19 +537,6 @@ export default function LandingPage() {
                 <textarea id="fb-message" value={feedbackMessage} onChange={e => setFeedbackMessage(e.target.value.slice(0, 160))} placeholder="Say something nice..." rows={3} maxLength={160}
                   className="w-full rounded-xl border border-border bg-rose-50/50 px-4 py-2.5 text-sm text-text placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all resize-none" />
                 <p className="text-xs text-muted text-right mt-1">{feedbackMessage.length}/160</p>
-              </div>
-              <div>
-                <label className="block text-sm text-text font-medium mb-2">Pick an emoji</label>
-                <div className="flex gap-1.5">
-                  {emojiOptions.map(emoji => (
-                    <button key={emoji} type="button" onClick={() => setFeedbackEmoji(emoji)}
-                      className={cn('w-9 h-9 rounded-xl text-base flex items-center justify-center transition-all focus:outline-none focus:ring-2 focus:ring-primary/40',
-                        feedbackEmoji === emoji ? 'bg-primary/10 border-2 border-primary scale-110' : 'bg-rose-50 border border-border hover:border-primary/40'
-                      )} aria-label={`Select emoji ${emoji}`}>
-                      {emoji}
-                    </button>
-                  ))}
-                </div>
               </div>
               <Button type="submit" disabled={!feedbackMessage.trim() || isSubmittingFeedback}
                 icon={isSubmittingFeedback ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}

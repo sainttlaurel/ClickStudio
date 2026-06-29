@@ -149,7 +149,7 @@ export default function TemplateLibrary({ isOpen, onClose, onSelect }: TemplateL
               <select
                 value={sortBy}
                 onChange={e => setSortBy(e.target.value as typeof sortBy)}
-                className="h-12 px-4 rounded-2xl border border-rose-200 bg-white text-xs text-text font-medium focus:outline-none focus:ring-[3px] focus:ring-primary/15 focus:border-primary transition-all shadow-sm"
+                className="h-12 px-4 rounded-2xl border border-rose-200 bg-white text-xs text-text font-medium focus:outline-none focus:ring-[3px] focus:ring-primary/15 focus:border-primary transition-all shadow-sm flex-shrink-0"
               >
                 <option value="popular">Popular</option>
                 <option value="newest">Newest</option>
@@ -222,7 +222,7 @@ export default function TemplateLibrary({ isOpen, onClose, onSelect }: TemplateL
             )}
 
             {/* ── Grid ── */}
-            <div className="flex-1 overflow-y-auto px-8 py-4">
+            <div className="flex-1 min-h-0 overflow-y-auto px-8 py-4">
               {filtered.length === 0 ? (
                 <div className="text-center py-16">
                   <div className="text-4xl mb-3 opacity-40">🔍</div>

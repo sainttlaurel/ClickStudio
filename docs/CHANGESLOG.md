@@ -2,20 +2,31 @@
 
 All notable changes to ClickStudio are documented here.
 
+## v1.7.9 (June 29, 2026)
+
+### Added
+* Side-by-side editor layout — photo canvas left, editor controls right, icon sidebar far left
+* Mobile bottom panel — full-width tab bar and controls on small screens
+
+### Fixed
+* Gallery preview strips — uniform height, all cards fill available space
+* Feedback emoji picker — removed picker entirely, feedback form simplified
+* Template Library — sort dropdown alignment, scrollable grid
+* Editor build — removed broken duplicate layout, restored clean build
+
 ---
 
 ## v1.7.8 (June 28, 2026)
 
 ### Added
-* Polaroid captions — add text below polaroid/blush frames
-* Polaroid caption font selector — 3 font options
+* Polaroid captions — add text below polaroid/blush frames with 3 font options
 
 ---
 
 ## v1.7.7 (June 28, 2026)
 
 ### Changed
-* Selected states — background fill, font-weight 600
+* Selected states — background fill and font-weight 600 for active tabs
 * Text workflow — compact one-row layout with prominent Add button
 * Save button — glow effect when unsaved changes
 * Frame preview — live preview on hover
@@ -41,9 +52,9 @@ All notable changes to ClickStudio are documented here.
 
 ### Changed
 * Canvas space — reduced empty space, larger editing area
-* Bottom panel — compressed to 24vh for more canvas room
+* Bottom panel — compressed to 240px for more canvas room
 * Adjustment sliders — grouped by Light and Color categories
-* Sticker sheet — compact 8-column grid layout
+* Sticker sheet — compact 10-column grid layout
 * Slider component — softer styling with thinner track and thumb
 
 ---
