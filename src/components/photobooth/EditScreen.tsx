@@ -25,22 +25,35 @@ interface TextData {
 
 interface EditScreenProps {
   imageUrl?: string | null
+  adjustments: PhotoAdjustments
+  onAdjustmentsChange: (val: PhotoAdjustments) => void
+  activeFilter: string
+  onFilterChange: (id: string) => void
+  activeFrame: string
+  onFrameChange: (id: string) => void
+  placedStickers: StickerData[]
+  onStickersChange: (stickers: StickerData[]) => void
+  placedTexts: TextData[]
+  onTextsChange: (texts: TextData[]) => void
 }
 
-export const EditScreen = ({ imageUrl }: EditScreenProps) => {
+export const EditScreen = ({ 
+  imageUrl,
+  adjustments,
+  onAdjustmentsChange,
+  activeFilter,
+  onFilterChange,
+  activeFrame,
+  onFrameChange,
+  placedStickers,
+  onStickersChange,
+  placedTexts,
+  onTextsChange
+}: EditScreenProps) => {
   const [activeTab, setActiveTab] = useState<EditorTab>('adjust')
-  const [adjustments, setAdjustments] = useState<PhotoAdjustments>({
-    brightness: 0, contrast: 0, saturation: 0,
-    exposure: 0, shadows: 0, highlights: 0,
-    temperature: 0, tint: 0
-  })
-  const [activeFilter, setActiveFilter] = useState('none')
-  const [activeFrame, setActiveFrame] = useState('none')
-  const [placedStickers, setPlacedStickers] = useState<StickerData[]>([])
-  const [placedTexts, setPlacedTexts] = useState<TextData[]>([])
 
   const handleStickerAdd = (emoji: string) => {
-    setPlacedStickers(prev => [...prev, {
+    onStickersChange([...placedStickers, {
       id: `sticker-${Date.now()}`,
       emoji,
       x: 50 + Math.random() * 20 - 10,
@@ -51,7 +64,7 @@ export const EditScreen = ({ imageUrl }: EditScreenProps) => {
   }
 
   const handleTextAdd = (text: string, color: string, fontSize: number) => {
-    setPlacedTexts(prev => [...prev, {
+    onTextsChange([...placedTexts, {
       id: `text-${Date.now()}`,
       text,
       color,
@@ -76,11 +89,11 @@ export const EditScreen = ({ imageUrl }: EditScreenProps) => {
         activeTab={activeTab}
         onTabChange={setActiveTab}
         adjustments={adjustments}
-        onAdjustmentsChange={setAdjustments}
+        onAdjustmentsChange={onAdjustmentsChange}
         activeFilter={activeFilter}
-        onFilterChange={setActiveFilter}
+        onFilterChange={onFilterChange}
         activeFrame={activeFrame}
-        onFrameChange={setActiveFrame}
+        onFrameChange={onFrameChange}
         onStickerAdd={handleStickerAdd}
         onTextAdd={handleTextAdd}
         placedStickers={placedStickers}
