@@ -2,22 +2,25 @@ import { useState } from 'react'
 import { Canvas } from './Canvas'
 import { RightPanel } from './RightPanel'
 import type { EditorTab } from './BottomTabs'
-import type { Adjustments } from './AdjustPanel'
+import type { PhotoAdjustments } from '@/types'
 
-interface Sticker {
+interface StickerData {
   id: string
   emoji: string
   x: number
   y: number
+  scale?: number
+  rotation?: number
 }
 
-interface TextLayer {
+interface TextData {
   id: string
   text: string
   color: string
   fontSize: number
   x: number
   y: number
+  font?: string
 }
 
 interface EditScreenProps {
@@ -26,25 +29,24 @@ interface EditScreenProps {
 
 export const EditScreen = ({ imageUrl }: EditScreenProps) => {
   const [activeTab, setActiveTab] = useState<EditorTab>('adjust')
-  const [adjustments, setAdjustments] = useState<Adjustments>({
-    brightness: 50,
-    contrast: 50,
-    saturation: 50,
-    sharpness: 50,
-    warmth: 50,
-    fade: 0
+  const [adjustments, setAdjustments] = useState<PhotoAdjustments>({
+    brightness: 0, contrast: 0, saturation: 0,
+    exposure: 0, shadows: 0, highlights: 0,
+    temperature: 0, tint: 0
   })
-  const [activeFilter, setActiveFilter] = useState('original')
+  const [activeFilter, setActiveFilter] = useState('none')
   const [activeFrame, setActiveFrame] = useState('none')
-  const [placedStickers, setPlacedStickers] = useState<Sticker[]>([])
-  const [placedTexts, setPlacedTexts] = useState<TextLayer[]>([])
+  const [placedStickers, setPlacedStickers] = useState<StickerData[]>([])
+  const [placedTexts, setPlacedTexts] = useState<TextData[]>([])
 
   const handleStickerAdd = (emoji: string) => {
     setPlacedStickers(prev => [...prev, {
       id: `sticker-${Date.now()}`,
       emoji,
-      x: 50,
-      y: 50
+      x: 50 + Math.random() * 20 - 10,
+      y: 50 + Math.random() * 20 - 10,
+      scale: 1,
+      rotation: 0
     }])
   }
 
@@ -55,20 +57,21 @@ export const EditScreen = ({ imageUrl }: EditScreenProps) => {
       color,
       fontSize,
       x: 50,
-      y: 50
+      y: 50,
+      font: 'sans-serif'
     }])
   }
 
   return (
     <div className="flex-1 flex">
-      {/* Canvas */}
       <Canvas 
         imageUrl={imageUrl} 
         isEditing 
-        hasStickers={activeTab === 'stickers' && placedStickers.length > 0}
+        filterId={activeFilter}
+        stickers={placedStickers}
+        texts={placedTexts}
       />
       
-      {/* Right panel */}
       <RightPanel
         activeTab={activeTab}
         onTabChange={setActiveTab}

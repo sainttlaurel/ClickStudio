@@ -1,55 +1,51 @@
 import { useState } from 'react'
+import type { PhotoAdjustments } from '@/types'
 
-export interface Adjustments {
-  brightness: number
-  contrast: number
-  saturation: number
-  sharpness: number
-  warmth: number
-  fade: number
-}
-
-interface AdjustPanelProps {
-  value?: Adjustments
-  onChange?: (value: Adjustments) => void
+export interface AdjustPanelProps {
+  value?: PhotoAdjustments
+  onChange?: (value: PhotoAdjustments) => void
 }
 
 export const AdjustPanel = ({ value, onChange }: AdjustPanelProps) => {
-  const [adjustments, setAdjustments] = useState<Adjustments>(value || {
-    brightness: 50,
-    contrast: 50,
-    saturation: 50,
-    sharpness: 50,
-    warmth: 50,
-    fade: 0
+  const [adjustments, setAdjustments] = useState<PhotoAdjustments>(value || {
+    brightness: 0,
+    contrast: 0,
+    saturation: 0,
+    exposure: 0,
+    shadows: 0,
+    highlights: 0,
+    temperature: 0,
+    tint: 0
   })
 
-  const sliders = [
-    { key: 'brightness', label: 'Brightness', min: 0, max: 100 },
-    { key: 'contrast', label: 'Contrast', min: 0, max: 100 },
-    { key: 'saturation', label: 'Saturation', min: 0, max: 100 },
-    { key: 'sharpness', label: 'Sharpness', min: 0, max: 100 },
-    { key: 'warmth', label: 'Warmth', min: 0, max: 100 },
-    { key: 'fade', label: 'Fade', min: 0, max: 100 }
+  const sliders: Array<{ key: keyof PhotoAdjustments; label: string; min: number; max: number }> = [
+    { key: 'brightness', label: 'Brightness', min: -100, max: 100 },
+    { key: 'contrast', label: 'Contrast', min: -100, max: 100 },
+    { key: 'saturation', label: 'Saturation', min: -100, max: 100 },
+    { key: 'exposure', label: 'Exposure', min: -100, max: 100 },
+    { key: 'shadows', label: 'Shadows', min: -100, max: 100 },
+    { key: 'highlights', label: 'Highlights', min: -100, max: 100 }
   ]
 
+  const handleSliderChange = (key: keyof PhotoAdjustments, newValue: number) => {
+    const updated = { ...adjustments, [key]: newValue }
+    setAdjustments(updated)
+    onChange?.(updated)
+  }
+
   const handleReset = () => {
-    setAdjustments({
-      brightness: 50,
-      contrast: 50,
-      saturation: 50,
-      sharpness: 50,
-      warmth: 50,
-      fade: 0
-    })
-    onChange?.({
-      brightness: 50,
-      contrast: 50,
-      saturation: 50,
-      sharpness: 50,
-      warmth: 50,
-      fade: 0
-    })
+    const reset: PhotoAdjustments = {
+      brightness: 0,
+      contrast: 0,
+      saturation: 0,
+      exposure: 0,
+      shadows: 0,
+      highlights: 0,
+      temperature: 0,
+      tint: 0
+    }
+    setAdjustments(reset)
+    onChange?.(reset)
   }
 
   return (
@@ -63,18 +59,14 @@ export const AdjustPanel = ({ value, onChange }: AdjustPanelProps) => {
           <div key={key}>
             <div className="flex justify-between items-center mb-2">
               <span className="text-sm font-medium text-gray-700">{label}</span>
-              <span className="text-sm text-gray-400">{adjustments[key as keyof Adjustments]}</span>
+              <span className="text-sm text-gray-400">{adjustments[key]}</span>
             </div>
             <input
               type="range"
               min={min}
               max={max}
-              value={adjustments[key as keyof Adjustments]}
-              onChange={(e) => {
-                const newValue = parseInt(e.target.value)
-                setAdjustments(prev => ({ ...prev, [key]: newValue }))
-                onChange?.({ ...adjustments, [key]: newValue })
-              }}
+              value={adjustments[key]}
+              onChange={(e) => handleSliderChange(key, parseInt(e.target.value))}
               className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer
                 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 
                 [&::-webkit-slider-thumb]:bg-[#EC1A66] [&::-webkit-slider-thumb]:rounded-full 

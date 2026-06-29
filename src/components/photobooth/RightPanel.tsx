@@ -4,13 +4,13 @@ import { StickersPanel } from './StickersPanel'
 import { TextPanel } from './TextPanel'
 import { FramesPanel } from './FramesPanel'
 import { BottomTabs, type EditorTab } from './BottomTabs'
-import type { Adjustments } from './AdjustPanel'
+import type { PhotoAdjustments } from '@/types'
 
 interface RightPanelProps {
   activeTab: EditorTab
   onTabChange: (tab: EditorTab) => void
-  adjustments: Adjustments
-  onAdjustmentsChange: (val: Adjustments) => void
+  adjustments: PhotoAdjustments
+  onAdjustmentsChange: (val: PhotoAdjustments) => void
   activeFilter: string
   onFilterChange: (id: string) => void
   activeFrame: string
@@ -37,7 +37,6 @@ export const RightPanel = ({
 }: RightPanelProps) => {
   return (
     <div className="w-[240px] bg-white border-l border-gray-200 flex flex-col">
-      {/* Tab content */}
       <div className="flex-1 overflow-y-auto">
         {activeTab === 'adjust' && (
           <AdjustPanel value={adjustments} onChange={onAdjustmentsChange} />
@@ -56,7 +55,6 @@ export const RightPanel = ({
         )}
       </div>
       
-      {/* Bottom tabs */}
       <BottomTabs activeTab={activeTab} onTabChange={onTabChange} />
     </div>
   )

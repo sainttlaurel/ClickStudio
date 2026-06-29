@@ -1,27 +1,29 @@
 import { useState } from 'react'
 import { cn } from '@/utils/cn'
+import { FILTERS } from '@/constants/filters'
 
 interface FiltersPanelProps {
   value?: string
   onChange?: (filterId: string) => void
 }
 
-const FILTERS = [
-  { id: 'original', name: 'Original', color: 'bg-pink-200' },
-  { id: 'warm', name: 'Warm', color: 'bg-orange-300' },
-  { id: 'cool', name: 'Cool', color: 'bg-blue-200' },
-  { id: 'fade', name: 'Fade', color: 'bg-gray-300' },
-  { id: 'vivid', name: 'Vivid', color: 'bg-purple-400' },
-  { id: 'matte', name: 'Matte', color: 'bg-amber-200' },
-  { id: 'noir', name: 'Noir', color: 'bg-gray-800' },
-  { id: 'film', name: 'Film', color: 'bg-yellow-400' },
-  { id: 'blush', name: 'Blush', color: 'bg-pink-100' },
-  { id: 'mint', name: 'Mint', color: 'bg-teal-200' },
-  { id: 'dreamy', name: 'Dreamy', color: 'bg-purple-200' },
-  { id: 'chrome', name: 'Chrome', color: 'bg-gray-300' }
-]
+const FILTER_COLORS: Record<string, string> = {
+  none: 'bg-pink-200',
+  vintage: 'bg-amber-300',
+  smooth: 'bg-blue-200',
+  '70s': 'bg-orange-300',
+  '80s': 'bg-purple-400',
+  '90s:': 'bg-gray-300',
+  bw: 'bg-gray-700',
+  faded: 'bg-gray-300',
+  lomo: 'bg-teal-300',
+  cool: 'bg-blue-300',
+  warm: 'bg-amber-300',
+  film: 'bg-yellow-400',
+  dreamy: 'bg-purple-200'
+}
 
-export const FiltersPanel = ({ value = 'original', onChange }: FiltersPanelProps) => {
+export const FiltersPanel = ({ value = 'none', onChange }: FiltersPanelProps) => {
   const [activeFilter, setActiveFilter] = useState(value)
 
   const handleFilterSelect = (filterId: string) => {
@@ -49,7 +51,7 @@ export const FiltersPanel = ({ value = 'original', onChange }: FiltersPanelProps
           >
             <div className={cn(
               'w-12 h-12 rounded-xl',
-              filter.color,
+              FILTER_COLORS[filter.id] || 'bg-gray-200',
               activeFilter === filter.id && 'ring-2 ring-[#EC1A66]'
             )} />
             <span className={cn(

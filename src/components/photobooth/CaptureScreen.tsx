@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useRef, useCallback, useState } from 'react'
+import { cameraManager } from '@/utils/camera'
+import { usePhotoStore } from '@/store/usePhotoStore'
 import { cn } from '@/utils/cn'
 
 const COLOR_SWATCHES_ROW1 = [
@@ -20,30 +22,76 @@ const COLOR_SWATCHES_ROW2 = [
 ]
 
 interface CaptureScreenProps {
-  onCapture?: () => void
+  onCapture: (imageUrl: string) => void
 }
 
 export const CaptureScreen = ({ onCapture }: CaptureScreenProps) => {
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
   const [selectedColor, setSelectedColor] = useState(COLOR_SWATCHES_ROW1[0].id)
+  const [cameraReady, setCameraReady] = useState(false)
+  const [cameraError, setCameraError] = useState<string | null>(null)
+  const { cameraSettings } = usePhotoStore()
+
+  useEffect(() => {
+    const startCamera = async () => {
+      if (!videoRef.current) return
+      try {
+        await cameraManager.startCamera(cameraSettings, videoRef.current)
+        setCameraReady(true)
+      } catch (err) {
+        setCameraError('Camera access denied or unavailable')
+      }
+    }
+    startCamera()
+    return () => { cameraManager.stopCamera() }
+  }, [cameraSettings])
+
+  const handleCapture = useCallback(() => {
+    if (!videoRef.current || !canvasRef.current) return
+    const video = videoRef.current
+    const canvas = canvasRef.current
+    canvas.width = video.videoWidth
+    canvas.height = video.videoHeight
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    ctx.drawImage(video, 0, 0)
+    const imageUrl = canvas.toDataURL('image/png')
+    onCapture(imageUrl)
+  }, [onCapture])
 
   return (
     <div className="flex-1 flex flex-col items-center justify-center p-6">
+      <canvas ref={canvasRef} className="hidden" />
+      
       {/* Camera viewport */}
       <div className="w-[300px] h-[300px] rounded-2xl overflow-hidden bg-[#0F172A] relative mb-8">
-        <div className="absolute inset-0 flex items-center justify-center flex-col">
-          <div className="absolute top-3 left-3 w-5 h-5 border-t-2 border-l-2 border-white/40 rounded-tl-sm" />
-          <div className="absolute top-3 right-3 w-5 h-5 border-t-2 border-r-2 border-white/40 rounded-tr-sm" />
-          <div className="absolute bottom-3 left-3 w-5 h-5 border-b-2 border-l-2 border-white/40 rounded-bl-sm" />
-          <div className="absolute bottom-3 right-3 w-5 h-5 border-b-2 border-r-2 border-white/40 rounded-br-sm" />
-          
-          <div className="w-14 h-14 rounded-full border-2 border-white/20 flex items-center justify-center mb-3">
-            <svg className="w-6 h-6 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-            </svg>
+        <video
+          ref={videoRef}
+          autoPlay
+          playsInline
+          muted
+          className="w-full h-full object-cover"
+        />
+        {!cameraReady && !cameraError && (
+          <div className="absolute inset-0 flex items-center justify-center flex-col">
+            <div className="absolute top-3 left-3 w-5 h-5 border-t-2 border-l-2 border-white/40 rounded-tl-sm" />
+            <div className="absolute top-3 right-3 w-5 h-5 border-t-2 border-r-2 border-white/40 rounded-tr-sm" />
+            <div className="absolute bottom-3 left-3 w-5 h-5 border-b-2 border-l-2 border-white/40 rounded-bl-sm" />
+            <div className="absolute bottom-3 right-3 w-5 h-5 border-b-2 border-r-2 border-white/40 rounded-br-sm" />
+            <div className="w-14 h-14 rounded-full border-2 border-white/20 flex items-center justify-center mb-3">
+              <svg className="w-6 h-6 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+              </svg>
+            </div>
+            <span className="text-white/40 text-sm">Camera will appear here</span>
           </div>
-          
-          <span className="text-white/40 text-sm">Camera will appear here</span>
-        </div>
+        )}
+        {cameraError && (
+          <div className="absolute inset-0 flex items-center justify-center text-white/60 text-sm p-4 text-center">
+            {cameraError}
+          </div>
+        )}
       </div>
       
       {/* Color swatches - Row 1 */}
@@ -82,8 +130,9 @@ export const CaptureScreen = ({ onCapture }: CaptureScreenProps) => {
       
       {/* Shutter button */}
       <button 
-        onClick={onCapture}
-        className="w-14 h-14 rounded-full bg-[#EC1A66] flex items-center justify-center hover:bg-[#EC1A66]/90 transition-all active:scale-95"
+        onClick={handleCapture}
+        disabled={!cameraReady}
+        className="w-14 h-14 rounded-full bg-[#EC1A66] flex items-center justify-center hover:bg-[#EC1A66]/90 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />

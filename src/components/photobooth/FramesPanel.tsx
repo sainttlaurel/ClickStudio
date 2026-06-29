@@ -1,21 +1,11 @@
 import { useState } from 'react'
 import { cn } from '@/utils/cn'
+import { FRAMES } from '@/constants/frames'
 
 interface FramesPanelProps {
   value?: string
   onChange?: (frameId: string) => void
 }
-
-const FRAMES = [
-  { id: 'none', name: 'None' },
-  { id: 'classic', name: 'Classic' },
-  { id: 'polaroid', name: 'Polaroid' },
-  { id: 'vintage', name: 'Vintage' },
-  { id: 'neon', name: 'Neon' },
-  { id: 'minimal', name: 'Minimal' },
-  { id: 'floral', name: 'Floral' },
-  { id: 'stars', name: 'Stars' }
-]
 
 export const FramesPanel = ({ value = 'none', onChange }: FramesPanelProps) => {
   const [activeFrame, setActiveFrame] = useState(value)
