@@ -363,7 +363,6 @@ export const PhotoBoothEditor = () => {
                 onFilterChange={(id) => { pushUndo(); setActiveFilter(id) }}
                 activeFrame={activeFrame}
                 onFrameChange={(id) => { pushUndo(); setActiveFrame(id); setActiveFrameImage(undefined) }}
-                onFrameHover={() => {}}
                 frameImage={activeFrameImage}
                 templateAspectRatio={templateAspectRatio}
                 placedStickers={placedStickers}

@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import { Camera, Palette, Download, Shield, Monitor, HardDrive, Globe, Bell, Trash2 } from 'lucide-react'
+import { Camera, Palette, Download, Shield, Monitor, HardDrive, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { Slider } from '@/components/ui/slider'
 import { useUIStore } from '@/store/useUIStore'
@@ -21,7 +20,6 @@ export default function SettingsPage() {
   const [flash, setFlash] = useState(cameraSettings.flash)
   const [exportQuality, setExportQuality] = useState(100)
   const [autoSave, setAutoSave] = useState(true)
-  const [notifications, setNotifications] = useState(true)
 
   const handleCameraSave = () => {
     setCameraSettings({ facingMode, countdown, grid, flash })
@@ -90,6 +88,7 @@ export default function SettingsPage() {
                   value={facingMode}
                   onChange={e => setFacingMode(e.target.value as 'user' | 'environment')}
                   className="w-full px-3 py-2 rounded-xl border border-border bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  aria-label="Select camera facing mode"
                 >
                   <option value="user">Front (Selfie)</option>
                   <option value="environment">Back (Rear)</option>
@@ -224,7 +223,7 @@ export default function SettingsPage() {
                   <p className="font-medium text-foreground">Export Format</p>
                   <p className="text-sm text-muted-foreground">Default format for downloads</p>
                 </div>
-                <select className="px-3 py-2 rounded-xl border border-border bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                <select className="px-3 py-2 rounded-xl border border-border bg-white text-sm focus:outline-none focus:ring-2 focus:ring-primary" aria-label="Select export format">
                   <option value="png">PNG (Lossless)</option>
                   <option value="jpg">JPEG (Smaller)</option>
                   <option value="webp">WebP (Modern)</option>
