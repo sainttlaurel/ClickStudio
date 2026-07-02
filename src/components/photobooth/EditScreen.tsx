@@ -31,6 +31,7 @@ interface EditScreenProps {
   onFilterChange: (id: string) => void
   activeFrame: string
   onFrameChange: (id: string) => void
+  onFrameHover?: (frameId: string | null) => void
   frameImage?: string
   templateAspectRatio?: string
   placedStickers: StickerData[]
@@ -51,6 +52,7 @@ export const EditScreen = ({
   onFilterChange,
   activeFrame,
   onFrameChange,
+  onFrameHover,
   frameImage,
   templateAspectRatio,
   placedStickers,
@@ -64,6 +66,7 @@ export const EditScreen = ({
 }: EditScreenProps) => {
   const [activeTab, setActiveTab] = useState<EditorTab>('adjust')
   const [pendingTextConfig, setPendingTextConfig] = useState<{ text: string; color: string; fontSize: number; font: string } | null>(null)
+  const [hoveredFrame, setHoveredFrame] = useState<string | null>(null)
 
   const handleTextAdd = (text: string, color: string, fontSize: number, font?: string) => {
     setPendingTextConfig({ text, color, fontSize, font: font || 'sans-serif' })
@@ -94,13 +97,13 @@ export const EditScreen = ({
   }
 
   return (
-    <div className="flex-1 flex">
+    <div className="flex-1 flex h-full">
       <div className="flex-1 flex items-center justify-center overflow-hidden bg-[#F0F0F2]">
         <Canvas 
           imageUrl={imageUrl} 
           isEditing 
           filterId={activeFilter}
-          frameId={activeFrame}
+          frameId={hoveredFrame || activeFrame}
           frameImage={frameImage}
           templateAspectRatio={templateAspectRatio}
           stickers={placedStickers}
@@ -122,6 +125,7 @@ export const EditScreen = ({
         onFilterChange={onFilterChange}
         activeFrame={activeFrame}
         onFrameChange={onFrameChange}
+        onFrameHover={setHoveredFrame}
         onStickerSelect={handleStickerSelect}
         selectedStickerEmoji={selectedStickerEmoji}
         onTextAdd={handleTextAdd}

@@ -22,7 +22,7 @@ export const TextPanel = ({ onTextAdd, placedTexts = [] }: TextPanelProps) => {
 
   return (
     <div className="p-4">
-      <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
+      <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
         Add Text
       </div>
       
@@ -33,31 +33,15 @@ export const TextPanel = ({ onTextAdd, placedTexts = [] }: TextPanelProps) => {
           onChange={(e) => setTextInput(e.target.value)}
           placeholder="Type something..."
           aria-label="Text input"
-          className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-studio/50"
+          className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-studio/50"
           onKeyDown={(e) => e.key === 'Enter' && handleAddText()}
         />
         
+        {/* Typography Section */}
         <div>
-          <div className="text-sm font-medium text-gray-700 mb-2">Color</div>
-          <div className="flex flex-wrap gap-2">
-            {TEXT_COLORS.slice(0, 8).map((color, i) => (
-              <button
-                key={i}
-                onClick={() => setTextColor(color)}
-                aria-label={`Select color ${color}`}
-                className={cn(
-                  'w-8 h-8 rounded-full transition-all',
-                  textColor === color ? 'ring-2 ring-offset-2 ring-studio' : '',
-                  color === '#FFFFFF' ? 'border-2 border-gray-300' : ''
-                )}
-                style={{ backgroundColor: color }}
-              />
-            ))}
+          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+            Typography
           </div>
-        </div>
-
-        <div>
-          <div className="text-sm font-medium text-gray-700 mb-2">Font</div>
           <div className="flex gap-2">
             {TEXT_PRESETS.slice(0, 4).map((preset, i) => (
               <button
@@ -65,10 +49,10 @@ export const TextPanel = ({ onTextAdd, placedTexts = [] }: TextPanelProps) => {
                 onClick={() => setFontPreset(i)}
                 aria-label={`Select font ${preset.name}`}
                 className={cn(
-                  'flex-1 py-1 rounded-lg border text-xs transition-all',
+                  'flex-1 py-1.5 rounded-lg border text-xs transition-all',
                   fontPreset === i
-                    ? 'border-studio text-studio bg-pink-50'
-                    : 'border-gray-200 text-gray-700 hover:border-gray-300'
+                    ? 'border-studio text-studio bg-pink-50 font-medium'
+                    : 'border-gray-200 text-gray-600 hover:border-gray-300'
                 )}
                 style={{ fontFamily: `"${preset.font}", serif` }}
               >
@@ -77,9 +61,37 @@ export const TextPanel = ({ onTextAdd, placedTexts = [] }: TextPanelProps) => {
             ))}
           </div>
         </div>
-        
+
+        {/* Appearance Section */}
         <div>
-          <div className="text-sm font-medium text-gray-700 mb-2">Font size</div>
+          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+            Appearance
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {TEXT_COLORS.slice(0, 8).map((color, i) => (
+              <button
+                key={i}
+                onClick={() => setTextColor(color)}
+                aria-label={`Select color ${color}`}
+                className={cn(
+                  'w-7 h-7 rounded-full transition-all',
+                  textColor === color ? 'ring-2 ring-offset-2 ring-studio scale-110' : '',
+                  color === '#FFFFFF' ? 'border-2 border-gray-300' : ''
+                )}
+                style={{ backgroundColor: color }}
+              />
+            ))}
+          </div>
+        </div>
+        
+        {/* Size Section */}
+        <div>
+          <div className="flex justify-between items-center mb-2">
+            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              Size
+            </div>
+            <span className="text-xs font-mono text-gray-400">{fontSize}px</span>
+          </div>
           <input
             type="range"
             min={12}
@@ -87,34 +99,35 @@ export const TextPanel = ({ onTextAdd, placedTexts = [] }: TextPanelProps) => {
             value={fontSize}
             onChange={(e) => setFontSize(parseInt(e.target.value))}
             aria-label="Font size"
-            className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer
+            className="w-full h-1 bg-gray-200 rounded-full appearance-none cursor-pointer transition-all
               [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 
               [&::-webkit-slider-thumb]:bg-studio [&::-webkit-slider-thumb]:rounded-full 
-              [&::-webkit-slider-thumb]:cursor-pointer"
+              [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:transition-transform
+              [&::-webkit-slider-thumb]:hover:scale-110"
           />
         </div>
         
         <button
           onClick={handleAddText}
           aria-label="Add text to photo"
-          className="w-full py-2.5 rounded-full bg-studio text-white font-medium text-sm hover:bg-studio/90 transition-all"
+          className="w-full py-2 rounded-lg bg-studio text-white font-medium text-sm hover:bg-studio/90 transition-all"
         >
-          Add to Photo
+          + Add Text
         </button>
       </div>
       
       {placedTexts.length > 0 && (
-        <div className="mt-6">
-          <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+        <div className="mt-4 pt-4 border-t border-gray-100">
+          <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
             Placed ({placedTexts.length})
           </div>
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             {placedTexts.map((text) => (
               <div 
                 key={text.id}
                 className="p-2 rounded-lg bg-gray-50 flex items-center justify-between"
               >
-                <span className="text-sm truncate" style={{ color: text.color }}>
+                <span className="text-xs truncate" style={{ color: text.color }}>
                   {text.text}
                 </span>
                 <span className="text-xs text-gray-400">{text.fontSize}px</span>

@@ -2,7 +2,7 @@
 
 A modern web photo booth — capture, edit, and share photo strips directly in the browser. No app download required.
 
-**Live:** [clickstudio.vercel.app](https://clickstudio.vercel.app)
+**Version:** 1.8.0 | **Live:** [clickstudio.vercel.app](https://clickstudio.vercel.app)
 
 ---
 
@@ -15,13 +15,14 @@ A modern web photo booth — capture, edit, and share photo strips directly in t
 - **Retake** — Thumbnail strip after each shot; delete and reshoot any photo
 
 ### Templates
-- **37 Templates** across 15 categories: Birthday, Wedding, Graduation, Couple, Friends, Family, Holiday, K-Pop, Vintage, Minimal, Aesthetic, Seasonal, Corporate, Custom — including 9 PNG frame templates (Anniversary, Valentine, Family, Christmas, etc.)
+- **37 Templates** — 28 from the library + 9 PNG frame templates (Anniversary, Valentine, Family, Christmas, etc.) across 15 categories: Birthday, Wedding, Graduation, Couple, Friends, Family, Holiday, K-Pop, Vintage, Minimal, Aesthetic, Seasonal, Corporate, Custom
 - **Template Carousel** — Centered horizontal scroll with snap, glassmorphism arrows, floating cards with badges (New/Popular/Trending)
 - **Template Library Modal** — Search, sort (Popular/Newest/A–Z), favorites, responsive grid, snap-scrolling category chips
 - **Classic & Frame Styles** — Toggle between plain layouts and decorative frame templates
 
 ### Edit (Preview Page)
 - **Filters** — 13 film presets (Vintage, B&W, Dreamy, etc.) applied per-photo with live preview thumbnails
+- **Adjustments** — Brightness, contrast, saturation, exposure, highlights, shadows, temperature, tint per-photo
 - **Frame Overlays** — Clean, Film, Blush, Minimal, Polaroid — applied per-photo at capture or in editor
 - **Stickers** — 10 themed packs (160+ emoji): Coquette, Y2K, Nature, Hearts, Food, Animals, etc.
 - **Text Overlays** — 6 font presets, 15 colors, adjustable size — drag to reposition
@@ -118,13 +119,13 @@ src/
 │   └── index.ts            # Barrel export (filters, frames)
 ├── pages/
 │   ├── LandingPage.tsx     # Landing with feedback wall
-│   ├── CameraPage.tsx      # Camera, template carousel, filters, frames, mirror, timer
-│   ├── PreviewPage.tsx     # Composite result, edit, retake, QR, PDF, download
-│   ├── EditorPage.tsx      # Adjustments, stickers, text, filters, frames (compact layout)
+│   ├── CameraPage.tsx      # Redirects to /studio (deprecated)
+│   ├── PreviewPage.tsx     # Redirects to /studio (deprecated)
+│   ├── EditorPage.tsx      # Redirects to /studio (deprecated)
+│   ├── SharePage.tsx       # Public share page /share/[sessionId]
 │   ├── AboutPage.tsx       # About / tech stack
 │   ├── HelpPage.tsx        # Help / FAQ
 │   ├── SettingsPage.tsx    # Settings
-│   ├── SharePage.tsx       # Public share page /share/[sessionId]
 │   ├── GalleryPage.tsx     # Placeholder (planned)
 │   └── SessionHistoryPage.tsx  # Placeholder (planned)
 ├── store/

@@ -15,6 +15,7 @@ interface RightPanelProps {
   onFilterChange: (id: string) => void
   activeFrame: string
   onFrameChange: (id: string) => void
+  onFrameHover?: (frameId: string | null) => void
   selectedStickerEmoji?: string | null
   onStickerSelect: (emoji: string) => void
   onTextAdd: (text: string, color: string, fontSize: number, font?: string) => void
@@ -31,6 +32,7 @@ export const RightPanel = ({
   onFilterChange,
   activeFrame,
   onFrameChange,
+  onFrameHover,
   selectedStickerEmoji,
   onStickerSelect,
   onTextAdd,
@@ -38,8 +40,8 @@ export const RightPanel = ({
   placedTexts
 }: RightPanelProps) => {
   return (
-    <div className="w-[200px] bg-white border-l border-gray-200 flex flex-col flex-shrink-0">
-      <div className="flex-1 overflow-y-auto">
+    <div className="w-[280px] bg-white border-l border-gray-200 flex flex-col flex-shrink-0">
+      <div className="flex-1 overflow-y-auto max-h-[calc(100vh-14rem)]">
         {activeTab === 'adjust' && (
           <AdjustPanel value={adjustments} onChange={onAdjustmentsChange} />
         )}
@@ -53,7 +55,7 @@ export const RightPanel = ({
           <TextPanel onTextAdd={onTextAdd} placedTexts={placedTexts} />
         )}
         {activeTab === 'frames' && (
-          <FramesPanel value={activeFrame} onChange={onFrameChange} />
+          <FramesPanel value={activeFrame} onChange={onFrameChange} onHover={onFrameHover} />
         )}
       </div>
 

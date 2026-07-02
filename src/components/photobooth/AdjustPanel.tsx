@@ -9,17 +9,20 @@ export interface AdjustPanelProps {
 }
 
 const LIGHT_SLIDERS: Array<{ key: keyof PhotoAdjustments; label: string; min: number; max: number }> = [
-  { key: 'exposure', label: 'Exposure', min: -100, max: 100 },
   { key: 'brightness', label: 'Brightness', min: -100, max: 100 },
   { key: 'contrast', label: 'Contrast', min: -100, max: 100 },
-  { key: 'highlights', label: 'Highlights', min: -100, max: 100 },
-  { key: 'shadows', label: 'Shadows', min: 0, max: 100 },
+  { key: 'exposure', label: 'Exposure', min: -100, max: 100 },
 ]
 
 const COLOR_SLIDERS: Array<{ key: keyof PhotoAdjustments; label: string; min: number; max: number }> = [
   { key: 'saturation', label: 'Saturation', min: -100, max: 100 },
   { key: 'temperature', label: 'Temperature', min: -100, max: 100 },
   { key: 'tint', label: 'Tint', min: -100, max: 100 },
+]
+
+const DETAILS_SLIDERS: Array<{ key: keyof PhotoAdjustments; label: string; min: number; max: number }> = [
+  { key: 'shadows', label: 'Shadows', min: 0, max: 100 },
+  { key: 'highlights', label: 'Highlights', min: -100, max: 100 },
 ]
 
 const RESET_VALUE: PhotoAdjustments = {
@@ -48,6 +51,7 @@ export const AdjustPanel = ({ value, onChange }: AdjustPanelProps) => {
   const adjustments = value || RESET_VALUE
   const [lightOpen, setLightOpen] = useState(true)
   const [colorOpen, setColorOpen] = useState(true)
+  const [detailsOpen, setDetailsOpen] = useState(true)
 
   const handleSliderChange = (key: keyof PhotoAdjustments, newValue: number) => {
     onChange?.({ ...adjustments, [key]: newValue })
@@ -58,10 +62,10 @@ export const AdjustPanel = ({ value, onChange }: AdjustPanelProps) => {
   }
 
   const renderSliders = (sliders: typeof LIGHT_SLIDERS) => sliders.map(({ key, label, min, max }) => (
-    <div key={key}>
-      <div className="flex justify-between items-center mb-2">
-        <span className="text-sm font-medium text-gray-700">{label}</span>
-        <span className="text-sm font-mono text-gray-500">{adjustments[key] > 0 ? `+${adjustments[key]}` : adjustments[key]}</span>
+    <div key={key} className="mb-3">
+      <div className="flex justify-between items-center mb-1.5">
+        <span className="text-xs font-medium text-gray-600">{label}</span>
+        <span className="text-xs font-mono text-gray-400">{adjustments[key] > 0 ? `+${adjustments[key]}` : adjustments[key]}</span>
       </div>
       <input
         type="range"
@@ -70,17 +74,19 @@ export const AdjustPanel = ({ value, onChange }: AdjustPanelProps) => {
         value={adjustments[key]}
         onChange={(e) => handleSliderChange(key, parseInt(e.target.value))}
         aria-label={`${label} adjustment`}
-        className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer
+        className="w-full h-1 bg-gray-200 rounded-full appearance-none cursor-pointer transition-all
           [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 
           [&::-webkit-slider-thumb]:bg-studio [&::-webkit-slider-thumb]:rounded-full 
-          [&::-webkit-slider-thumb]:cursor-pointer"
+          [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:transition-transform
+          [&::-webkit-slider-thumb]:hover:scale-110 [&::-webkit-slider-thumb]:focus-visible:ring-2
+          [&::-webkit-slider-thumb]:focus-visible:ring-studio [&::-webkit-slider-thumb]:focus-visible:ring-offset-2"
       />
     </div>
   ))
 
   return (
     <div className="p-4">
-      <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
+      <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
         Adjustments
       </div>
 
@@ -88,13 +94,21 @@ export const AdjustPanel = ({ value, onChange }: AdjustPanelProps) => {
         {renderSliders(LIGHT_SLIDERS)}
       </Section>
 
+      <div className="border-t border-gray-100 my-3" />
+
       <Section label="Color" open={colorOpen} onToggle={() => setColorOpen(!colorOpen)}>
         {renderSliders(COLOR_SLIDERS)}
       </Section>
 
+      <div className="border-t border-gray-100 my-3" />
+
+      <Section label="Details" open={detailsOpen} onToggle={() => setDetailsOpen(!detailsOpen)}>
+        {renderSliders(DETAILS_SLIDERS)}
+      </Section>
+
       <button 
         onClick={handleReset}
-        className="w-full mt-4 px-4 py-2 rounded-lg border border-gray-200 text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all"
+        className="w-full mt-3 px-3 py-2 rounded-lg border border-gray-200 text-xs font-medium text-gray-500 hover:bg-gray-50 transition-all"
       >
         Reset All
       </button>

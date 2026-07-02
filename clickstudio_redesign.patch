@@ -1,0 +1,900 @@
+From 15931b3ecaf30f604567a35d94be83689cd8f1d0 Mon Sep 17 00:00:00 2001
+From: ClickStudio Fix <fix@clickstudio.dev>
+Date: Mon, 29 Jun 2026 20:06:21 +0000
+Subject: [PATCH] Redesign + feature fixes: theme system, offline fallback,
+ lint/type cleanup, frame layering
+
+---
+ .eslintrc.json                                |   4 +-
+ package-lock.json                             |  39 ----
+ src/components/layout/Header.tsx              |   4 +-
+ .../photobooth/PhotoBoothEditor.tsx           |   8 +-
+ src/index.css                                 |  31 +++
+ src/lib/supabase.ts                           | 139 ++++++++++++-
+ src/main.tsx                                  |   4 +
+ src/pages/SessionHistoryPage.tsx              |   2 +-
+ src/pages/SettingsPage.tsx                    | 195 ++++++++++++++----
+ src/store/usePhotoStore.ts                    |   5 +-
+ src/store/useUIStore.ts                       |  33 ++-
+ src/utils/bakeEdits.ts                        |  12 +-
+ src/utils/camera.ts                           |   5 +-
+ tailwind.config.js                            |  47 ++---
+ 14 files changed, 401 insertions(+), 127 deletions(-)
+
+diff --git a/.eslintrc.json b/.eslintrc.json
+index 1e25f48..da0c0eb 100644
+--- a/.eslintrc.json
++++ b/.eslintrc.json
+@@ -3,8 +3,8 @@
+   "env": { "browser": true, "es2020": true },
+   "extends": [
+     "eslint:recommended",
+-    "@typescript-eslint/recommended",
+-    "eslint-plugin-react-hooks/recommended"
++    "plugin:@typescript-eslint/recommended",
++    "plugin:react-hooks/recommended"
+   ],
+   "ignorePatterns": ["dist", ".eslintrc.cjs"],
+   "parser": "@typescript-eslint/parser",
+diff --git a/package-lock.json b/package-lock.json
+index 5adc460..30fe778 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -2584,9 +2584,6 @@
+         "arm"
+       ],
+       "dev": true,
+-      "libc": [
+-        "glibc"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -2601,9 +2598,6 @@
+         "arm"
+       ],
+       "dev": true,
+-      "libc": [
+-        "musl"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -2618,9 +2612,6 @@
+         "arm64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "glibc"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -2635,9 +2626,6 @@
+         "arm64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "musl"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -2652,9 +2640,6 @@
+         "loong64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "glibc"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -2669,9 +2654,6 @@
+         "loong64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "musl"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -2686,9 +2668,6 @@
+         "ppc64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "glibc"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -2703,9 +2682,6 @@
+         "ppc64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "musl"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -2720,9 +2696,6 @@
+         "riscv64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "glibc"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -2737,9 +2710,6 @@
+         "riscv64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "musl"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -2754,9 +2724,6 @@
+         "s390x"
+       ],
+       "dev": true,
+-      "libc": [
+-        "glibc"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -2771,9 +2738,6 @@
+         "x64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "glibc"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+@@ -2788,9 +2752,6 @@
+         "x64"
+       ],
+       "dev": true,
+-      "libc": [
+-        "musl"
+-      ],
+       "license": "MIT",
+       "optional": true,
+       "os": [
+diff --git a/src/components/layout/Header.tsx b/src/components/layout/Header.tsx
+index d05cadc..7d75fef 100644
+--- a/src/components/layout/Header.tsx
++++ b/src/components/layout/Header.tsx
+@@ -11,7 +11,7 @@ export default function Header() {
+   const navigate = useNavigate()
+ 
+   return (
+-    <header className="h-16 border-b border-border bg-white/80 backdrop-blur-xl sticky top-0 z-20 shadow-soft">
++    <header className="h-16 border-b border-border bg-card/80 backdrop-blur-xl sticky top-0 z-20 shadow-soft">
+       <div className="flex items-center justify-between px-4 h-full">
+         {/* Left — hamburger + logo (links home) */}
+         <div className="flex items-center gap-3">
+@@ -34,7 +34,7 @@ export default function Header() {
+               className="h-8 w-auto object-contain hidden sm:block"
+               onError={e => {
+                 /* fallback: hide broken image */
+-                ;(e.target as HTMLImageElement).style.display = 'none'
++                (e.currentTarget as HTMLImageElement).style.display = 'none'
+               }}
+             />
+             {/* Inline fallback shown while logo.png isn't loaded */}
+diff --git a/src/components/photobooth/PhotoBoothEditor.tsx b/src/components/photobooth/PhotoBoothEditor.tsx
+index c5615cc..4018ae3 100644
+--- a/src/components/photobooth/PhotoBoothEditor.tsx
++++ b/src/components/photobooth/PhotoBoothEditor.tsx
+@@ -55,7 +55,7 @@ export const PhotoBoothEditor = () => {
+     setUndoStack(prev => [...prev.slice(-49), {
+       adjustments, activeFilter, activeFrame, placedStickers, placedTexts, selectedStickerEmoji
+     }])
+-  }, [adjustments, activeFilter, activeFrame, placedStickers, placedTexts])
++  }, [adjustments, activeFilter, activeFrame, placedStickers, placedTexts, selectedStickerEmoji])
+ 
+   const handleUndo = useCallback(() => {
+     if (undoStack.length === 0) return
+@@ -162,10 +162,10 @@ export const PhotoBoothEditor = () => {
+   }
+ 
+   return (
+-    <div className="h-screen bg-[#F7F7F8] overflow-hidden">
++    <div className="h-screen bg-[#F7F7F8] dark:bg-[#140910] overflow-hidden">
+       <div className="h-full flex">
+         {/* Left Sidebar */}
+-        <div className="w-16 h-full bg-white border-r border-gray-200 flex flex-col items-center py-4">
++        <div className="w-16 h-full bg-white dark:bg-[#1f1018] border-r border-gray-200 dark:border-white/10 flex flex-col items-center py-4">
+           <div className="w-10 h-10 rounded-full bg-studio text-white font-bold flex items-center justify-center text-sm mb-12">S</div>
+           <div className="flex flex-col gap-4 items-center flex-1">
+             <button onClick={() => navigate('/')} title="Home" className="w-10 h-10 rounded-full flex items-center justify-center text-gray-400 hover:bg-gray-50">
+@@ -200,7 +200,7 @@ export const PhotoBoothEditor = () => {
+         {/* Main content area */}
+         <div className="flex-1 flex flex-col">
+           {/* Top bar */}
+-          <div className="h-14 bg-white border-b border-gray-200 flex items-center px-6 justify-between flex-shrink-0">
++          <div className="h-14 bg-white dark:bg-[#1f1018] border-b border-gray-200 dark:border-white/10 flex items-center px-6 justify-between flex-shrink-0">
+             <div className="flex items-center gap-2 text-sm">
+               <button onClick={currentScreen === 'capture' ? undefined : handleBack} className={`flex items-center gap-1.5 ${currentScreen === 'capture' ? 'text-gray-300' : 'text-gray-400 hover:text-gray-600'} transition-colors text-sm`}>
+                 <span>←</span>
+diff --git a/src/index.css b/src/index.css
+index 66e5507..b56f033 100644
+--- a/src/index.css
++++ b/src/index.css
+@@ -36,6 +36,36 @@
+   --error: #ef4444;
+ }
+ 
++/* ─── Dark theme: ClickStudio Obsidian ───────────────────────── */
++.dark {
++  --background: #140910;
++  --foreground: #fbe8f1;
++  --card: #1f1018;
++  --card-foreground: #fbe8f1;
++  --popover: #1f1018;
++  --popover-foreground: #fbe8f1;
++  --primary: #ff4d9d;
++  --primary-foreground: #ffffff;
++  --secondary: #2a1620;
++  --secondary-foreground: #fbe8f1;
++  --muted: #20121a;
++  --muted-foreground: #c79bb0;
++  --accent: #ff85b8;
++  --accent-foreground: #140910;
++  --destructive: #ff5a78;
++  --destructive-foreground: #ffffff;
++  --border: rgba(255, 77, 157, 0.18);
++  --input: transparent;
++  --input-background: #25131d;
++  --switch-background: #4a2436;
++  --ring: rgba(255, 77, 157, 0.45);
++
++  --surface: #1f1018;
++  --success: #5fd068;
++  --warning: #ffb74d;
++  --error: #ff6b6b;
++}
++
+ * {
+   box-sizing: border-box;
+ }
+@@ -53,6 +83,7 @@ body {
+   background-color: var(--background);
+   color: var(--foreground);
+   overflow-x: hidden;
++  transition: background-color 0.3s ease, color 0.3s ease;
+ }
+ 
+ /* ─── Scrollbar ───────────────────────────────────────── */
+diff --git a/src/lib/supabase.ts b/src/lib/supabase.ts
+index e07da4b..103ef65 100644
+--- a/src/lib/supabase.ts
++++ b/src/lib/supabase.ts
+@@ -1,3 +1,4 @@
++/* eslint-disable @typescript-eslint/no-explicit-any */
+ import { createClient } from '@supabase/supabase-js'
+ 
+ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+@@ -47,18 +48,144 @@ export interface DbFeedback {
+ // ─── Supabase client (lazy - safe to import without env vars) ──
+ import type { SupabaseClient } from '@supabase/supabase-js'
+ 
+-let _client: SupabaseClient | null = null
++// ─── Mock Supabase Client for Offline/Local Fallback ───
++class MockSupabaseClient {
++  from(table: string) {
++    return {
++      upsert: async (data: any) => {
++        const items = JSON.parse(localStorage.getItem(`mock_${table}`) || '[]');
++        if (Array.isArray(data)) {
++          data.forEach(item => {
++            const idx = items.findIndex((x: any) => x.id === item.id);
++            if (idx > -1) items[idx] = { ...items[idx], ...item, updated_at: new Date().toISOString() };
++            else items.push({ ...item, created_at: new Date().toISOString(), updated_at: new Date().toISOString() });
++          });
++        } else {
++          const idx = items.findIndex((x: any) => x.id === data.id);
++          if (idx > -1) items[idx] = { ...items[idx], ...data, updated_at: new Date().toISOString() };
++          else items.push({ ...data, created_at: new Date().toISOString(), updated_at: new Date().toISOString() });
++        }
++        localStorage.setItem(`mock_${table}`, JSON.stringify(items));
++        return { data, error: null };
++      },
++      insert: async (data: any) => {
++        const items = JSON.parse(localStorage.getItem(`mock_${table}`) || '[]');
++        if (Array.isArray(data)) {
++          data.forEach(item => {
++            items.push({ ...item, id: item.id || Math.random().toString(), created_at: new Date().toISOString() });
++          });
++        } else {
++          items.push({ ...data, id: data.id || Math.random().toString(), created_at: new Date().toISOString() });
++        }
++        localStorage.setItem(`mock_${table}`, JSON.stringify(items));
++        return { data, error: null };
++      },
++      select: (query: string = '*') => {
++        let items = JSON.parse(localStorage.getItem(`mock_${table}`) || '[]');
++
++        // Relation join: sessions -> photos
++        if (table === 'sessions' && query.includes('photos')) {
++          const photos = JSON.parse(localStorage.getItem('mock_photos') || '[]');
++          items = items.map((s: any) => ({
++            ...s,
++            photos: photos.filter((p: any) => p.session_id === s.id)
++          }));
++        }
++
++        const builder = {
++          eq: (field: string, value: any) => {
++            items = items.filter((x: any) => x[field] === value);
++            return builder;
++          },
++          order: (field: string, options: any) => {
++            items.sort((a: any, b: any) => {
++              const valA = a[field];
++              const valB = b[field];
++              if (options?.ascending) return valA > valB ? 1 : -1;
++              return valA < valB ? 1 : -1;
++            });
++            return builder;
++          },
++          limit: (num: number) => {
++            items = items.slice(0, num);
++            return builder;
++          },
++          single: async () => {
++            return { data: items[0] || null, error: items[0] ? null : new Error('Row not found') };
++          },
++          then: (onfulfilled: any) => {
++            return Promise.resolve({ data: items, error: null }).then(onfulfilled);
++          }
++        };
++        return builder;
++      },
++      delete: () => {
++        let items = JSON.parse(localStorage.getItem(`mock_${table}`) || '[]');
++        const builder = {
++          eq: async (field: string, value: any) => {
++            items = items.filter((x: any) => x[field] !== value);
++            localStorage.setItem(`mock_${table}`, JSON.stringify(items));
++
++            if (table === 'sessions' && field === 'id') {
++              let photos = JSON.parse(localStorage.getItem('mock_photos') || '[]');
++              photos = photos.filter((p: any) => p.session_id !== value);
++              localStorage.setItem('mock_photos', JSON.stringify(photos));
++            }
++            return { error: null };
++          }
++        };
++        return builder;
++      }
++    };
++  }
++
++  storage = {
++    from: (bucket: string) => {
++      return {
++        upload: async (path: string, blob: Blob, _options?: any) => {
++          const reader = new FileReader();
++          const base64Promise = new Promise<string>((resolve) => {
++            reader.onloadend = () => resolve(reader.result as string);
++            reader.readAsDataURL(blob);
++          });
++          const base64 = await base64Promise;
++
++          const storage = JSON.parse(localStorage.getItem(`mock_storage_${bucket}`) || '{}');
++          storage[path] = base64;
++          localStorage.setItem(`mock_storage_${bucket}`, JSON.stringify(storage));
++
++          return { data: { path }, error: null };
++        },
++        getPublicUrl: (path: string) => {
++          const storage = JSON.parse(localStorage.getItem(`mock_storage_${bucket}`) || '{}');
++          const base64 = storage[path] || '';
++          return { data: { publicUrl: base64 } };
++        },
++        remove: async (paths: string[]) => {
++          const storage = JSON.parse(localStorage.getItem(`mock_storage_${bucket}`) || '{}');
++          paths.forEach(p => delete storage[p]);
++          localStorage.setItem(`mock_storage_${bucket}`, JSON.stringify(storage));
++          return { data: null, error: null };
++        }
++      };
++    }
++  };
++}
++
++let _client: any = null;
+ 
+ export function getClient(): SupabaseClient {
+   if (!_client) {
+     if (!supabaseUrl || !supabaseAnonKey) {
+-      throw new Error('Supabase env vars not configured')
++      console.warn('Supabase env vars not configured. Using localStorage mock client.');
++      _client = new MockSupabaseClient() as any;
++    } else {
++      _client = createClient(supabaseUrl, supabaseAnonKey, {
++        auth: { persistSession: true, autoRefreshToken: true },
++      });
+     }
+-    _client = createClient(supabaseUrl, supabaseAnonKey, {
+-      auth: { persistSession: true, autoRefreshToken: true },
+-    })
+   }
+-  return _client
++  return _client as SupabaseClient;
+ }
+ 
+ // ─── Constants ────────────────────────────────────────────────
+diff --git a/src/main.tsx b/src/main.tsx
+index 607210d..6686ae7 100644
+--- a/src/main.tsx
++++ b/src/main.tsx
+@@ -3,6 +3,10 @@ import { createRoot } from 'react-dom/client'
+ import { BrowserRouter } from 'react-router-dom'
+ import App from './App.tsx'
+ import './index.css'
++import { applyTheme, useUIStore } from './store/useUIStore'
++
++// Apply persisted theme before first paint to avoid flash
++applyTheme(useUIStore.getState().theme)
+ 
+ const container = document.getElementById('root')!
+ const root = createRoot(container)
+diff --git a/src/pages/SessionHistoryPage.tsx b/src/pages/SessionHistoryPage.tsx
+index ddc521b..1d30039 100644
+--- a/src/pages/SessionHistoryPage.tsx
++++ b/src/pages/SessionHistoryPage.tsx
+@@ -42,7 +42,7 @@ export default function SessionHistoryPage() {
+   // ── Load sessions from Supabase on mount ──
+   useEffect(() => {
+     fetchSessions()
+-  }, [])
++  }, [fetchSessions])
+ 
+   // ── Merge current session (if not yet saved) with cloud sessions ──
+   const allSessions = (() => {
+diff --git a/src/pages/SettingsPage.tsx b/src/pages/SettingsPage.tsx
+index 271e7ed..e1c862d 100644
+--- a/src/pages/SettingsPage.tsx
++++ b/src/pages/SettingsPage.tsx
+@@ -1,71 +1,188 @@
+-import { Camera, Palette, Download, Shield } from 'lucide-react'
++import { Camera, Palette, Download, Shield, Sun, Moon, Monitor, Trash2 } from 'lucide-react'
++import { useUIStore } from '@/store/useUIStore'
++import { usePhotoStore } from '@/store/usePhotoStore'
++import { useToast } from '@/store/useUIStore'
++
++function SettingRow({
++  label,
++  description,
++  children,
++}: {
++  label: string
++  description?: string
++  children: React.ReactNode
++}) {
++  return (
++    <div className="flex items-center justify-between gap-4 py-3 border-b border-border last:border-0">
++      <div className="min-w-0">
++        <p className="text-sm font-medium text-foreground">{label}</p>
++        {description && (
++          <p className="text-xs text-muted-foreground font-body mt-0.5">{description}</p>
++        )}
++      </div>
++      <div className="flex-shrink-0">{children}</div>
++    </div>
++  )
++}
++
++function Toggle({ on, onChange }: { on: boolean; onChange: (v: boolean) => void }) {
++  return (
++    <button
++      onClick={() => onChange(!on)}
++      className={`relative w-11 h-6 rounded-full transition-colors ${
++        on ? 'bg-primary' : 'bg-muted-foreground/30'
++      }`}
++      role="switch"
++      aria-checked={on}
++    >
++      <span
++        className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-transform ${
++          on ? 'translate-x-5' : 'translate-x-0'
++        }`}
++      />
++    </button>
++  )
++}
+ 
+ export default function SettingsPage() {
++  const theme = useUIStore(s => s.theme)
++  const setTheme = useUIStore(s => s.setTheme)
++  const reducedMotion = useUIStore(s => s.reducedMotion)
++  const setReducedMotion = useUIStore(s => s.setReducedMotion)
++
++  const cameraSettings = usePhotoStore(s => s.cameraSettings)
++  const setCameraSettings = usePhotoStore(s => s.setCameraSettings)
++  const { success } = useToast()
++
++  const themeOptions: { value: 'light' | 'dark' | 'system'; label: string; icon: typeof Sun }[] = [
++    { value: 'light', label: 'Light', icon: Sun },
++    { value: 'dark', label: 'Dark', icon: Moon },
++    { value: 'system', label: 'System', icon: Monitor },
++  ]
++
++  const countdownOptions = [0, 3, 5, 10]
++
++  const handleClearData = () => {
++    if (
++      window.confirm(
++        'Clear all locally stored sessions, photos and preferences? This cannot be undone.'
++      )
++    ) {
++      Object.keys(localStorage)
++        .filter(k => k.startsWith('mock_') || k.startsWith('clickstudio'))
++        .forEach(k => localStorage.removeItem(k))
++      success('Local data cleared', 'All saved sessions and photos were removed.')
++    }
++  }
++
+   return (
+-    <div className="h-full p-6">
+-      <div className="max-w-4xl mx-auto space-y-8">
++    <div className="h-full p-6 overflow-y-auto">
++      <div className="max-w-4xl mx-auto space-y-6">
+         <div>
+           <h1 className="font-display text-2xl text-foreground">Settings</h1>
+-          <p className="text-muted-foreground font-body">Customize your ClickStudio experience</p>
++          <p className="text-muted-foreground font-body">
++            Customize your ClickStudio experience
++          </p>
+         </div>
+ 
+         <div className="grid gap-6">
+           {/* Camera Settings */}
+-          <div className="bg-white rounded-2xl p-6 border border-border shadow-card">
+-            <div className="flex items-center gap-3 mb-4">
++          <div className="bg-card rounded-2xl p-6 border border-border shadow-card">
++            <div className="flex items-center gap-3 mb-2">
+               <Camera className="h-5 w-5 text-primary" />
+-              <h2 className="font-display text-lg text-foreground">
+-                Camera Settings
+-              </h2>
++              <h2 className="font-display text-lg text-foreground">Camera Settings</h2>
+             </div>
+-            <div className="space-y-4">
+-              <div className="text-sm text-muted-foreground font-body">
+-                Camera settings will be available here
++            <SettingRow label="Default countdown" description="Timer before each shot is taken">
++              <div className="flex gap-1.5">
++                {countdownOptions.map(c => (
++                  <button
++                    key={c}
++                    onClick={() => setCameraSettings({ countdown: c })}
++                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
++                      cameraSettings.countdown === c
++                        ? 'bg-primary text-primary-foreground'
++                        : 'bg-secondary text-muted-foreground hover:text-primary'
++                    }`}
++                  >
++                    {c === 0 ? 'Off' : `${c}s`}
++                  </button>
++                ))}
+               </div>
+-            </div>
++            </SettingRow>
++            <SettingRow label="Grid overlay" description="Show rule-of-thirds guides on camera">
++              <Toggle on={cameraSettings.grid} onChange={v => setCameraSettings({ grid: v })} />
++            </SettingRow>
++            <SettingRow label="Flash" description="Screen flash effect when capturing">
++              <Toggle on={cameraSettings.flash} onChange={v => setCameraSettings({ flash: v })} />
++            </SettingRow>
+           </div>
+ 
+           {/* Appearance */}
+-          <div className="bg-white rounded-2xl p-6 border border-border shadow-card">
+-            <div className="flex items-center gap-3 mb-4">
++          <div className="bg-card rounded-2xl p-6 border border-border shadow-card">
++            <div className="flex items-center gap-3 mb-2">
+               <Palette className="h-5 w-5 text-primary" />
+               <h2 className="font-display text-lg text-foreground">Appearance</h2>
+             </div>
+-            <div className="space-y-4">
+-              <div className="text-sm text-muted-foreground font-body">
+-                Theme and appearance options will be available here
++            <SettingRow label="Theme" description="Choose your preferred color scheme">
++              <div className="flex gap-1.5">
++                {themeOptions.map(({ value, label, icon: Icon }) => (
++                  <button
++                    key={value}
++                    onClick={() => setTheme(value)}
++                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
++                      theme === value
++                        ? 'bg-primary text-primary-foreground'
++                        : 'bg-secondary text-muted-foreground hover:text-primary'
++                    }`}
++                  >
++                    <Icon className="h-4 w-4" />
++                    {label}
++                  </button>
++                ))}
+               </div>
+-            </div>
++            </SettingRow>
++            <SettingRow
++              label="Reduced motion"
++              description="Minimize animations across the app"
++            >
++              <Toggle on={reducedMotion} onChange={setReducedMotion} />
++            </SettingRow>
+           </div>
+ 
+           {/* Export Settings */}
+-          <div className="bg-white rounded-2xl p-6 border border-border shadow-card">
+-            <div className="flex items-center gap-3 mb-4">
++          <div className="bg-card rounded-2xl p-6 border border-border shadow-card">
++            <div className="flex items-center gap-3 mb-2">
+               <Download className="h-5 w-5 text-primary" />
+-              <h2 className="font-display text-lg text-foreground">
+-                Export Settings
+-              </h2>
+-            </div>
+-            <div className="space-y-4">
+-              <div className="text-sm text-muted-foreground font-body">
+-                Export and sharing preferences will be available here
+-              </div>
++              <h2 className="font-display text-lg text-foreground">Export Settings</h2>
+             </div>
++            <p className="text-sm text-muted-foreground font-body py-2">
++              Photo strips export as high-resolution PNG with a print-ready PDF option
++              available in the editor. Exports include a subtle ClickStudio watermark.
++            </p>
+           </div>
+ 
+           {/* Privacy & Security */}
+-          <div className="bg-white rounded-2xl p-6 border border-border shadow-card">
+-            <div className="flex items-center gap-3 mb-4">
++          <div className="bg-card rounded-2xl p-6 border border-border shadow-card">
++            <div className="flex items-center gap-3 mb-2">
+               <Shield className="h-5 w-5 text-primary" />
+-              <h2 className="font-display text-lg text-foreground">
+-                Privacy & Security
+-              </h2>
+-            </div>
+-            <div className="space-y-4">
+-              <div className="text-sm text-muted-foreground font-body">
+-                Privacy and security settings will be available here
+-              </div>
++              <h2 className="font-display text-lg text-foreground">Privacy & Data</h2>
+             </div>
++            <p className="text-sm text-muted-foreground font-body py-2">
++              Your photos are processed entirely in your browser. When cloud sync is not
++              configured, sessions are stored locally on this device only.
++            </p>
++            <SettingRow
++              label="Clear local data"
++              description="Remove all saved sessions, photos and preferences"
++            >
++              <button
++                onClick={handleClearData}
++                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors"
++              >
++                <Trash2 className="h-4 w-4" />
++                Clear
++              </button>
++            </SettingRow>
+           </div>
+         </div>
+       </div>
+diff --git a/src/store/usePhotoStore.ts b/src/store/usePhotoStore.ts
+index 25e8f47..0b197ef 100644
+--- a/src/store/usePhotoStore.ts
++++ b/src/store/usePhotoStore.ts
+@@ -6,6 +6,7 @@ import {
+   TABLES,
+   uploadPhotoToStorage,
+   removePhotosFromStorage,
++  DbPhoto,
+ } from '@/lib/supabase'
+ 
+ interface PhotoState {
+@@ -193,7 +194,7 @@ export const usePhotoStore = create<PhotoState>()(
+           const sessions: PhotoSession[] = (data ?? []).map(s => ({
+             id: s.id,
+             template: s.template as Template,
+-            photos: (s.photos ?? []).map((p: any) => ({
++            photos: (s.photos ?? []).map((p: DbPhoto) => ({
+               id: p.id,
+               url: p.public_url,
+               timestamp: new Date(p.created_at).getTime(),
+@@ -265,7 +266,7 @@ export const usePhotoStore = create<PhotoState>()(
+           const session: PhotoSession = {
+             id: data.id,
+             template: data.template as Template,
+-            photos: (data.photos ?? []).map((p: any) => ({
++            photos: (data.photos ?? []).map((p: DbPhoto) => ({
+               id: p.id,
+               url: p.public_url,
+               timestamp: new Date(p.created_at).getTime(),
+diff --git a/src/store/useUIStore.ts b/src/store/useUIStore.ts
+index 5afe01d..c8abadd 100644
+--- a/src/store/useUIStore.ts
++++ b/src/store/useUIStore.ts
+@@ -1,6 +1,33 @@
+ import { create } from 'zustand'
+ import type { Toast } from '@/types'
+ 
++type ThemeMode = 'dark' | 'light' | 'system'
++
++// ─── Theme persistence + application helpers ───
++function getStoredTheme(): ThemeMode {
++  if (typeof localStorage === 'undefined') return 'light'
++  const stored = localStorage.getItem('clickstudio-theme') as ThemeMode | null
++  return stored ?? 'light'
++}
++
++function resolveTheme(theme: ThemeMode): 'dark' | 'light' {
++  if (theme === 'system') {
++    if (typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
++      return 'dark'
++    }
++    return 'light'
++  }
++  return theme
++}
++
++export function applyTheme(theme: ThemeMode): void {
++  if (typeof document === 'undefined') return
++  const resolved = resolveTheme(theme)
++  document.documentElement.classList.toggle('dark', resolved === 'dark')
++  const meta = document.querySelector('meta[name="theme-color"]')
++  if (meta) meta.setAttribute('content', resolved === 'dark' ? '#140910' : '#FEF8FA')
++}
++
+ interface UIState {
+   // Sidebar
+   sidebarOpen: boolean
+@@ -41,7 +68,7 @@ export const useUIStore = create<UIState>((set, get) => ({
+   sidebarOpen: false,
+   activeModal: null,
+   toasts: [],
+-  theme: 'dark',
++  theme: getStoredTheme(),
+   reducedMotion: false,
+   loadingStates: {},
+   
+@@ -92,6 +119,10 @@ export const useUIStore = create<UIState>((set, get) => ({
+   },
+   
+   setTheme: (theme: 'dark' | 'light' | 'system') => {
++    if (typeof localStorage !== 'undefined') {
++      localStorage.setItem('clickstudio-theme', theme)
++    }
++    applyTheme(theme)
+     set({ theme })
+   },
+   
+diff --git a/src/utils/bakeEdits.ts b/src/utils/bakeEdits.ts
+index 0ead0a8..41db072 100644
+--- a/src/utils/bakeEdits.ts
++++ b/src/utils/bakeEdits.ts
+@@ -81,6 +81,12 @@ export async function bakePhotoEdits(options: BakeOptions): Promise<string> {
+     ctx.filter = 'none'
+   }
+ 
++  // PNG frame template on top of photo, under stickers/text
++  if (options.frameImage) {
++    const frameImg = await loadImage(options.frameImage)
++    ctx.drawImage(frameImg, 0, 0, size.w, size.h)
++  }
++
+   // CSS frame overlay BEFORE stickers/text so overlays sit on top
+   if (!options.frameImage) {
+     bakeFrameOverlay(ctx, size.w, size.h, options.frameId)
+@@ -121,11 +127,5 @@ export async function bakePhotoEdits(options: BakeOptions): Promise<string> {
+     ctx.restore()
+   }
+ 
+-  // PNG frame template on top of photo, under stickers/text
+-  if (options.frameImage) {
+-    const frameImg = await loadImage(options.frameImage)
+-    ctx.drawImage(frameImg, 0, 0, size.w, size.h)
+-  }
+-
+   return canvas.toDataURL('image/png', 1.0)
+ }
+diff --git a/src/utils/camera.ts b/src/utils/camera.ts
+index a73159e..95f3dc6 100644
+--- a/src/utils/camera.ts
++++ b/src/utils/camera.ts
+@@ -12,13 +12,14 @@ export class CameraManager {
+       const stream = await navigator.mediaDevices.getUserMedia({ video: true })
+       stream.getTracks().forEach(t => t.stop())
+       return true
+-    } catch (err: any) {
++    } catch (err) {
++      const errName = err instanceof Error ? err.name : ''
+       const denied = [
+         'NotAllowedError',
+         'PermissionDeniedError',
+         'SecurityError',
+       ]
+-      if (!denied.includes(err?.name)) {
++      if (!denied.includes(errName)) {
+         console.error('Camera permission error:', err)
+       }
+       return false
+diff --git a/tailwind.config.js b/tailwind.config.js
+index fab4e74..f49f973 100644
+--- a/tailwind.config.js
++++ b/tailwind.config.js
+@@ -1,32 +1,33 @@
+ /** @type {import('tailwindcss').Config} */
+ export default {
++  darkMode: 'class',
+   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+   theme: {
+     extend: {
+       colors: {
+-        background: '#FEF8FA',
+-        foreground: '#1A0812',
+-        card: '#FFFFFF',
+-        'card-foreground': '#1A0812',
+-        popover: '#FFFFFF',
+-        'popover-foreground': '#1A0812',
+-        primary: '#E8127A',
+-        'primary-foreground': '#FFFFFF',
+-        secondary: '#FDE8F0',
+-        'secondary-foreground': '#1A0812',
+-        muted: '#FFF5F8',
+-        'muted-foreground': '#8A5A6E',
+-        accent: '#FF69B4',
+-        'accent-foreground': '#FFFFFF',
+-        destructive: '#D4183D',
+-        'destructive-foreground': '#FFFFFF',
+-        border: 'rgba(232, 18, 122, 0.12)',
+-        input: 'transparent',
+-        'input-background': '#FEF0F5',
+-        ring: 'rgba(232, 18, 122, 0.35)',
+-        success: '#4CAF50',
+-        warning: '#FF9800',
+-        error: '#EF4444',
++        background: 'var(--background)',
++        foreground: 'var(--foreground)',
++        card: 'var(--card)',
++        'card-foreground': 'var(--card-foreground)',
++        popover: 'var(--popover)',
++        'popover-foreground': 'var(--popover-foreground)',
++        primary: 'var(--primary)',
++        'primary-foreground': 'var(--primary-foreground)',
++        secondary: 'var(--secondary)',
++        'secondary-foreground': 'var(--secondary-foreground)',
++        muted: 'var(--muted)',
++        'muted-foreground': 'var(--muted-foreground)',
++        accent: 'var(--accent)',
++        'accent-foreground': 'var(--accent-foreground)',
++        destructive: 'var(--destructive)',
++        'destructive-foreground': 'var(--destructive-foreground)',
++        border: 'var(--border)',
++        input: 'var(--input)',
++        'input-background': 'var(--input-background)',
++        ring: 'var(--ring)',
++        success: 'var(--success)',
++        warning: 'var(--warning)',
++        error: 'var(--error)',
+         rose: {
+           50: '#FFF0F5',
+           100: '#FFE0EC',
+-- 
+2.47.3
+

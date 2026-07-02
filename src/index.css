@@ -36,6 +36,36 @@
   --error: #ef4444;
 }
 
+/* ─── Dark theme: ClickStudio Obsidian ───────────────────────── */
+.dark {
+  --background: #140910;
+  --foreground: #fbe8f1;
+  --card: #1f1018;
+  --card-foreground: #fbe8f1;
+  --popover: #1f1018;
+  --popover-foreground: #fbe8f1;
+  --primary: #ff4d9d;
+  --primary-foreground: #ffffff;
+  --secondary: #2a1620;
+  --secondary-foreground: #fbe8f1;
+  --muted: #20121a;
+  --muted-foreground: #c79bb0;
+  --accent: #ff85b8;
+  --accent-foreground: #140910;
+  --destructive: #ff5a78;
+  --destructive-foreground: #ffffff;
+  --border: rgba(255, 77, 157, 0.18);
+  --input: transparent;
+  --input-background: #25131d;
+  --switch-background: #4a2436;
+  --ring: rgba(255, 77, 157, 0.45);
+
+  --surface: #1f1018;
+  --success: #5fd068;
+  --warning: #ffb74d;
+  --error: #ff6b6b;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -53,6 +83,7 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* ─── Scrollbar ───────────────────────────────────────── */
