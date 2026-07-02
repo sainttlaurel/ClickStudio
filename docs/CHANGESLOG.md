@@ -6,6 +6,37 @@ All notable changes to ClickStudio.
 
 ---
 
+## v1.9.0 (July 2, 2026)
+
+### Added
+- **Compact editor layout** — optimized spacing with 280px right panel and max-height scrolling
+- **Redo functionality** — full undo/redo stack with keyboard shortcuts (Ctrl+Z/Ctrl+Y)
+- **Organized adjustment sliders** — grouped into Light, Color, and Details sections with visual dividers
+- **Modern slider design** — improved thumb styling with hover/focus animations and ring effects
+- **Compact sticker picker** — 5-column grid with square cells, hover zoom effects, tighter spacing
+- **Enhanced filter selector** — checkmarks, active borders/background, compact 3-column layout
+- **Reorganized text editing panel** — Typography, Appearance, and Size sections with clear hierarchy
+- **Improved active tab state** — #FFF1F7 background, font-weight 600, smooth 200ms transitions
+- **Sidebar tooltips** — fade-in animation with dark background (#gray-900) for all navigation icons
+- **Live frame preview** — hover over frames to preview on canvas, restores on mouse leave
+
+### Changed
+- Editor right panel width increased from 200px to 280px for better proportions
+- Bottom panel now uses max-height with internal scrolling for compact layout
+- All adjustment sliders reduced to 4px track height with improved thumb interactions
+- Filter grid changed from 4-column to 3-column for better visual balance
+- Sticker grid changed from 4-column to 5-column for more compact display
+- Frame panel spacing reduced for tighter layout
+
+### Improved
+- Overall editor UX inspired by Canva, Adobe Express, and Photopea
+- Professional visual consistency across all editor components
+- Smoother interactions with 150-250ms animations
+- Better visual hierarchy with organized sections and dividers
+- Reduced wasted vertical space in editor layout
+
+---
+
 ## v1.8.0 (July 2, 2026)
 
 ### Added

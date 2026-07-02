@@ -8,7 +8,7 @@ Development roadmap and future direction for ClickStudio.
 
 | Metric | Value |
 |---|---|
-| Version | 1.8.0 |
+| Version | 1.9.0 |
 | Pages | 10 (Landing, Camera, Preview, Editor, Share, About, Help, Settings, Gallery, SessionHistory) |
 | Features | Camera, Filters, Adjustments, Stickers, Text, Frames, Undo/Redo, Zoom |
 | Templates | 37 (28 library + 9 PNG frame templates) |
@@ -41,6 +41,16 @@ All core features are production-ready:
 - Numeric readouts on all adjustment sliders
 - Tooltips on all sidebar navigation icons
 - Logo fallback handling across all pages
+- Compact editor layout with optimized spacing (280px right panel, max-height scrolling)
+- Redo functionality with full undo/redo stack and keyboard shortcuts (Ctrl+Z/Ctrl+Y)
+- Organized adjustment sliders into Light, Color, and Details sections with dividers
+- Modern slider design with improved thumb styling, hover/focus animations
+- Compact sticker picker with 5-column grid, square cells, hover zoom effects
+- Enhanced filter selector with checkmarks, active borders, compact 3-column layout
+- Reorganized text editing panel with Typography, Appearance, and Size sections
+- Improved active tab state with #FFF1F7 background, smooth transitions
+- Sidebar tooltips with fade-in animation and dark background
+- Live frame preview on hover (preview on canvas, restore on mouse leave)
 
 ---
 
