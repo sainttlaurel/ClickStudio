@@ -1,6 +1,6 @@
 # Roadmap
 
-Development phases and status for ClickStudio.
+Development roadmap and future direction for ClickStudio.
 
 ---
 
@@ -8,129 +8,57 @@ Development phases and status for ClickStudio.
 
 | Metric | Value |
 |---|---|
-| Version | 1.7.8 |
+| Version | 1.8.0 |
 | Pages | 10 (Landing, Camera, Preview, Editor, Share, About, Help, Settings, Gallery, SessionHistory) |
-| Templates | 37 (28 library + 9 PNG frame templates) across 15 categories |
-| Filters | 13 film presets |
-| Frames | 5 overlay styles |
-| Sticker Packs | 10 themes, 160+ emoji |
+| Features | Camera, Filters, Adjustments, Stickers, Text, Frames, Undo/Redo, Zoom |
+| Templates | 37 (28 library + 9 PNG frame templates) |
 | Deployment | Vercel |
 | URL | [clickstudio.vercel.app](https://clickstudio.vercel.app) |
 
 ---
 
-## Phase 1 — Core Camera & Filters ✅
-**Status:** Complete
+## ✅ Completed
 
-- [x] Live camera with device switching
-- [x] HD quality support, grid overlay, flash, mirror toggle
-- [x] Timer (3s/5s/10s) and burst mode
-- [x] Retake individual photos
-- [x] 13 film filters + 5 frame overlays
-- [x] Image upload + filter/frame baking
-
-## Phase 2 — Composite & Export ✅
-**Status:** Complete
-
-- [x] Classic layouts (single, double, quad, photo strip)
-- [x] Frame templates (Polaroid, Film Roll, Blush, Minimal, Clean)
-- [x] Photo strip compositor with watermark
-- [x] Print-ready PDF export (300 DPI)
-- [x] QR code + public share page + Web Share API
-- [x] Supabase cloud sync
-
-## Phase 3 — Editor & UI ✅
-**Status:** Complete
-
-- [x] Per-photo adjustments, stickers (160+ emoji), text overlays (6 fonts, 15 colors)
-- [x] Sticker/text drag/resize/rotate
-- [x] What's New changelog, feedback wall, PWA, responsive design
-- [x] Camera floating toolbar, template carousel, Template Library modal
-- [x] Frame Overlay tab, countdown sounds
-
-## Phase 4 — Polish & Deployment ✅
-**Status:** Complete
-
-- [x] Vercel deployment, SPA routing, security headers, SEO
-- [x] Google Search Console, sitemap, robots.txt, PWA manifest
-- [x] Code cleanup, React error #310 fix
-- [x] Editor compactness pass, centered UI
-
-## Phase 5 — Landing Page & UI Polish ✅
-**Status:** Complete
-
-- [x] Feature card visuals — realistic mockups replacing emoji placeholders
-- [x] Gallery preview section — 5 photo strip style mockups
-- [x] Testimonials section — real user reviews with star ratings
-- [x] Alternating section backgrounds across landing page
-- [x] Landing page motion — staggered entrances, hover effects
-- [x] Accessibility pass — aria-labels, focus rings, labels, roles
-- [x] Button component upgrade — gradient bg, deeper shadows, smoother hover
-- [x] Camera tooltip walkthrough — 4-step first-visit onboarding
-- [x] Accessibility contrast audit — WCAG AA analysis for all design tokens
-- [x] 9 PNG frame templates — Anniversary, Valentine, Family, Christmas, etc.
-- [x] Card hover interactions, search bar, category chips, selection feedback
-- [x] Hover quick actions (Preview, Use Template, Save)
-
-#### Contrast Audit Results (WCAG AA)
-
-| Color | Ratio | AA Normal | AA Large | AA UI |
-|---|---|---|---|---|
-| `text` on `background` | 17.61:1 | ✅ | ✅ | ✅ |
-| `text` on `surface` | 18.88:1 | ✅ | ✅ | ✅ |
-| `muted` on `background` | 4.09:1 | ❌ | ✅ | ✅ |
-| `muted` on `surface` | 4.39:1 | ❌ | ✅ | ✅ |
-| `primary` on `background` | 3.89:1 | ❌ | ✅ | ✅ |
-| `primary` on `surface` | 4.18:1 | ❌ | ✅ | ✅ |
-| `secondary` on `background` | 2.14:1 | ❌ | ❌ | ❌ |
-| `secondary` on `surface` | 2.30:1 | ❌ | ❌ | ❌ |
-| `white` on `primary` | 4.18:1 | ❌ | ✅ | ✅ |
-| `white` on `secondary` | 2.30:1 | ❌ | ❌ | ❌ |
-
-**Issues:** `muted` and `primary` need darkening for small text. `secondary` needs significant darkening for all uses.
+All core features are production-ready:
+- Live camera with device switching, grid, flash, mirror, timer, burst mode
+- 13 film filters, 5 frame overlays (Clean, Film, Blush, Minimal, Polaroid)
+- Photo adjustments (brightness, contrast, saturation, exposure, etc.)
+- Stickers (160+ emoji across 10 packs), text overlays (6 fonts, 15 colors)
+- Drag/resize/rotate for stickers and text
+- Frame templates with PNG backgrounds
+- Zoom controls (50–200%)
+- Undo/Redo (50-state history)
+- PDF export (300 DPI, 6 sizes)
+- QR code and public share page
+- PWA support
+- Supabase cloud sync
+- Session History page — view past editing sessions with search, sort, export
+- Gallery page — browse user-generated content with permission
+- Full Settings page with camera, appearance, export, and privacy controls
+- Filter thumbnails with live photo preview (64×64 downsampling)
+- Frame panel with visual previews showing actual frame styling
+- Color swatch labels on capture screen (tooltips on hover)
+- Numeric readouts on all adjustment sliders
+- Tooltips on all sidebar navigation icons
+- Logo fallback handling across all pages
 
 ---
 
-## Phase 6 — Editor UX Overhaul ✅
-**Status:** Complete
+## 📋 Backlog
 
-### Completed
-
-- [x] Reduce empty canvas space (55vh → 65vh)
-- [x] Compress bottom panel (30vh → 24vh)
-- [x] Undo / Redo (50-state history)
-- [x] Group sliders (Light / Color categories)
-- [x] Compact sticker sheet (8-column grid)
-- [x] Filter labels (already present)
-- [x] Softer sliders (1.5px track, 16px thumb)
-- [x] Collapsible controls (click tab to collapse)
-- [x] Zoom controls (50%–150% with fit button)
-- [x] Sidebar tooltips (title attributes on tabs)
-- [x] Improve selected states — background fill, font-weight 600
-- [x] Redesign text workflow — compact one-row layout
-- [x] "+ Add Text" primary button — prominent Add button
-- [x] Better Save hierarchy — glow effect when unsaved
-- [x] Live frame preview on hover
-- [x] Better preview feedback — ring glow on unsaved changes
-
-### Extra
-
-- [x] Polaroid captions
-- [ ] Photo reordering (drag-and-drop)
-- [ ] Higher resolution composites for print
-- [ ] Functional Session History page
-- [ ] Community Gallery page
+- Photo reordering — drag-and-drop to reorder captures
+- Higher resolution composites for print
+- User accounts and authentication
+- Premium templates
+- Collaborative editing sessions
+- Custom branding options
+- Social media integration
+- Admin dashboard
+- Analytics
 
 ---
 
-## Phase 7 — Future (HOLD)
-**Status:** On hold
-
-User accounts, payment processing, premium templates, collaborative sessions, custom branding, multi-camera support, social media integration, print integration, admin dashboard, analytics.
-
----
-
-## Design Tokens
+## Design System
 
 | Token | Value | Usage |
 |---|---|---|
