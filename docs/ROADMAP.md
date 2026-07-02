@@ -56,15 +56,51 @@ All core features are production-ready:
 
 ## 📋 Backlog
 
-- Photo reordering — drag-and-drop to reorder captures
-- Higher resolution composites for print
-- User accounts and authentication
-- Premium templates
-- Collaborative editing sessions
-- Custom branding options
-- Social media integration
-- Admin dashboard
-- Analytics
+### High Priority
+- **Polaroid caption input in Editor** — Currently only in Preview; should be editable per-photo in the Editor too
+- **Photo reordering** — Drag-and-drop reorder shots before compositing
+- **Improved composite quality** — Higher resolution composites for print
+
+### Medium Priority
+- **Template creation tool** — Let users design custom templates with custom layouts
+- **Multi-frame support** — Apply different frames to individual photos in a strip
+- **Video capture** — Short video clips alongside photo strips
+- **AR filters** — Face tracking and AR overlays via WebRTC
+- **Music/sound effects** — Customizable shutter sounds, background music
+
+### Low Priority (On Hold)
+- **User accounts** — On HOLD per solo dev decision; no auth planned
+- **Payment processing** — On HOLD
+- **Premium templates** — On HOLD
+- **Collaborative sessions** — On HOLD
+- **Custom branding/watermarks** — On HOLD
+- **Multi-camera support** — On HOLD
+- **Social media integration** — On HOLD
+- **Print integration** — On HOLD
+- **Admin dashboard** — On HOLD
+- **Analytics dashboard** — On HOLD
+
+### Ideas Parking Lot
+- Photo booth rental mode (offline, kiosk)
+- Green screen / background replacement
+- Time-lapse mode
+- Photo booth rental business features
+- Custom color themes per user
+- Template sharing between users
+- Seasonal template packs
+- Photo booth simulator mode
+- Export to different formats (HEIC, WebP)
+- Batch processing
+- Photo collage maker
+- Frame builder tool
+- Sticker marketplace
+- Community sticker packs
+- Animation effects
+- Music visualization
+- Social media templates (Instagram stories, etc.)
+- Print queue management
+- Digital signage mode
+- Photo booth locator
 
 ---
 
